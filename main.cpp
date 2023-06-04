@@ -1,14 +1,21 @@
+#include <chrono>
 #include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <string>
 
 #include "SDL3/SDL.h"
-#include "SDL3/sdl_main.h"
+#include "SDL3/SDL_main.h"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/fmt.h"
+#include "spdlog/fmt/chrono.h"
+
+namespace chrono = std::chrono;
+namespace fs = std::filesystem;
+using precise_clock = chrono::high_resolution_clock;
 
 #define GAME_NAME "Game" // TODO: come up with name
 
@@ -58,10 +65,10 @@ int SDL_main(int argc, char* argv[])
     info.focused = true;
 
     bool run = true;
-    double now = 0;
-    double last = 0;
-    double delta = 0;
-    double runtime = 0;
+    chrono::time_point<precise_clock> start = precise_clock::now();
+    chrono::time_point<precise_clock> now;
+    chrono::time_point<precise_clock> last;
+    chrono::milliseconds delta;
     while (run)
     {
         SDL_Event event{};
@@ -79,9 +86,8 @@ int SDL_main(int argc, char* argv[])
             continue;
         }
 
-        now = (double)SDL_GetTicksNS() / 1000000;
-        delta = now - last;
-        runtime += delta;
+        now = precise_clock::now();
+        delta = chrono::duration_cast<chrono::milliseconds>(now - last);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
@@ -92,9 +98,12 @@ int SDL_main(int argc, char* argv[])
 
     SPDLOG_INFO("Shutting down game");
 
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     SPDLOG_INFO("Game shut down");
-    SPDLOG_INFO("Game ran for {:.3} seconds", runtime / 1000);
+    SPDLOG_INFO("Game ran for {:%T}", now - start);
 
     return 0;
 }
