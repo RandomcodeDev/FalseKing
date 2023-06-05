@@ -6,6 +6,13 @@
 #include <iostream>
 #include <string>
 
+#include "box2d/box2d.h"
+
+#include "entt/entt.hpp"
+
+#include "glm/vec2.hpp"
+#include "glm/vec4.hpp"
+
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_main.h"
 
@@ -34,6 +41,35 @@ struct WindowInfo
 
 // Handle events
 bool HandleEvent(const SDL_Event& event, WindowInfo& info);
+
+// Update entities
+void UpdateEntities(entt::registry& registry);
+
+// Transform
+struct Transform
+{
+    glm::vec2 position;
+    glm::vec2 scale;
+    float rotation;
+
+    Transform()
+        : position(), scale(), rotation(0)
+    {}
+
+    Transform(const glm::vec2& position, const glm::vec2& scale, float rotation)
+        : position(position), scale(scale), rotation(rotation)
+    {}
+};
+
+// Thing that can be rendered
+struct Renderable
+{
+    SDL_Renderer* renderer;
+
+};
+
+// Velocity
+using Velocity = glm::vec2;
 
 int SDL_main(int argc, char* argv[])
 {
@@ -69,6 +105,12 @@ int SDL_main(int argc, char* argv[])
     chrono::time_point<precise_clock> now;
     chrono::time_point<precise_clock> last;
     chrono::milliseconds delta;
+
+    entt::registry registry;
+    entt::entity player = registry.create();
+    registry.emplace<Transform>(player, Transform(glm::vec2(0.0, 0.0), glm::vec2(0.0, 0.0), 0.0));
+    registry.emplace<Velocity>(player, Velocity());
+
     while (run)
     {
         SDL_Event event{};
@@ -91,6 +133,9 @@ int SDL_main(int argc, char* argv[])
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
+
+        UpdateEntities(registry);
+
         SDL_RenderPresent(renderer);
 
         last = now;
@@ -143,7 +188,6 @@ bool HandleEvent(const SDL_Event& event, WindowInfo& info)
 
             return true;
         }
-
         }
     }
     else if (event.type == SDL_EVENT_QUIT)
@@ -153,4 +197,10 @@ bool HandleEvent(const SDL_Event& event, WindowInfo& info)
     }
 
     return true;
+}
+
+void UpdateEntities(entt::registry& registry)
+{
+    auto transformView = registry.view<Transform, Velocity>();
+    auto renderableView = registry.view<Renderable>();
 }
