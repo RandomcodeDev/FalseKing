@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
-#include <memory>
 #include <string>
 
 #include "box2d/box2d.h"
@@ -62,13 +61,12 @@ void UpdateEntities(entt::registry& registry);
 class Renderable
 {
 public:
-    Renderable(std::shared_ptr<SDL_Renderer> renderer, std::shared_ptr<Sprite> sprite)
+    Renderable(SDL_Renderer* renderer, const Sprite* sprite)
         : renderer(renderer), sprite(sprite)
-    {
-    }
+    {}
 private:
-    std::shared_ptr<SDL_Renderer> renderer;
-    std::shared_ptr<Sprite> sprite;
+    SDL_Renderer* renderer;
+    Sprite* sprite;
 };
 
 // Transformation
@@ -102,15 +100,12 @@ int SDL_main(int argc, char* argv[])
         Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()), 1);
     }
 
-    SDL_Window* windowRaw = nullptr;
-    SDL_Renderer* rendererRaw = nullptr;
-    if (SDL_CreateWindowAndRenderer(1024, 576, SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE, &windowRaw, &rendererRaw) < 0)
+    SDL_Renderer* renderer = nullptr;
+    SDL_Window* window = nullptr;
+    if (SDL_CreateWindowAndRenderer(1024, 576, SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE, &window, &renderer) < 0)
     {
         Quit(fmt::format("Failed to create window or renderer: {}", SDL_GetError()), 1);
     }
-
-    std::shared_ptr<SDL_Window> window(windowRaw);
-    std::shared_ptr<SDL_Renderer> renderer(rendererRaw);
 
     entt::registry registry;
 
@@ -119,8 +114,8 @@ int SDL_main(int argc, char* argv[])
     SPDLOG_INFO("Game initialized");
 
     WindowInfo info{};
-    info.windowId = SDL_GetWindowID(window.get());
-    SDL_GetWindowSize(window.get(), &info.width, &info.height);
+    info.windowId = SDL_GetWindowID(window);
+    SDL_GetWindowSize(window, &info.width, &info.height);
     info.focused = true;
 
     bool run = true;
@@ -152,21 +147,21 @@ int SDL_main(int argc, char* argv[])
         now = precise_clock::now();
         delta = chrono::duration_cast<chrono::milliseconds>(now - last);
 
-        SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 0);
-        SDL_RenderClear(renderer.get());
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderClear(renderer);
 
         world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS, PHYSICS_POSITION_ITERATIONS);
         UpdateEntities(registry);
 
-        SDL_RenderPresent(renderer.get());
+        SDL_RenderPresent(renderer);
 
         last = now;
     }
 
     SPDLOG_INFO("Shutting down game");
 
-    SDL_DestroyRenderer(renderer.get());
-    SDL_DestroyWindow(window.get());
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
     SPDLOG_INFO("Game shut down");
@@ -223,6 +218,6 @@ bool HandleEvent(const SDL_Event& event, WindowInfo& info)
 
 void UpdateEntities(entt::registry& registry)
 {
-    auto transformView = registry.view<Transform, std::shared_ptr<b2Body>>();
+    auto transformView = registry.view<Transform, b2Body*>();
     auto renderableView = registry.view<Renderable>();
 }
