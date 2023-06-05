@@ -24,7 +24,19 @@ namespace chrono = std::chrono;
 namespace fs = std::filesystem;
 using precise_clock = chrono::high_resolution_clock;
 
-#define GAME_NAME "Game" // TODO: come up with name
+// Constants
+
+constexpr const char* GAME_NAME = "Game"; // TODO: come up with name
+
+// Physics time step
+constexpr float PHYSICS_STEP = 1.0 / 60.0;
+
+// Physics gravity
+constexpr float PHYSICS_GRAVITY = 9.807;
+
+// Physics iteration counts (these are the ones recommended in the docs)
+constexpr int PHYSICS_VELOCITY_ITERATIONS = 8;
+constexpr int PHYSICS_POSITIONS_ITERATIONS = 3;
 
 // Exit the program
 [[noreturn]]
@@ -45,22 +57,6 @@ bool HandleEvent(const SDL_Event& event, WindowInfo& info);
 // Update entities
 void UpdateEntities(entt::registry& registry);
 
-// Transform
-struct Transform
-{
-    glm::vec2 position;
-    glm::vec2 scale;
-    float rotation;
-
-    Transform()
-        : position(), scale(), rotation(0)
-    {}
-
-    Transform(const glm::vec2& position, const glm::vec2& scale, float rotation)
-        : position(position), scale(scale), rotation(rotation)
-    {}
-};
-
 // Thing that can be rendered
 struct Renderable
 {
@@ -68,8 +64,21 @@ struct Renderable
 
 };
 
-// Velocity
-using Velocity = glm::vec2;
+// Transformation
+struct Transform
+{
+    glm::vec2 position;
+    glm::vec2 scale;
+    float rotation;
+
+    Transform()
+        : position(), scale(), rotation()
+    {}
+
+    Transform(const glm::vec2& position, const glm::vec2& scale, float rotation)
+        : position(position), scale(scale), rotation(rotation)
+    {}
+};
 
 int SDL_main(int argc, char* argv[])
 {
@@ -93,6 +102,10 @@ int SDL_main(int argc, char* argv[])
         Quit(fmt::format("Failed to create window or renderer: {}", SDL_GetError()), 1);
     }
 
+    entt::registry registry;
+
+    b2World world(b2Vec2(0.0, -PHYSICS_GRAVITY));
+
     SPDLOG_INFO("Game initialized");
 
     WindowInfo info{};
@@ -106,10 +119,8 @@ int SDL_main(int argc, char* argv[])
     chrono::time_point<precise_clock> last;
     chrono::milliseconds delta;
 
-    entt::registry registry;
     entt::entity player = registry.create();
     registry.emplace<Transform>(player, Transform(glm::vec2(0.0, 0.0), glm::vec2(0.0, 0.0), 0.0));
-    registry.emplace<Velocity>(player, Velocity());
 
     while (run)
     {
@@ -134,6 +145,7 @@ int SDL_main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
 
+        world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS, PHYSICS_POSITION_ITERATIONS);
         UpdateEntities(registry);
 
         SDL_RenderPresent(renderer);
