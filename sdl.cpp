@@ -5,7 +5,10 @@
 
 int SDL_main(int argc, char* argv[])
 {
-    return GameMain((Backend*)new SdlBackend());
+    Backend* backend = (Backend*)new SdlBackend();
+    int returnCode = GameMain(backend);
+    delete backend;
+    return returnCode;
 }
 
 [[noreturn]]
