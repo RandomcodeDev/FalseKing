@@ -155,8 +155,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sdl.cpp" />
+    <ClCompile Include="sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend.h" />

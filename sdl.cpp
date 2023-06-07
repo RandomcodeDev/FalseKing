@@ -1,7 +1,10 @@
 // SDL backend
 
-#include "backend.h"
 #include "SDL3/SDL_main.h"
+
+#include "backend.h"
+#include "image.h"
+#include "sprite.h"
 
 int SDL_main(int argc, char* argv[])
 {
@@ -44,6 +47,43 @@ SdlBackend::~SdlBackend()
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
+}
+
+void SdlBackend::SetupImage(Image& image)
+{
+    uint32_t imageWidth;
+    uint32_t imageHeight;
+    image.GetSize(imageWidth, imageHeight);
+    image.backendData = SDL_CreateSurfaceFrom(image.GetPixels(), imageWidth, imageHeight, 4, SDL_PIXELFORMAT_RGBA8888);
+    if (!image.backendData)
+    {
+        Quit(fmt::format("Failed to create surface from image: {}", SDL_GetError()), 1);
+    }
+}
+
+void SdlBackend::CleanupImage(Image& image)
+{
+    if (image.backendData)
+    {
+        SDL_DestroySurface((SDL_Surface*)image.backendData);
+    }
+    image.backendData = nullptr;
+}
+
+void SdlBackend::SetupSprite(const Image& spriteSheet, Sprite& sprite)
+{
+    if (!spriteSheet.backendData)
+    {
+        sprite.backendData = nullptr;
+        return;
+    }
+
+
+}
+
+void SdlBackend::CleanupSprite(Sprite& sprite)
+{
+    sprite.backendData = nullptr;
 }
 
 bool SdlBackend::Update()

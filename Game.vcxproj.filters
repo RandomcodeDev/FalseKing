@@ -21,6 +21,12 @@
     <ClCompile Include="sdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend.h">
