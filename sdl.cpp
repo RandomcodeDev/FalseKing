@@ -1,6 +1,20 @@
 // SDL backend
 
 #include "backend.h"
+#include "SDL3/SDL_main.h"
+
+int SDL_main(int argc, char* argv[])
+{
+    return GameMain((Backend*)new SdlBackend());
+}
+
+[[noreturn]]
+void Quit(const std::string& message, int32_t exitCode)
+{
+    std::string title = fmt::format("Error {0}/0x{0:X}", exitCode);
+    SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), NULL);
+    exit(exitCode);
+}
 
 SdlBackend::SdlBackend()
 {

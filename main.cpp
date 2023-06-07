@@ -30,12 +30,17 @@ int GameMain(Backend* backend)
     chrono::milliseconds delta;
 
     entt::entity player = registry.create();
-    registry.emplace<Transform>(player, Transform(glm::vec2(0.0, 0.0), glm::vec2(0.0, 0.0), 0.0));
+    registry.emplace<Transform>(player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0));
 
     while (run)
     {
         now = precise_clock::now();
         delta = chrono::duration_cast<chrono::milliseconds>(now - last);
+
+        if (!backend->Update())
+        {
+            break;
+        }
 
         if (!backend->BeginRender())
         {

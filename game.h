@@ -30,10 +30,10 @@ using precise_clock = chrono::high_resolution_clock;
 constexpr const char* GAME_NAME = "Game"; // TODO: come up with name
 
 // Physics time step
-constexpr float PHYSICS_STEP = 1.0 / 60.0;
+constexpr float PHYSICS_STEP = 1.0f / 60.0f;
 
 // Physics gravity
-constexpr float PHYSICS_GRAVITY = 9.807;
+constexpr float PHYSICS_GRAVITY = 9.807f;
 
 // Physics iteration counts (these are the ones recommended in the docs)
 constexpr int PHYSICS_VELOCITY_ITERATIONS = 8;

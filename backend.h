@@ -11,9 +11,25 @@ struct WindowInfo
     bool focused;
 };
 
+// Abstraction of the platform
+class Backend
+{
+public:
+    // Process events
+    virtual bool Update() = 0;
+
+    // Prepare for rendering
+    virtual bool BeginRender() = 0;
+
+    // Complete rendering
+    virtual void EndRender() = 0;
+
+    // Get window information
+    virtual WindowInfo* GetWindowInformation() = 0;
+};
+
 #ifdef USE_SDL
 #include "SDL3/SDL.h"
-#include "SDL3/SDL_main.h"
 
 class SdlBackend : Backend
 {
@@ -37,34 +53,6 @@ private:
     bool HandleEvent(const SDL_Event& event);
 };
 #endif
-
-// Abstraction of the platform
-class Backend
-{
-public:
-    // Get the backend
-    static Backend* GetBackend()
-    {
-#ifdef USE_SDL
-        return (Backend*)new SdlBackend();
-#endif
-    }
-
-    // Shut down the backend
-    virtual ~Backend() = 0;
-
-    // Process events
-    virtual bool Update() = 0;
-
-    // Prepare for rendering
-    virtual bool BeginRender() = 0;
-
-    // Complete rendering
-    virtual void EndRender() = 0;
-
-    // Get window information
-    virtual WindowInfo* GetWindowInformation() = 0;
-};
 
 // Program entry point
 extern int GameMain(Backend* backend);
