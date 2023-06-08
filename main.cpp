@@ -1,3 +1,5 @@
+#define QOI_IMPLEMENTATION
+
 #include "backend.h"
 #include "game.h"
 #include "image.h"
@@ -5,7 +7,7 @@
 #include "sprite.h"
 
 // Update entities
-static void UpdateEntities(entt::registry& registry);
+static void UpdateEntities(Backend* backend, entt::registry& registry);
 
 int GameMain(Backend* backend)
 {
@@ -16,6 +18,8 @@ int GameMain(Backend* backend)
 #endif
 
     SPDLOG_INFO("Initializing game");
+
+    Image sprites(backend, "assets/sprites.qoi");
 
     entt::registry registry;
 
@@ -31,6 +35,7 @@ int GameMain(Backend* backend)
 
     entt::entity player = registry.create();
     registry.emplace<Transform>(player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0));
+    registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
     while (run)
     {
@@ -48,7 +53,7 @@ int GameMain(Backend* backend)
         }
 
         world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS, PHYSICS_POSITION_ITERATIONS);
-        UpdateEntities(registry);
+        UpdateEntities(backend, registry);
 
         backend->EndRender();
 
@@ -63,8 +68,15 @@ int GameMain(Backend* backend)
     return 0;
 }
 
-static void UpdateEntities(entt::registry& registry)
+static void UpdateEntities(Backend* backend, entt::registry& registry)
 {
     auto transformView = registry.view<Transform, b2Body*>();
-    auto spriteView = registry.view<Sprite>();
+    auto spriteView = registry.view<Transform, Sprite>();
+
+    for (auto& entity: spriteView)
+    {
+        Transform& transform = registry.get<Transform>(entity);
+        Sprite& sprite = registry.get<Sprite>(entity);
+        backend->DrawSprite(sprite, transform.position.x, transform.position.y);
+    }
 }

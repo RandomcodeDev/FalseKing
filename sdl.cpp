@@ -35,7 +35,7 @@ SdlBackend::SdlBackend()
     {
         Quit(fmt::format("Failed to create window or renderer: {}", SDL_GetError()), 1);
     }
-    
+
     m_windowId = SDL_GetWindowID(m_window);
     m_windowInfo.handle = m_window;
     SDL_GetWindowSize(m_window, &m_windowInfo.width, &m_windowInfo.height);
@@ -54,36 +54,22 @@ void SdlBackend::SetupImage(Image& image)
     uint32_t imageWidth;
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
-    image.backendData = SDL_CreateSurfaceFrom(image.GetPixels(), imageWidth, imageHeight, 4, SDL_PIXELFORMAT_RGBA8888);
+    image.backendData = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
-        Quit(fmt::format("Failed to create surface from image: {}", SDL_GetError()), 1);
+        Quit(fmt::format("Failed to create texture for image: {}", SDL_GetError()), 1);
     }
+
+    SDL_UpdateTexture((SDL_Texture*)image.backendData, nullptr, image.GetPixels(), 4);
 }
 
 void SdlBackend::CleanupImage(Image& image)
 {
     if (image.backendData)
     {
-        SDL_DestroySurface((SDL_Surface*)image.backendData);
+        SDL_DestroyTexture((SDL_Texture*)image.backendData);
     }
     image.backendData = nullptr;
-}
-
-void SdlBackend::SetupSprite(const Image& spriteSheet, Sprite& sprite)
-{
-    if (!spriteSheet.backendData)
-    {
-        sprite.backendData = nullptr;
-        return;
-    }
-
-
-}
-
-void SdlBackend::CleanupSprite(Sprite& sprite)
-{
-    sprite.backendData = nullptr;
 }
 
 bool SdlBackend::Update()
@@ -145,9 +131,27 @@ bool SdlBackend::BeginRender()
         return false;
     }
 
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
     return true;
+}
+
+void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y)
+{
+    SDL_SetRenderTarget(m_renderer, nullptr);
+    uint32_t imageWidth;
+    uint32_t imageHeight;
+    image.GetSize(imageWidth, imageHeight);
+    SDL_FRect region{ x, y, imageWidth, imageHeight };
+    SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, nullptr, &region);
+}
+
+void SdlBackend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
+{
+    SDL_SetRenderTarget(m_renderer, nullptr);
+    SDL_FRect srcRegion{ sprite.x, sprite.y, sprite.width, sprite.height };
+    SDL_FRect destRegion{ x, y, sprite.width, sprite.height };
+    SDL_RenderTexture(m_renderer, (SDL_Texture*)sprite.sheet.backendData, &srcRegion, &destRegion);
 }
 
 void SdlBackend::EndRender()

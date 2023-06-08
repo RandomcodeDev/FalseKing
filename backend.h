@@ -25,12 +25,6 @@ public:
     // Clean up an image's resources
     virtual void CleanupImage(Image& image) = 0;
 
-    // Set up a sprite so it can be used
-    virtual void SetupSprite(const Image& spriteSheet, Sprite& sprite) = 0;
-
-    // Clean up a sprite's resources
-    virtual void CleanupSprite(Sprite& sprite) = 0;
-
     // Process events
     virtual bool Update() = 0;
 
@@ -38,10 +32,10 @@ public:
     virtual bool BeginRender() = 0;
     
     // Draw an image
-    virtual void DrawImage(const Image& image) = 0;
-
-    // Draw a sprite (they only store the size and position in the image)
-    virtual void DrawSprite(const Sprite& sprite) = 0;
+    virtual void DrawImage(const Image& image, uint32_t x, uint32_t y) = 0;
+    
+    // Draw a sprite
+    virtual void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y) = 0;
 
     // Complete rendering
     virtual void EndRender() = 0;
@@ -60,12 +54,10 @@ public:
     ~SdlBackend();
     void SetupImage(Image& image);
     void CleanupImage(Image& image);
-    void SetupSprite(const Image& spriteSheet, Sprite& sprite);
-    void CleanupSprite(Sprite& sprite);
     bool Update();
     bool BeginRender();
-    void DrawImage(const Image& image);
-    void DrawSprite(const Sprite& sprite);
+    void DrawImage(const Image& image, uint32_t x, uint32_t y);
+    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);
     void EndRender();
     WindowInfo* GetWindowInformation()
     {
