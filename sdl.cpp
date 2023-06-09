@@ -29,11 +29,16 @@ SdlBackend::SdlBackend()
         Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()), 1);
     }
 
-    m_renderer = nullptr;
-    m_window = nullptr;
-    if (SDL_CreateWindowAndRenderer(1024, 576, SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE, &m_window, &m_renderer) < 0)
+    m_window = SDL_CreateWindow(GAME_NAME, 1024, 576, SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);
+    if (!m_window)
     {
-        Quit(fmt::format("Failed to create window or renderer: {}", SDL_GetError()), 1);
+        Quit(fmt::format("Failed to create window: {}", SDL_GetError()), 1);
+    }
+
+    m_renderer = SDL_CreateRenderer(m_window, nullptr, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!m_renderer)
+    {
+        Quit(fmt::format("Failed to create renderer: {}", SDL_GetError()), 1);
     }
 
     m_windowId = SDL_GetWindowID(m_window);
@@ -60,7 +65,12 @@ void SdlBackend::SetupImage(Image& image)
         Quit(fmt::format("Failed to create texture for image: {}", SDL_GetError()), 1);
     }
 
-    SDL_UpdateTexture((SDL_Texture*)image.backendData, nullptr, image.GetPixels(), 4);
+    SDL_SetTextureScaleMode((SDL_Texture*)image.backendData, SDL_SCALEMODE_NEAREST);
+
+    if (SDL_UpdateTexture((SDL_Texture*)image.backendData, nullptr, image.GetPixels(), image.GetChannels()) < 0)
+    {
+        Quit(fmt::format("Failed to copy pixels to texture for image: {}", SDL_GetError()), 1);
+    }
 }
 
 void SdlBackend::CleanupImage(Image& image)
@@ -108,8 +118,13 @@ bool SdlBackend::HandleEvent(const SDL_Event& event)
         }
         case SDL_EVENT_WINDOW_RESIZED:
         {
-            SPDLOG_INFO("Window resized from {}x{} to {}x{}", m_windowInfo.width,
-                m_windowInfo.height, event.window.data1, event.window.data2);
+            if (m_windowInfo.width != event.window.data1 || m_windowInfo.height != event.window.data2)
+            {
+                SPDLOG_INFO("Window resized from {}x{} to {}x{}", m_windowInfo.width,
+                    m_windowInfo.height, event.window.data1, event.window.data2);
+                m_windowInfo.width = event.window.data1;
+                m_windowInfo.height = event.window.data2;
+            }
 
             return true;
         }
@@ -131,6 +146,9 @@ bool SdlBackend::BeginRender()
         return false;
     }
 
+    // Scale everything to be the right size
+    SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH, (float)m_windowInfo.height / GAME_HEIGHT);
+
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
     return true;
@@ -142,15 +160,15 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y)
     uint32_t imageWidth;
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
-    SDL_FRect region{ x, y, imageWidth, imageHeight };
+    SDL_FRect region{ (float)x, (float)y, (float)imageWidth, (float)imageHeight };
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, nullptr, &region);
 }
 
 void SdlBackend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
-    SDL_FRect srcRegion{ sprite.x, sprite.y, sprite.width, sprite.height };
-    SDL_FRect destRegion{ x, y, sprite.width, sprite.height };
+    SDL_FRect srcRegion{ (float)sprite.x, (float)sprite.y, (float)sprite.width, (float)sprite.height };
+    SDL_FRect destRegion{ (float)x, (float)y, (float)sprite.width, (float)sprite.height };
     SDL_RenderTexture(m_renderer, (SDL_Texture*)sprite.sheet.backendData, &srcRegion, &destRegion);
 }
 

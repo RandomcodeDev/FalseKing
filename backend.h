@@ -13,7 +13,7 @@ struct WindowInfo
 
 // Forward declarations
 class Image;
-class Sprite;
+struct Sprite;
 
 // Abstraction of the platform
 class Backend

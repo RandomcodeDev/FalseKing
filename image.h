@@ -24,6 +24,18 @@ public:
         return m_data;
     }
 
+    // Get the number of channels in the image
+    uint32_t GetChannels()
+    {
+        return m_info.channels;
+    }
+
+    // Get whether the image is sRGB
+    bool IsSrgb()
+    {
+        return m_info.colorspace == QOI_SRGB;
+    }
+
     // Get the image dimensions
     void GetSize(uint32_t& width, uint32_t& height) const
     {
