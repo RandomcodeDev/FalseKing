@@ -1,6 +1,7 @@
 #define QOI_IMPLEMENTATION
 
 #include "backend.h"
+#include "fs.h"
 #include "game.h"
 #include "image.h"
 #include "mathutil.h"
@@ -9,7 +10,7 @@
 // Update entities
 static void UpdateEntities(Backend* backend, entt::registry& registry);
 
-int GameMain(Backend* backend)
+int GameMain(Backend* backend, std::vector<std::string> paths)
 {
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
@@ -18,6 +19,13 @@ int GameMain(Backend* backend)
 #endif
 
     SPDLOG_INFO("Initializing game");
+
+#ifdef _DEBUG
+    paths.push_back(".");
+#endif
+    paths.push_back("custom");
+    paths.push_back("game.pak");
+    Filesystem::Initialize(paths);
 
     Image sprites(backend, "assets/sprites.qoi");
 
@@ -34,7 +42,8 @@ int GameMain(Backend* backend)
     chrono::milliseconds delta;
 
     entt::entity player = registry.create();
-    registry.emplace<Transform>(player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0));
+    registry.emplace<Transform>(
+        player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0));
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
     while (run)
@@ -52,7 +61,8 @@ int GameMain(Backend* backend)
             continue;
         }
 
-        world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS, PHYSICS_POSITION_ITERATIONS);
+        world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS,
+                   PHYSICS_POSITION_ITERATIONS);
         UpdateEntities(backend, registry);
 
         backend->EndRender();
@@ -73,7 +83,7 @@ static void UpdateEntities(Backend* backend, entt::registry& registry)
     auto transformView = registry.view<Transform, b2Body*>();
     auto spriteView = registry.view<Transform, Sprite>();
 
-    for (auto& entity: spriteView)
+    for (auto& entity : spriteView)
     {
         Transform& transform = registry.get<Transform>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);

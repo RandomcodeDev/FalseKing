@@ -1,25 +1,36 @@
 #pragma once
 
+#include <algorithm>
+#include <cerrno>
 #include <chrono>
 #include <cinttypes>
-#include <cstdio>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
 
 #include "box2d/box2d.h"
 
+#ifndef __WINRT__
 #include "entt/entt.hpp"
+#endif
 
 #include "glm/vec2.hpp"
 #include "glm/vec4.hpp"
 
+#include "metrohash.h"
+
+#define QOI_NO_STDIO
 #include "qoi.h"
 
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/fmt.h"
+#define FMT_HEADER_ONLY
+#define SPDLOG_HEADER_ONLY
 #include "spdlog/fmt/chrono.h"
+#include "spdlog/fmt/fmt.h"
+#include "spdlog/spdlog.h"
+
+#include "zstd.h"
 
 namespace chrono = std::chrono;
 namespace fs = std::filesystem;
@@ -44,5 +55,4 @@ constexpr uint32_t PHYSICS_VELOCITY_ITERATIONS = 8;
 constexpr uint32_t PHYSICS_POSITION_ITERATIONS = 3;
 
 // Exit the program
-[[noreturn]]
-extern void Quit(const std::string& message, int32_t exitCode);
+[[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);

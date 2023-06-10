@@ -1,48 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Assets">
+      <UniqueIdentifier>dad3d573-ab33-428d-ae70-6098066c27e7</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Content">
+      <UniqueIdentifier>e4caa635-e149-44c2-8915-48ffa6ac48f7</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="Content\Header Files">
+      <UniqueIdentifier>{c366edc2-5eef-4584-950e-48742cb62e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Source Files">
+      <UniqueIdentifier>{ec416704-60d5-4dc1-ab7d-44deb255f27e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Source Files\External">
+      <UniqueIdentifier>{ba92aea6-769d-480a-83df-fc76f0cad83a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="image.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sdl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="image.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sprite.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fs.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash64.cpp">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash128.cpp">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash128crc.cpp">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UwpAssets\BlankCursor.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UwpAssets\Resources.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend.h">
-      <Filter>Header Files</Filter>
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fs.h">
+      <Filter>Content\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>Header Files</Filter>
+      <Filter>Content\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="image.h">
-      <Filter>Header Files</Filter>
+      <Filter>Content\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mathutil.h">
-      <Filter>Header Files</Filter>
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Content\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

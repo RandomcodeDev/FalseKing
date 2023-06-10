@@ -18,7 +18,7 @@ struct Sprite;
 // Abstraction of the platform
 class Backend
 {
-public:
+  public:
     // Set up an image so it can be used
     virtual void SetupImage(Image& image) = 0;
 
@@ -30,10 +30,10 @@ public:
 
     // Prepare for rendering
     virtual bool BeginRender() = 0;
-    
+
     // Draw an image
     virtual void DrawImage(const Image& image, uint32_t x, uint32_t y) = 0;
-    
+
     // Draw a sprite
     virtual void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y) = 0;
 
@@ -49,7 +49,7 @@ public:
 
 class SdlBackend : Backend
 {
-public:
+  public:
     SdlBackend();
     ~SdlBackend();
     void SetupImage(Image& image);
@@ -64,7 +64,7 @@ public:
         return &m_windowInfo;
     }
 
-private:
+  private:
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     WindowInfo m_windowInfo;
@@ -75,4 +75,4 @@ private:
 #endif
 
 // Program entry point
-extern int GameMain(Backend* backend);
+extern int GameMain(Backend* backend, std::vector<std::string> paths);

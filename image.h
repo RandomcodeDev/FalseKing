@@ -8,7 +8,7 @@ class Backend;
 // Image
 class Image
 {
-public:
+  public:
     // Opaque backend information
     void* backendData;
 
@@ -42,7 +42,8 @@ public:
         width = m_info.width;
         height = m_info.height;
     }
-private:
+
+  private:
     Backend* m_backend;
     void* m_data;
     qoi_desc m_info;
