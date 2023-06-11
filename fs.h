@@ -4,8 +4,8 @@
 
 // Pack file extensions
 constexpr const char* PACK_BASE_EXTENSION = ".pak";
-constexpr const char* PACK_TABLE_EXTENSION = "_table";
-constexpr const char* PACK_DATA_EXTENSION = "_data";
+constexpr const char* PACK_TABLE_EXTENSION = ".pak_table";
+constexpr const char* PACK_DATA_EXTENSION = ".pak_data";
 
 // Pack table magic signature
 constexpr uint8_t PACK_TABLE_MAGIC[] = "PACK0\0";
@@ -41,7 +41,7 @@ struct PackTable
     std::fstream dataFile;
 
     // Load a pack table from the given path
-    PackTable(const std::string& path);
+    PackTable(fs::path path);
 
     // Find an entry by name
     PackEntry* FindEntry(const std::string& name);
@@ -61,19 +61,16 @@ class Filesystem
 {
   public:
     // Initialize the filesystem
-    static void Initialize(const std::string& paths);
-
-    // Initialize the filesystem
-    static void Initialize(const std::vector<std::string>& paths);
+    static void Initialize(const std::vector<fs::path>& paths);
 
     // Read a file
-    static std::vector<uint8_t> Read(const std::string& path);
+    static std::vector<uint8_t> Read(const fs::path& path);
 
     // Write a file
-    static void Write(const std::string& path,
+    static void Write(const fs::path& path,
                       const std::vector<uint8_t>& data);
 
   private:
-    static std::vector<std::string> s_paths;
+    static std::vector<fs::path> s_paths;
     static std::vector<PackTable> s_tables;
 };

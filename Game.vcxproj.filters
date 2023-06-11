@@ -8,22 +8,22 @@
     <Filter Include="Content">
       <UniqueIdentifier>e4caa635-e149-44c2-8915-48ffa6ac48f7</UniqueIdentifier>
     </Filter>
-    <Image Include="Assets\LockScreenLogo.scale-200.png">
+    <Image Include="UwpAssets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\SplashScreen.scale-200.png">
+    <Image Include="UwpAssets\SplashScreen.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\Square150x150Logo.scale-200.png">
+    <Image Include="UwpAssets\Square150x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\Square44x44Logo.scale-200.png">
+    <Image Include="UwpAssets\Square44x44Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+    <Image Include="UwpAssets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
     <Filter Include="Content\Header Files">
@@ -37,7 +37,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\StoreLogo.png">
+    <Image Include="UwpAssets\StoreLogo.png">
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="UwpAssets\BlankCursor.cur" />
+    <None Include="copyfiles.bat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UwpAssets\Resources.rc" />

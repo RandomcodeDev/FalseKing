@@ -4,10 +4,12 @@
 #include <cerrno>
 #include <chrono>
 #include <cinttypes>
+#include <codecvt>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <locale>
 #include <string>
 
 #include "box2d/box2d.h"

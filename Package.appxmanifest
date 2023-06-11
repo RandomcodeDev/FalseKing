@@ -14,8 +14,8 @@
   <mp:PhoneIdentity PhoneProductId="a430d85b-5cf1-4705-9fe1-7da520f91d4b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>testdraw</DisplayName>
-    <PublisherDisplayName>Daniel</PublisherDisplayName>
+    <DisplayName>Game</DisplayName>
+    <PublisherDisplayName>MobSlicer152</PublisherDisplayName>
     <Logo>UwpAssets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="testdraw.App">
+      EntryPoint="Game.App">
       <uap:VisualElements
-        DisplayName="testdraw"
+        DisplayName="Game"
         Square150x150Logo="UwpAssets\Square150x150Logo.png"
         Square44x44Logo="UwpAssets\Square44x44Logo.png"
-        Description="testdraw"
+        Description="Game"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="UwpAssets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="UwpAssets\SplashScreen.png" />

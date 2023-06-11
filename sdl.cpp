@@ -9,8 +9,18 @@
 int SDL_main(int argc, char* argv[])
 {
     Backend* backend = (Backend*)new SdlBackend();
-    std::vector<std::string> paths;
-    paths.push_back(".");
+
+#if defined(__WINRT__) && defined(_DEBUG)
+    AllocConsole();
+    FILE* dummy;
+    freopen_s(&dummy, "CONIN$", "r", stdin);
+    freopen_s(&dummy, "CONOUT$", "w", stdout);
+    freopen_s(&dummy, "CONOUT$", "w", stderr);
+    spdlog::flush_every(std::chrono::seconds(5));
+#endif
+
+    std::vector<fs::path> paths;
+    paths.push_back(SDL_GetBasePath());
     int returnCode = GameMain(backend, paths);
     delete backend;
     return returnCode;
@@ -25,7 +35,7 @@ int SDL_main(int argc, char* argv[])
 
 SdlBackend::SdlBackend()
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0)
     {
         Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
     }
@@ -38,9 +48,7 @@ SdlBackend::SdlBackend()
         Quit(fmt::format("Failed to create window: {}", SDL_GetError()));
     }
 
-    m_renderer = SDL_CreateRenderer(m_window, nullptr,
-                                    SDL_RENDERER_ACCELERATED |
-                                        SDL_RENDERER_PRESENTVSYNC);
+    m_renderer = SDL_CreateRenderer(m_window, nullptr, 0);
     if (!m_renderer)
     {
         Quit(fmt::format("Failed to create renderer: {}", SDL_GetError()));

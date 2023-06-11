@@ -10,7 +10,7 @@
 // Update entities
 static void UpdateEntities(Backend* backend, entt::registry& registry);
 
-int GameMain(Backend* backend, std::vector<std::string> paths)
+int GameMain(Backend* backend, std::vector<fs::path> paths)
 {
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
@@ -20,9 +20,6 @@ int GameMain(Backend* backend, std::vector<std::string> paths)
 
     SPDLOG_INFO("Initializing game");
 
-#ifdef _DEBUG
-    paths.push_back(".");
-#endif
     paths.push_back("custom");
     paths.push_back("game.pak");
     Filesystem::Initialize(paths);
