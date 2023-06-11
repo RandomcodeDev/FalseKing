@@ -7,14 +7,14 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="a430d85b-5cf1-4705-9fe1-7da520f91d4b"
-    Publisher="CN=Daniel"
+    Name="62281MobSlicer152.FalseKing"
+    Publisher="CN=226F0228-2A14-49C0-8CB9-FDB4B16D6A76"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="a430d85b-5cf1-4705-9fe1-7da520f91d4b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Game</DisplayName>
+    <DisplayName>False King</DisplayName>
     <PublisherDisplayName>MobSlicer152</PublisherDisplayName>
     <Logo>UwpAssets\StoreLogo.png</Logo>
   </Properties>

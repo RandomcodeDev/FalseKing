@@ -40,7 +40,7 @@ using precise_clock = chrono::high_resolution_clock;
 
 // Constants
 
-constexpr const char* GAME_NAME = "Game"; // TODO: come up with name
+constexpr const char* GAME_NAME = "False King";
 
 // Game screen resolution
 constexpr uint32_t GAME_WIDTH = 256;
