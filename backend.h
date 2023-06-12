@@ -104,10 +104,11 @@ class SdlBackend : protected Backend
     WindowInfo m_windowInfo;
     int32_t m_windowId;
     KeyMapping m_mapping;
+    float m_scrollAmount;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
-    const KeyMapping DEFAULT_KEYMAP = {
+    static constexpr KeyMapping DEFAULT_KEYMAP = {
         SDL_SCANCODE_ESCAPE,
         SDL_SCANCODE_TAB,
         SDL_SCANCODE_Q,
@@ -127,6 +128,8 @@ class SdlBackend : protected Backend
         SDL_SCANCODE_A,
         SDL_SCANCODE_D
     };
+
+    static constexpr float SCROLLING_SENSITIVITY = 20.0f;
 };
 #endif
 

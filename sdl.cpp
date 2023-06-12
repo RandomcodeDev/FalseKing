@@ -63,6 +63,8 @@ SdlBackend::SdlBackend()
     m_windowInfo.handle = m_window;
     SDL_GetWindowSize(m_window, &m_windowInfo.width, &m_windowInfo.height);
     m_windowInfo.focused = true;
+
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 SdlBackend::~SdlBackend()
@@ -114,6 +116,20 @@ void SdlBackend::CleanupImage(Image& image)
 bool SdlBackend::Update(InputState& input)
 {
     SDL_Event event{};
+
+    input.rightStick.x = 0;
+    input.rightStick.y = 0;
+
+    // Scrolling is goofy but this seems legit
+    if (m_scrollAmount > 0)
+    {
+        m_scrollAmount--;
+    }
+    else
+    {
+        input.state &= ~(InputState::LEFT_SHOULDER | InputState::RIGHT_SHOULDER);
+    }
+
     while (SDL_PollEvent(&event))
     {
         if (!HandleEvent(event, input))
@@ -136,12 +152,12 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         case SDL_EVENT_WINDOW_FOCUS_GAINED: {
             SPDLOG_INFO("Window focused");
             m_windowInfo.focused = true;
-            return true;
+            break;;
         }
         case SDL_EVENT_WINDOW_FOCUS_LOST: {
             SPDLOG_INFO("Window unfocused");
             m_windowInfo.focused = false;
-            return true;
+            break;
         }
         case SDL_EVENT_WINDOW_RESIZED: {
             if (m_windowInfo.width != event.window.data1 ||
@@ -153,13 +169,36 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
                 m_windowInfo.width = event.window.data1;
                 m_windowInfo.height = event.window.data2;
             }
-
-            return true;
+            break;
         }
         }
     }
-    else if ((event.type == SDL_EVENT_KEY_DOWN) ||
-             (event.type == SDL_EVENT_KEY_UP))
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+             event.type == SDL_EVENT_MOUSE_BUTTON_UP)
+    {
+        bool down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+        if (event.button.button == 1) // left click
+        {
+            input.rightTrigger = down ? 1.0f : 0.0f;
+        }
+        else if (event.button.button == 3) // right click
+        {
+            input.leftTrigger = down ? 1.0f : 0.0f;
+        }
+    }
+    else if (event.type == SDL_EVENT_MOUSE_MOTION)
+    {
+        // this is a guess
+        input.rightStick.x = event.motion.xrel / 5.0f;
+        input.rightStick.y = event.motion.yrel / 5.0f;
+    }
+    else if (event.type == SDL_EVENT_MOUSE_WHEEL)
+    {
+        input.state |= event.wheel.y > 0 ? InputState::LEFT_SHOULDER : InputState::RIGHT_SHOULDER;
+        m_scrollAmount = abs(event.wheel.y) * SCROLLING_SENSITIVITY;
+    }
+    else if (event.type == SDL_EVENT_KEY_DOWN ||
+             event.type == SDL_EVENT_KEY_UP)
     {
         SDL_Scancode key = event.key.keysym.scancode;
         bool down = event.type == SDL_EVENT_KEY_DOWN;
@@ -194,7 +233,6 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
                 }
             }
         }
-        return true;
     }
     else if (event.type == SDL_EVENT_QUIT)
     {

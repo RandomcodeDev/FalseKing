@@ -19,20 +19,20 @@ class InputState
 
     // Things that are always binary on controller (the letter buttons are
     // based on the North American layout, keys are position on QWERTY)
-    const uint16_t START = 0b0000000000000001;          // ESC
-    const uint16_t SELECT = 0b0000000000000010;         // Tab
-    const uint16_t DPAD_UP = 0b0000000000000100;        // Q
-    const uint16_t DPAD_DOWN = 0b0000000000001000;      // C
-    const uint16_t DPAD_LEFT = 0b0000000000010000;      // X
-    const uint16_t DPAD_RIGHT = 0b0000000000100000;     // V
-    const uint16_t A = 0b0000000001000000;              // Space
-    const uint16_t B = 0b0000000010000000;              // F
-    const uint16_t X = 0b0000000100000000;              // E
-    const uint16_t Y = 0b0000001000000000;              // R
-    const uint16_t LEFT_SHOULDER = 0b0000010000000000;  // Scroll up
-    const uint16_t RIGHT_SHOULDER = 0b0000100000000000; // Scroll down
-    const uint16_t LEFT_STICK = 0b0001000000000000;     // Shift
-    const uint16_t RIGHT_STICK = 0b0010000000000000;    // Left control
+    static constexpr uint16_t START = 0b0000000000000001;          // ESC
+    static constexpr uint16_t SELECT = 0b0000000000000010;         // Tab
+    static constexpr uint16_t DPAD_UP = 0b0000000000000100;        // Q
+    static constexpr uint16_t DPAD_DOWN = 0b0000000000001000;      // C
+    static constexpr uint16_t DPAD_LEFT = 0b0000000000010000;      // X
+    static constexpr uint16_t DPAD_RIGHT = 0b0000000000100000;     // V
+    static constexpr uint16_t A = 0b0000000001000000;              // Space
+    static constexpr uint16_t B = 0b0000000010000000;              // F
+    static constexpr uint16_t X = 0b0000000100000000;              // E
+    static constexpr uint16_t Y = 0b0000001000000000;              // R
+    static constexpr uint16_t LEFT_SHOULDER = 0b0000010000000000;  // Scroll up
+    static constexpr uint16_t RIGHT_SHOULDER = 0b0000100000000000; // Scroll down
+    static constexpr uint16_t LEFT_STICK = 0b0001000000000000;     // Shift
+    static constexpr uint16_t RIGHT_STICK = 0b0010000000000000;    // Left control
 
     // A lot of getters
   public:
