@@ -105,6 +105,8 @@ class SdlBackend : protected Backend
     int32_t m_windowId;
     KeyMapping m_mapping;
     float m_scrollAmount;
+    SDL_Gamepad* m_gamepad;
+    SDL_JoystickID m_gamepadId;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 

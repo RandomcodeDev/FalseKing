@@ -55,8 +55,6 @@ int GameMain(Backend* backend, std::vector<fs::path> paths)
             break;
         }
 
-        fmt::print("\r{}", input.GetStateDescription());
-
         if (!backend->BeginRender())
         {
             continue;

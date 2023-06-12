@@ -9,8 +9,6 @@
 
 int SDL_main(int argc, char* argv[])
 {
-    Backend* backend = (Backend*)new SdlBackend();
-
 #if defined(__WINRT__) && defined(_DEBUG)
     AllocConsole();
     FILE* dummy;
@@ -19,6 +17,8 @@ int SDL_main(int argc, char* argv[])
     freopen_s(&dummy, "CONOUT$", "w", stderr);
     spdlog::flush_every(std::chrono::seconds(5));
 #endif
+
+    Backend* backend = (Backend*)new SdlBackend();
 
     std::vector<fs::path> paths;
     paths.push_back(SDL_GetBasePath());
@@ -38,7 +38,7 @@ SdlBackend::SdlBackend()
 {
     m_mapping = DEFAULT_KEYMAP;
 
-    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_VIDEO) < 0)
     {
         Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
     }
@@ -65,6 +65,35 @@ SdlBackend::SdlBackend()
     m_windowInfo.focused = true;
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
+
+    SPDLOG_INFO("Enumerating gamepads");
+    int32_t gamepadCount = 0;
+    SDL_JoystickID* gamepads = SDL_GetGamepads(&gamepadCount);
+    if (gamepadCount > 0)
+    {
+        for (int32_t i = 0; i < gamepadCount; i++)
+        {
+            SDL_Gamepad* gamepad = SDL_OpenGamepad(gamepads[i]);
+            if (!gamepad)
+            {
+                continue;
+            }
+
+            SPDLOG_INFO("Gamepad {} player {}: {}", gamepads[i], SDL_GetGamepadPlayerIndex(gamepad),
+                        SDL_GetGamepadName(gamepad));
+            if (gamepadCount == 1 || SDL_GetGamepadPlayerIndex(gamepad) == 1)
+            {
+                m_gamepad = gamepad;
+                m_gamepadId = gamepads[i];
+            }
+        }
+
+        SDL_free(gamepads);
+    }
+    else
+    {
+        SPDLOG_INFO("No gamepads");
+    }
 }
 
 SdlBackend::~SdlBackend()
@@ -127,7 +156,8 @@ bool SdlBackend::Update(InputState& input)
     }
     else
     {
-        input.state &= ~(InputState::LEFT_SHOULDER | InputState::RIGHT_SHOULDER);
+        input.state &=
+            ~(InputState::LEFT_SHOULDER | InputState::RIGHT_SHOULDER);
     }
 
     while (SDL_PollEvent(&event))
@@ -152,7 +182,8 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         case SDL_EVENT_WINDOW_FOCUS_GAINED: {
             SPDLOG_INFO("Window focused");
             m_windowInfo.focused = true;
-            break;;
+            break;
+            ;
         }
         case SDL_EVENT_WINDOW_FOCUS_LOST: {
             SPDLOG_INFO("Window unfocused");
@@ -194,11 +225,11 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     }
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
-        input.state |= event.wheel.y > 0 ? InputState::LEFT_SHOULDER : InputState::RIGHT_SHOULDER;
+        input.state |= event.wheel.y > 0 ? InputState::LEFT_SHOULDER
+                                         : InputState::RIGHT_SHOULDER;
         m_scrollAmount = abs(event.wheel.y) * SCROLLING_SENSITIVITY;
     }
-    else if (event.type == SDL_EVENT_KEY_DOWN ||
-             event.type == SDL_EVENT_KEY_UP)
+    else if (event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP)
     {
         SDL_Scancode key = event.key.keysym.scancode;
         bool down = event.type == SDL_EVENT_KEY_DOWN;
@@ -228,11 +259,17 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
                     // Mapping is in same order as bit flags for state
                     // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
                     uint32_t mapping = 1 << i;
-                    input.state =
-                        (input.state & ~mapping) | (-down & mapping);
+                    input.state = (input.state & ~mapping) | (-down & mapping);
                 }
             }
         }
+    }
+    else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
+             event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
+    {
+    }
+    else if (event.type == SDL_EVENT_GAMEPAD_AXIS_MOTION)
+    {
     }
     else if (event.type == SDL_EVENT_QUIT)
     {
