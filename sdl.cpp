@@ -4,6 +4,7 @@
 
 #include "backend.h"
 #include "image.h"
+#include "input.h"
 #include "sprite.h"
 
 int SDL_main(int argc, char* argv[])
@@ -35,6 +36,8 @@ int SDL_main(int argc, char* argv[])
 
 SdlBackend::SdlBackend()
 {
+    m_mapping = DEFAULT_KEYMAP;
+
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0)
     {
         Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
@@ -108,12 +111,12 @@ void SdlBackend::CleanupImage(Image& image)
     image.backendData = nullptr;
 }
 
-bool SdlBackend::Update()
+bool SdlBackend::Update(InputState& input)
 {
     SDL_Event event{};
     while (SDL_PollEvent(&event))
     {
-        if (!HandleEvent(event))
+        if (!HandleEvent(event, input))
         {
             return false;
         }
@@ -122,11 +125,11 @@ bool SdlBackend::Update()
     return true;
 }
 
-bool SdlBackend::HandleEvent(const SDL_Event& event)
+bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
 {
-    if (event.type >= SDL_EVENT_WINDOW_FIRST ||
-        event.type <= SDL_EVENT_WINDOW_LAST &&
-            event.window.windowID == m_windowId)
+    if ((event.type >= SDL_EVENT_WINDOW_FIRST &&
+         event.type <= SDL_EVENT_WINDOW_LAST) &&
+        event.window.windowID == m_windowId)
     {
         switch (event.window.type)
         {
@@ -154,6 +157,44 @@ bool SdlBackend::HandleEvent(const SDL_Event& event)
             return true;
         }
         }
+    }
+    else if ((event.type == SDL_EVENT_KEY_DOWN) ||
+             (event.type == SDL_EVENT_KEY_UP))
+    {
+        SDL_Scancode key = event.key.keysym.scancode;
+        bool down = event.type == SDL_EVENT_KEY_DOWN;
+        if (key == m_mapping.w)
+        {
+            input.leftStick.y = down ? 1.0f : 0.0f;
+        }
+        else if (key == m_mapping.s)
+        {
+            input.leftStick.y = down ? -1.0f : 0.0f;
+        }
+        else if (key == m_mapping.a)
+        {
+            input.leftStick.x = down ? -1.0f : 0.0f;
+        }
+        else if (key == m_mapping.d)
+        {
+            input.leftStick.x = down ? 1.0f : 0.0f;
+        }
+        else
+        {
+            // There are 4 mappings that aren't bit flags
+            for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
+            {
+                if (key == m_mapping.values[i])
+                {
+                    // Mapping is in same order as bit flags for state
+                    // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
+                    uint32_t mapping = 1 << i;
+                    input.state =
+                        (input.state & ~mapping) | (-down & mapping);
+                }
+            }
+        }
+        return true;
     }
     else if (event.type == SDL_EVENT_QUIT)
     {

@@ -4,6 +4,7 @@
 #include "fs.h"
 #include "game.h"
 #include "image.h"
+#include "input.h"
 #include "mathutil.h"
 #include "sprite.h"
 
@@ -40,18 +41,21 @@ int GameMain(Backend* backend, std::vector<fs::path> paths)
 
     entt::entity player = registry.create();
     registry.emplace<Transform>(
-        player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0));
+        player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0f));
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
+    InputState input;
     while (run)
     {
         now = precise_clock::now();
         delta = chrono::duration_cast<chrono::milliseconds>(now - last);
 
-        if (!backend->Update())
+        if (!backend->Update(input))
         {
             break;
         }
+
+        fmt::print("\r{}", input.GetStateDescription());
 
         if (!backend->BeginRender())
         {
@@ -84,6 +88,6 @@ static void UpdateEntities(Backend* backend, entt::registry& registry)
     {
         Transform& transform = registry.get<Transform>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        backend->DrawSprite(sprite, transform.position.x, transform.position.y);
+        backend->DrawSprite(sprite, (uint32_t)transform.position.x, (uint32_t)transform.position.y);
     }
 }

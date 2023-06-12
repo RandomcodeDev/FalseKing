@@ -56,5 +56,11 @@ constexpr float PHYSICS_GRAVITY = 9.807f;
 constexpr uint32_t PHYSICS_VELOCITY_ITERATIONS = 8;
 constexpr uint32_t PHYSICS_POSITION_ITERATIONS = 3;
 
+// Get the size of an array
+template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])
+{
+    return N;
+}
+
 // Exit the program
 [[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);

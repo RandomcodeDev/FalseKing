@@ -96,5 +96,8 @@
     <ClInclude Include="sprite.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
