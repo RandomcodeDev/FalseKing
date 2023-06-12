@@ -67,8 +67,7 @@ class Filesystem
     static std::vector<uint8_t> Read(const fs::path& path);
 
     // Write a file
-    static void Write(const fs::path& path,
-                      const std::vector<uint8_t>& data);
+    static void Write(const fs::path& path, const std::vector<uint8_t>& data);
 
   private:
     static std::vector<fs::path> s_paths;

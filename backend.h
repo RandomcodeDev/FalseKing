@@ -12,24 +12,23 @@ struct WindowInfo
 };
 
 // Maps backend keycodes to inputs
-union KeyMapping
-{
+union KeyMapping {
     struct
     {
-        uint32_t esc; // Start
-        uint32_t tab; // Select
-        uint32_t q; // Up
-        uint32_t c; // Down
-        uint32_t x; // Left
-        uint32_t v; // Right
-        uint32_t space; // A
-        uint32_t f; // B
-        uint32_t e; // X
-        uint32_t r; // Y
-        uint32_t scrollUp; // Left shoulder
+        uint32_t esc;        // Start
+        uint32_t tab;        // Select
+        uint32_t q;          // Up
+        uint32_t c;          // Down
+        uint32_t x;          // Left
+        uint32_t v;          // Right
+        uint32_t space;      // A
+        uint32_t f;          // B
+        uint32_t e;          // X
+        uint32_t r;          // Y
+        uint32_t scrollUp;   // Left shoulder
         uint32_t scrollDown; // Right shoulder
-        uint32_t shift; // Left stick
-        uint32_t control; // Right stick
+        uint32_t shift;      // Left stick
+        uint32_t control;    // Right stick
         uint32_t w;
         uint32_t s;
         uint32_t a;
@@ -110,25 +109,40 @@ class SdlBackend : protected Backend
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
-    static constexpr KeyMapping DEFAULT_KEYMAP = {
-        SDL_SCANCODE_ESCAPE,
-        SDL_SCANCODE_TAB,
-        SDL_SCANCODE_Q,
-        SDL_SCANCODE_C,
-        SDL_SCANCODE_X,
-        SDL_SCANCODE_V,
-        SDL_SCANCODE_SPACE,
-        SDL_SCANCODE_F,
-        SDL_SCANCODE_E,
-        SDL_SCANCODE_R,
-        0,
-        0,
-        SDL_SCANCODE_LSHIFT,
-        SDL_SCANCODE_LCTRL,
-        SDL_SCANCODE_W,
-        SDL_SCANCODE_S,
-        SDL_SCANCODE_A,
-        SDL_SCANCODE_D
+    static constexpr KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
+                                                  SDL_SCANCODE_TAB,
+                                                  SDL_SCANCODE_Q,
+                                                  SDL_SCANCODE_C,
+                                                  SDL_SCANCODE_X,
+                                                  SDL_SCANCODE_V,
+                                                  SDL_SCANCODE_SPACE,
+                                                  SDL_SCANCODE_F,
+                                                  SDL_SCANCODE_E,
+                                                  SDL_SCANCODE_R,
+                                                  0,
+                                                  0,
+                                                  SDL_SCANCODE_LSHIFT,
+                                                  SDL_SCANCODE_LCTRL,
+                                                  SDL_SCANCODE_W,
+                                                  SDL_SCANCODE_S,
+                                                  SDL_SCANCODE_A,
+                                                  SDL_SCANCODE_D};
+
+    static constexpr SDL_GamepadButton BUTTONS_IN_ORDER[] = {
+        SDL_GAMEPAD_BUTTON_START,
+        SDL_GAMEPAD_BUTTON_BACK,
+        SDL_GAMEPAD_BUTTON_DPAD_UP,
+        SDL_GAMEPAD_BUTTON_DPAD_DOWN,
+        SDL_GAMEPAD_BUTTON_DPAD_LEFT,
+        SDL_GAMEPAD_BUTTON_DPAD_RIGHT,
+        SDL_GAMEPAD_BUTTON_A,
+        SDL_GAMEPAD_BUTTON_B,
+        SDL_GAMEPAD_BUTTON_X,
+        SDL_GAMEPAD_BUTTON_Y,
+        SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
+        SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
+        SDL_GAMEPAD_BUTTON_LEFT_STICK,
+        SDL_GAMEPAD_BUTTON_RIGHT_STICK,
     };
 
     static constexpr float SCROLLING_SENSITIVITY = 20.0f;

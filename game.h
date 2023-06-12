@@ -62,5 +62,12 @@ template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])
     return N;
 }
 
+// Get the sign of a number
+// https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
+template <typename T> T SIGN(T val)
+{
+    return (T(0) < val) - (val < T(0));
+}
+
 // Exit the program
 [[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);

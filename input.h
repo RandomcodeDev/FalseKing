@@ -19,20 +19,42 @@ class InputState
 
     // Things that are always binary on controller (the letter buttons are
     // based on the North American layout, keys are position on QWERTY)
-    static constexpr uint16_t START = 0b0000000000000001;          // ESC
-    static constexpr uint16_t SELECT = 0b0000000000000010;         // Tab
-    static constexpr uint16_t DPAD_UP = 0b0000000000000100;        // Q
-    static constexpr uint16_t DPAD_DOWN = 0b0000000000001000;      // C
-    static constexpr uint16_t DPAD_LEFT = 0b0000000000010000;      // X
-    static constexpr uint16_t DPAD_RIGHT = 0b0000000000100000;     // V
-    static constexpr uint16_t A = 0b0000000001000000;              // Space
-    static constexpr uint16_t B = 0b0000000010000000;              // F
-    static constexpr uint16_t X = 0b0000000100000000;              // E
-    static constexpr uint16_t Y = 0b0000001000000000;              // R
-    static constexpr uint16_t LEFT_SHOULDER = 0b0000010000000000;  // Scroll up
-    static constexpr uint16_t RIGHT_SHOULDER = 0b0000100000000000; // Scroll down
-    static constexpr uint16_t LEFT_STICK = 0b0001000000000000;     // Shift
-    static constexpr uint16_t RIGHT_STICK = 0b0010000000000000;    // Left control
+    static constexpr uint16_t START = 0b0000000000000001;         // ESC
+    static constexpr uint16_t SELECT = 0b0000000000000010;        // Tab
+    static constexpr uint16_t DPAD_UP = 0b0000000000000100;       // Q
+    static constexpr uint16_t DPAD_DOWN = 0b0000000000001000;     // C
+    static constexpr uint16_t DPAD_LEFT = 0b0000000000010000;     // X
+    static constexpr uint16_t DPAD_RIGHT = 0b0000000000100000;    // V
+    static constexpr uint16_t A = 0b0000000001000000;             // Space
+    static constexpr uint16_t B = 0b0000000010000000;             // F
+    static constexpr uint16_t X = 0b0000000100000000;             // E
+    static constexpr uint16_t Y = 0b0000001000000000;             // R
+    static constexpr uint16_t LEFT_SHOULDER = 0b0000010000000000; // Scroll up
+    static constexpr uint16_t RIGHT_SHOULDER =
+        0b0000100000000000;                                     // Scroll down
+    static constexpr uint16_t LEFT_STICK = 0b0001000000000000;  // Shift
+    static constexpr uint16_t RIGHT_STICK = 0b0010000000000000; // Left control
+
+    // FIXME: hardcoded deadzones based on my specific controller
+    static constexpr float LEFT_STICK_MIN_X = 0.3f;
+    static constexpr float LEFT_STICK_MAX_X = 1.0f;
+    static constexpr float LEFT_STICK_MIN_Y = 0.3f;
+    static constexpr float LEFT_STICK_MAX_Y = 1.0f;
+    static constexpr float RIGHT_STICK_MIN_X = 0.3f;
+    static constexpr float RIGHT_STICK_MAX_X = 1.0f;
+    static constexpr float RIGHT_STICK_MIN_Y = 0.3f;
+    static constexpr float RIGHT_STICK_MAX_Y = 1.0f;
+
+    // Probably better ways to do this
+    template <typename T>
+    T Deadzone(T value, T min, T max)
+    {
+        if (std::abs(value) < min)
+        {
+            return 0;
+        }
+        return std::clamp(value, -max, max);
+    }
 
     // A lot of getters
   public:
@@ -44,14 +66,24 @@ class InputState
     std::string GetStateDescription() const
     {
         return fmt::format(
-            "left={}, {}\tright={}, {}\ttriggers={}, {}\tstart={}, select={}, "
+            "left={:.03}, {:.03}\tright={:.03}, {:.03}\ttriggers={:.03}, "
+            "{:.03}\tstart={}, select={}, "
             "up={}, down={}, left={}, right={}, A={}, B={}, X={}, Y={}, "
             "shoulders={}, {}, stick buttons={}, {}",
-            leftStick.x, leftStick.y, rightStick.x, rightStick.y, leftTrigger,
-            rightTrigger, GetStart(), GetSelect(), GetDpadUp(), GetDpadDown(),
+            GetLeftStickDirection().x, GetLeftStickDirection().y, GetRightStickDirection().x, GetRightStickDirection().y, GetLeftTrigger(),
+            GetRightTrigger(), GetStart(), GetSelect(), GetDpadUp(), GetDpadDown(),
             GetDpadLeft(), GetDpadRight(), GetA(), GetB(), GetX(), GetY(),
             GetLeftShoulder(), GetRightShoulder(), GetLeftStickPressed(),
             GetRightStickPressed());
+    }
+
+    // Constrain sticks to deadzones
+    void AdjustSticks()
+    {
+        leftStick.x = Deadzone(leftStick.x, LEFT_STICK_MIN_X, LEFT_STICK_MAX_X);
+        leftStick.y = Deadzone(leftStick.y, LEFT_STICK_MIN_Y, LEFT_STICK_MAX_Y);
+        rightStick.x = Deadzone(rightStick.x, RIGHT_STICK_MIN_X, RIGHT_STICK_MAX_X);
+        rightStick.y = Deadzone(rightStick.y, RIGHT_STICK_MIN_Y, RIGHT_STICK_MAX_Y);
     }
 
     const glm::vec2& GetLeftStickDirection() const

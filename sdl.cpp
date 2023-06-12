@@ -79,7 +79,8 @@ SdlBackend::SdlBackend()
                 continue;
             }
 
-            SPDLOG_INFO("Gamepad {} player {}: {}", gamepads[i], SDL_GetGamepadPlayerIndex(gamepad),
+            SPDLOG_INFO("Gamepad {} player {}: {}", gamepads[i],
+                        SDL_GetGamepadPlayerIndex(gamepad),
                         SDL_GetGamepadName(gamepad));
             if (gamepadCount == 1 || SDL_GetGamepadPlayerIndex(gamepad) == 1)
             {
@@ -145,9 +146,6 @@ void SdlBackend::CleanupImage(Image& image)
 bool SdlBackend::Update(InputState& input)
 {
     SDL_Event event{};
-
-    input.rightStick.x = 0;
-    input.rightStick.y = 0;
 
     // Scrolling is goofy but this seems legit
     if (m_scrollAmount > 0)
@@ -267,9 +265,43 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
              event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
     {
+        // Same as keyboard buttons
+        bool down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
+        for (uint8_t i = 0; i < ARRAY_SIZE(BUTTONS_IN_ORDER); i++)
+        {
+            if (event.gbutton.button == BUTTONS_IN_ORDER[i])
+            {
+                uint32_t mapping = 1 << i;
+                input.state = (input.state & ~mapping) | (-down & mapping);
+            }
+        }
     }
     else if (event.type == SDL_EVENT_GAMEPAD_AXIS_MOTION)
     {
+        // TODO: make inversion optional (Y axes are backwards
+        // from what's interpreted from the keyboard)
+        float value = (float)event.gaxis.value / INT16_MAX;
+        switch (event.gaxis.axis)
+        {
+        case SDL_GAMEPAD_AXIS_LEFTX:
+            input.leftStick.x = value;
+            break;
+        case SDL_GAMEPAD_AXIS_LEFTY:
+            input.leftStick.y = -value;
+            break;
+        case SDL_GAMEPAD_AXIS_RIGHTX:
+            input.rightStick.x = value;
+            break;
+        case SDL_GAMEPAD_AXIS_RIGHTY:
+            input.rightStick.y = -value;
+            break;
+        case SDL_GAMEPAD_AXIS_LEFT_TRIGGER:
+            input.leftTrigger = value;
+            break;
+        case SDL_GAMEPAD_AXIS_RIGHT_TRIGGER:
+            input.rightTrigger = value;
+            break;
+        }
     }
     else if (event.type == SDL_EVENT_QUIT)
     {

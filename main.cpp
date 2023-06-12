@@ -55,6 +55,11 @@ int GameMain(Backend* backend, std::vector<fs::path> paths)
             break;
         }
 
+        // Respect deadzones
+        input.AdjustSticks();
+
+        fmt::print("\r{}", input.GetStateDescription());
+
         if (!backend->BeginRender())
         {
             continue;
@@ -86,6 +91,7 @@ static void UpdateEntities(Backend* backend, entt::registry& registry)
     {
         Transform& transform = registry.get<Transform>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        backend->DrawSprite(sprite, (uint32_t)transform.position.x, (uint32_t)transform.position.y);
+        backend->DrawSprite(sprite, (uint32_t)transform.position.x,
+                            (uint32_t)transform.position.y);
     }
 }

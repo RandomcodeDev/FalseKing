@@ -127,7 +127,8 @@ void Filesystem::Initialize(const std::vector<fs::path>& paths)
     SPDLOG_INFO("Search paths: {}", paths.size());
     for (auto path : paths)
     {
-        SPDLOG_INFO("\t{}{}", path.string(), fs::exists(path) ? "" : " (not available)");
+        SPDLOG_INFO("\t{}{}", path.string(),
+                    fs::exists(path) ? "" : " (not available)");
         if (path.extension() == PACK_BASE_EXTENSION)
         {
             if (fs::exists(path.replace_extension(PACK_TABLE_EXTENSION)))
