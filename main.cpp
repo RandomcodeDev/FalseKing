@@ -58,7 +58,7 @@ int GameMain(Backend* backend, std::vector<fs::path> paths)
         // Respect deadzones
         input.AdjustSticks();
 
-        fmt::print("\r{}", input.GetStateDescription());
+        //fmt::print("\r{}", input.GetStateDescription());
 
         if (!backend->BeginRender())
         {

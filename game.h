@@ -12,6 +12,7 @@
 #include <locale>
 #include <string>
 
+#ifndef TOOL
 #include "box2d/box2d.h"
 
 #ifndef __WINRT__
@@ -20,6 +21,7 @@
 
 #include "glm/vec2.hpp"
 #include "glm/vec4.hpp"
+#endif
 
 #include "metrohash.h"
 
