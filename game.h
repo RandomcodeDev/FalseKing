@@ -30,6 +30,9 @@
 
 #define FMT_HEADER_ONLY
 #define SPDLOG_HEADER_ONLY
+#ifdef _DEBUG
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+#endif
 #include "spdlog/fmt/chrono.h"
 #include "spdlog/fmt/fmt.h"
 #include "spdlog/spdlog.h"

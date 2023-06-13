@@ -148,7 +148,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -171,7 +171,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -194,7 +194,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -217,7 +217,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -240,7 +240,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -263,7 +263,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -286,7 +286,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -309,7 +309,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

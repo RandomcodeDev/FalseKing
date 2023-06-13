@@ -150,4 +150,4 @@ class SdlBackend : protected Backend
 #endif
 
 // Program entry point
-extern int GameMain(Backend* backend, std::vector<fs::path> paths);
+extern int GameMain(Backend* backend, std::vector<fs::path> backendPaths);
