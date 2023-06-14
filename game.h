@@ -14,6 +14,7 @@
 
 #ifndef TOOL
 #include "PxPhysicsAPI.h"
+using namespace physx;
 
 #ifndef __WINRT__
 #include "entt/entt.hpp"

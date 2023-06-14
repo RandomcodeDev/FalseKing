@@ -1,9 +1,9 @@
 #include "physics.h"
 
-class ErrorCallback : public physx::PxErrorCallback
+class ErrorCallback : public PxErrorCallback
 {
   public:
-    virtual void reportError(physx::PxErrorCode::Enum code, const char* message,
+    virtual void reportError(PxErrorCode::Enum code, const char* message,
                              const char* file, int line)
     {
         Quit(fmt::format("PhysX error at {}:{}: {}", file, line, message),
@@ -12,7 +12,7 @@ class ErrorCallback : public physx::PxErrorCallback
 };
 
 static ErrorCallback g_physxErrorCallback;
-static physx::PxDefaultAllocator g_physxAllocator;
+static PxDefaultAllocator g_physxAllocator;
 
 PhysicsState::PhysicsState()
 {
@@ -25,7 +25,8 @@ PhysicsState::PhysicsState()
         Quit("PxCreateFoundation failed");
     }
 
-    m_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, physx::PxTolerancesScale());
+    m_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation,
+                                PxTolerancesScale());
     if (!m_physics)
     {
         Quit("PxCreatePhysics failed");

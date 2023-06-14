@@ -8,4 +8,4 @@ Things likely to be in game:
 - Dashing
 - Multiple types of attack: normal, special, ranged
 
-C++ syntax is used to represent things that could be done with function pointer tables and preprocessor macros, more than OOP (game uses ECS).
+C++ syntax is used to represent things that could be done with function pointer tables and preprocessor macros in C, more than OOP (game uses ECS).

@@ -40,7 +40,16 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     chrono::time_point<precise_clock> last;
     chrono::milliseconds delta;
 
+    PxMaterial* material =
+        physics.GetPhysics().createMaterial(1.0f, 1.0f, 1.0f);
+
+    PxRigidStatic* floorActor = physics.GetPhysics().createRigidStatic(PxTransform(PxVec3(0.0f, -1.0f, 0.0f)));
+    PxShape* floorShape = PxRigidActorExt::createExclusiveShape(*floorActor, PxBoxGeometry(50.0f, 0.5f, 50.0f), *material);
+
     entt::entity player = registry.create();
+    PxRigidDynamic* playerActor = physics.GetPhysics().createRigidDynamic(PxTransform(PxVec3(0.0f)));
+    PxShape* playerShape = PxRigidActorExt::createExclusiveShape(
+        *playerActor, PxBoxGeometry(0.5f, 0.5f, 0.5f), *material);
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
     while (run)

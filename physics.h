@@ -2,6 +2,13 @@
 
 #include "game.h"
 
+// Scene implementation
+class PhysicsScene : public PxScene
+{
+  public:
+    virtual bool advance(PxReal delta);
+};
+
 // Stores physics stuff
 class PhysicsState
 {
@@ -15,7 +22,20 @@ class PhysicsState
     // Update state
     void Update(chrono::milliseconds delta);
 
+    // Get physics
+    PxPhysics& GetPhysics()
+    {
+        return *m_physics;
+    }
+
+    // Get scene
+    PxScene& GetScene()
+    {
+        return *m_scene;
+    }
+
   private:
-    physx::PxFoundation* m_foundation;
-    physx::PxPhysics* m_physics;
+    PxFoundation* m_foundation;
+    PxPhysics* m_physics;
+    PhysicsScene* m_scene;
 };
