@@ -13,13 +13,14 @@
 #include <string>
 
 #ifndef TOOL
-#include "box2d/box2d.h"
+#include "PxPhysicsAPI.h"
 
 #ifndef __WINRT__
 #include "entt/entt.hpp"
 #endif
 
 #include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
 #endif
 
@@ -47,19 +48,9 @@ using precise_clock = chrono::high_resolution_clock;
 
 constexpr const char* GAME_NAME = "False King";
 
-// Game screen resolution
+// Game screen size
 constexpr uint32_t GAME_WIDTH = 256;
 constexpr uint32_t GAME_HEIGHT = 168;
-
-// Physics time step
-constexpr float PHYSICS_STEP = 1.0f / 60.0f;
-
-// Physics gravity
-constexpr float PHYSICS_GRAVITY = 9.807f;
-
-// Physics iteration counts (these are the ones recommended in the docs)
-constexpr uint32_t PHYSICS_VELOCITY_ITERATIONS = 8;
-constexpr uint32_t PHYSICS_POSITION_ITERATIONS = 3;
 
 // Get the size of an array
 template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])

@@ -31,6 +31,7 @@ int SDL_main(int argc, char* argv[])
 {
     std::string title = fmt::format("Error {0}/0x{0:X}", exitCode);
     SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), NULL);
+    SDL_TriggerBreakpoint();
     exit(exitCode);
 }
 

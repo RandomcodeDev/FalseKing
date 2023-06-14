@@ -130,7 +130,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -140,7 +140,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -163,7 +163,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -176,7 +176,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -186,7 +186,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -199,7 +199,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -209,7 +209,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -222,7 +222,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -232,7 +232,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -245,7 +245,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -255,7 +255,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -268,7 +268,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -278,7 +278,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -291,7 +291,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>box2d.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -301,7 +301,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX20_CISO646_REMOVED_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -327,13 +327,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="deps\include\glm\detail\glm.cpp" />
     <ClCompile Include="deps\src\metrohash128.cpp" />
     <ClCompile Include="deps\src\metrohash128crc.cpp" />
     <ClCompile Include="deps\src\metrohash64.cpp" />
     <ClCompile Include="fs.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="physics.cpp" />
     <ClCompile Include="sdl.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp17</LanguageStandard>
@@ -356,146 +356,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="copyfiles.bat" />
-    <None Include="deps\include\glm\detail\func_common.inl" />
-    <None Include="deps\include\glm\detail\func_common_simd.inl" />
-    <None Include="deps\include\glm\detail\func_exponential.inl" />
-    <None Include="deps\include\glm\detail\func_exponential_simd.inl" />
-    <None Include="deps\include\glm\detail\func_geometric.inl" />
-    <None Include="deps\include\glm\detail\func_geometric_simd.inl" />
-    <None Include="deps\include\glm\detail\func_integer.inl" />
-    <None Include="deps\include\glm\detail\func_integer_simd.inl" />
-    <None Include="deps\include\glm\detail\func_matrix.inl" />
-    <None Include="deps\include\glm\detail\func_matrix_simd.inl" />
-    <None Include="deps\include\glm\detail\func_packing.inl" />
-    <None Include="deps\include\glm\detail\func_packing_simd.inl" />
-    <None Include="deps\include\glm\detail\func_trigonometric.inl" />
-    <None Include="deps\include\glm\detail\func_trigonometric_simd.inl" />
-    <None Include="deps\include\glm\detail\func_vector_relational.inl" />
-    <None Include="deps\include\glm\detail\func_vector_relational_simd.inl" />
-    <None Include="deps\include\glm\detail\type_half.inl" />
-    <None Include="deps\include\glm\detail\type_mat2x2.inl" />
-    <None Include="deps\include\glm\detail\type_mat2x3.inl" />
-    <None Include="deps\include\glm\detail\type_mat2x4.inl" />
-    <None Include="deps\include\glm\detail\type_mat3x2.inl" />
-    <None Include="deps\include\glm\detail\type_mat3x3.inl" />
-    <None Include="deps\include\glm\detail\type_mat3x4.inl" />
-    <None Include="deps\include\glm\detail\type_mat4x2.inl" />
-    <None Include="deps\include\glm\detail\type_mat4x3.inl" />
-    <None Include="deps\include\glm\detail\type_mat4x4.inl" />
-    <None Include="deps\include\glm\detail\type_mat4x4_simd.inl" />
-    <None Include="deps\include\glm\detail\type_quat.inl" />
-    <None Include="deps\include\glm\detail\type_quat_simd.inl" />
-    <None Include="deps\include\glm\detail\type_vec1.inl" />
-    <None Include="deps\include\glm\detail\type_vec2.inl" />
-    <None Include="deps\include\glm\detail\type_vec3.inl" />
-    <None Include="deps\include\glm\detail\type_vec4.inl" />
-    <None Include="deps\include\glm\detail\type_vec4_simd.inl" />
-    <None Include="deps\include\glm\ext\matrix_clip_space.inl" />
-    <None Include="deps\include\glm\ext\matrix_common.inl" />
-    <None Include="deps\include\glm\ext\matrix_integer.inl" />
-    <None Include="deps\include\glm\ext\matrix_projection.inl" />
-    <None Include="deps\include\glm\ext\matrix_relational.inl" />
-    <None Include="deps\include\glm\ext\matrix_transform.inl" />
-    <None Include="deps\include\glm\ext\quaternion_common.inl" />
-    <None Include="deps\include\glm\ext\quaternion_common_simd.inl" />
-    <None Include="deps\include\glm\ext\quaternion_exponential.inl" />
-    <None Include="deps\include\glm\ext\quaternion_geometric.inl" />
-    <None Include="deps\include\glm\ext\quaternion_relational.inl" />
-    <None Include="deps\include\glm\ext\quaternion_transform.inl" />
-    <None Include="deps\include\glm\ext\quaternion_trigonometric.inl" />
-    <None Include="deps\include\glm\ext\scalar_common.inl" />
-    <None Include="deps\include\glm\ext\scalar_constants.inl" />
-    <None Include="deps\include\glm\ext\scalar_integer.inl" />
-    <None Include="deps\include\glm\ext\scalar_packing.inl" />
-    <None Include="deps\include\glm\ext\scalar_reciprocal.inl" />
-    <None Include="deps\include\glm\ext\scalar_relational.inl" />
-    <None Include="deps\include\glm\ext\scalar_ulp.inl" />
-    <None Include="deps\include\glm\ext\vector_common.inl" />
-    <None Include="deps\include\glm\ext\vector_integer.inl" />
-    <None Include="deps\include\glm\ext\vector_packing.inl" />
-    <None Include="deps\include\glm\ext\vector_reciprocal.inl" />
-    <None Include="deps\include\glm\ext\vector_relational.inl" />
-    <None Include="deps\include\glm\ext\vector_ulp.inl" />
-    <None Include="deps\include\glm\gtc\bitfield.inl" />
-    <None Include="deps\include\glm\gtc\color_space.inl" />
-    <None Include="deps\include\glm\gtc\constants.inl" />
-    <None Include="deps\include\glm\gtc\epsilon.inl" />
-    <None Include="deps\include\glm\gtc\integer.inl" />
-    <None Include="deps\include\glm\gtc\matrix_access.inl" />
-    <None Include="deps\include\glm\gtc\matrix_inverse.inl" />
-    <None Include="deps\include\glm\gtc\matrix_transform.inl" />
-    <None Include="deps\include\glm\gtc\noise.inl" />
-    <None Include="deps\include\glm\gtc\packing.inl" />
-    <None Include="deps\include\glm\gtc\quaternion.inl" />
-    <None Include="deps\include\glm\gtc\quaternion_simd.inl" />
-    <None Include="deps\include\glm\gtc\random.inl" />
-    <None Include="deps\include\glm\gtc\round.inl" />
-    <None Include="deps\include\glm\gtc\type_precision.inl" />
-    <None Include="deps\include\glm\gtc\type_ptr.inl" />
-    <None Include="deps\include\glm\gtc\ulp.inl" />
-    <None Include="deps\include\glm\gtx\associated_min_max.inl" />
-    <None Include="deps\include\glm\gtx\bit.inl" />
-    <None Include="deps\include\glm\gtx\closest_point.inl" />
-    <None Include="deps\include\glm\gtx\color_encoding.inl" />
-    <None Include="deps\include\glm\gtx\color_space.inl" />
-    <None Include="deps\include\glm\gtx\color_space_YCoCg.inl" />
-    <None Include="deps\include\glm\gtx\common.inl" />
-    <None Include="deps\include\glm\gtx\compatibility.inl" />
-    <None Include="deps\include\glm\gtx\component_wise.inl" />
-    <None Include="deps\include\glm\gtx\dual_quaternion.inl" />
-    <None Include="deps\include\glm\gtx\easing.inl" />
-    <None Include="deps\include\glm\gtx\euler_angles.inl" />
-    <None Include="deps\include\glm\gtx\extend.inl" />
-    <None Include="deps\include\glm\gtx\extended_min_max.inl" />
-    <None Include="deps\include\glm\gtx\exterior_product.inl" />
-    <None Include="deps\include\glm\gtx\fast_exponential.inl" />
-    <None Include="deps\include\glm\gtx\fast_square_root.inl" />
-    <None Include="deps\include\glm\gtx\fast_trigonometry.inl" />
-    <None Include="deps\include\glm\gtx\float_notmalize.inl" />
-    <None Include="deps\include\glm\gtx\functions.inl" />
-    <None Include="deps\include\glm\gtx\gradient_paint.inl" />
-    <None Include="deps\include\glm\gtx\handed_coordinate_space.inl" />
-    <None Include="deps\include\glm\gtx\hash.inl" />
-    <None Include="deps\include\glm\gtx\integer.inl" />
-    <None Include="deps\include\glm\gtx\intersect.inl" />
-    <None Include="deps\include\glm\gtx\io.inl" />
-    <None Include="deps\include\glm\gtx\log_base.inl" />
-    <None Include="deps\include\glm\gtx\matrix_cross_product.inl" />
-    <None Include="deps\include\glm\gtx\matrix_decompose.inl" />
-    <None Include="deps\include\glm\gtx\matrix_factorisation.inl" />
-    <None Include="deps\include\glm\gtx\matrix_interpolation.inl" />
-    <None Include="deps\include\glm\gtx\matrix_major_storage.inl" />
-    <None Include="deps\include\glm\gtx\matrix_operation.inl" />
-    <None Include="deps\include\glm\gtx\matrix_query.inl" />
-    <None Include="deps\include\glm\gtx\matrix_transform_2d.inl" />
-    <None Include="deps\include\glm\gtx\mixed_product.inl" />
-    <None Include="deps\include\glm\gtx\norm.inl" />
-    <None Include="deps\include\glm\gtx\normal.inl" />
-    <None Include="deps\include\glm\gtx\normalize_dot.inl" />
-    <None Include="deps\include\glm\gtx\number_precision.inl" />
-    <None Include="deps\include\glm\gtx\optimum_pow.inl" />
-    <None Include="deps\include\glm\gtx\orthonormalize.inl" />
-    <None Include="deps\include\glm\gtx\pca.inl" />
-    <None Include="deps\include\glm\gtx\perpendicular.inl" />
-    <None Include="deps\include\glm\gtx\polar_coordinates.inl" />
-    <None Include="deps\include\glm\gtx\projection.inl" />
-    <None Include="deps\include\glm\gtx\quaternion.inl" />
-    <None Include="deps\include\glm\gtx\raw_data.inl" />
-    <None Include="deps\include\glm\gtx\rotate_normalized_axis.inl" />
-    <None Include="deps\include\glm\gtx\rotate_vector.inl" />
-    <None Include="deps\include\glm\gtx\scalar_relational.inl" />
-    <None Include="deps\include\glm\gtx\spline.inl" />
-    <None Include="deps\include\glm\gtx\std_based_type.inl" />
-    <None Include="deps\include\glm\gtx\string_cast.inl" />
-    <None Include="deps\include\glm\gtx\texture.inl" />
-    <None Include="deps\include\glm\gtx\transform.inl" />
-    <None Include="deps\include\glm\gtx\transform2.inl" />
-    <None Include="deps\include\glm\gtx\type_aligned.inl" />
-    <None Include="deps\include\glm\gtx\type_trait.inl" />
-    <None Include="deps\include\glm\gtx\vector_angle.inl" />
-    <None Include="deps\include\glm\gtx\vector_query.inl" />
-    <None Include="deps\include\glm\gtx\wrap.inl" />
-    <None Include="deps\include\spdlog\fmt\bundled\fmt.license.rst" />
     <None Include="UwpAssets\BlankCursor.cur" />
   </ItemGroup>
   <ItemGroup>
@@ -503,600 +363,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend.h" />
-    <ClInclude Include="deps\include\box2d\b2_api.h" />
-    <ClInclude Include="deps\include\box2d\b2_block_allocator.h" />
-    <ClInclude Include="deps\include\box2d\b2_body.h" />
-    <ClInclude Include="deps\include\box2d\b2_broad_phase.h" />
-    <ClInclude Include="deps\include\box2d\b2_chain_shape.h" />
-    <ClInclude Include="deps\include\box2d\b2_circle_shape.h" />
-    <ClInclude Include="deps\include\box2d\b2_collision.h" />
-    <ClInclude Include="deps\include\box2d\b2_common.h" />
-    <ClInclude Include="deps\include\box2d\b2_contact.h" />
-    <ClInclude Include="deps\include\box2d\b2_contact_manager.h" />
-    <ClInclude Include="deps\include\box2d\b2_distance.h" />
-    <ClInclude Include="deps\include\box2d\b2_distance_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_draw.h" />
-    <ClInclude Include="deps\include\box2d\b2_dynamic_tree.h" />
-    <ClInclude Include="deps\include\box2d\b2_edge_shape.h" />
-    <ClInclude Include="deps\include\box2d\b2_fixture.h" />
-    <ClInclude Include="deps\include\box2d\b2_friction_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_gear_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_growable_stack.h" />
-    <ClInclude Include="deps\include\box2d\b2_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_math.h" />
-    <ClInclude Include="deps\include\box2d\b2_motor_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_mouse_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_polygon_shape.h" />
-    <ClInclude Include="deps\include\box2d\b2_prismatic_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_pulley_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_revolute_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_rope.h" />
-    <ClInclude Include="deps\include\box2d\b2_settings.h" />
-    <ClInclude Include="deps\include\box2d\b2_shape.h" />
-    <ClInclude Include="deps\include\box2d\b2_stack_allocator.h" />
-    <ClInclude Include="deps\include\box2d\b2_timer.h" />
-    <ClInclude Include="deps\include\box2d\b2_time_of_impact.h" />
-    <ClInclude Include="deps\include\box2d\b2_time_step.h" />
-    <ClInclude Include="deps\include\box2d\b2_types.h" />
-    <ClInclude Include="deps\include\box2d\b2_weld_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_wheel_joint.h" />
-    <ClInclude Include="deps\include\box2d\b2_world.h" />
-    <ClInclude Include="deps\include\box2d\b2_world_callbacks.h" />
-    <ClInclude Include="deps\include\box2d\box2d.h" />
-    <ClInclude Include="deps\include\entt\config\config.h" />
-    <ClInclude Include="deps\include\entt\config\macro.h" />
-    <ClInclude Include="deps\include\entt\config\version.h" />
-    <ClInclude Include="deps\include\entt\container\dense_map.hpp" />
-    <ClInclude Include="deps\include\entt\container\dense_set.hpp" />
-    <ClInclude Include="deps\include\entt\container\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\core\algorithm.hpp" />
-    <ClInclude Include="deps\include\entt\core\any.hpp" />
-    <ClInclude Include="deps\include\entt\core\attribute.h" />
-    <ClInclude Include="deps\include\entt\core\compressed_pair.hpp" />
-    <ClInclude Include="deps\include\entt\core\enum.hpp" />
-    <ClInclude Include="deps\include\entt\core\family.hpp" />
-    <ClInclude Include="deps\include\entt\core\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\core\hashed_string.hpp" />
-    <ClInclude Include="deps\include\entt\core\ident.hpp" />
-    <ClInclude Include="deps\include\entt\core\iterator.hpp" />
-    <ClInclude Include="deps\include\entt\core\memory.hpp" />
-    <ClInclude Include="deps\include\entt\core\monostate.hpp" />
-    <ClInclude Include="deps\include\entt\core\tuple.hpp" />
-    <ClInclude Include="deps\include\entt\core\type_info.hpp" />
-    <ClInclude Include="deps\include\entt\core\type_traits.hpp" />
-    <ClInclude Include="deps\include\entt\core\utility.hpp" />
-    <ClInclude Include="deps\include\entt\entity\component.hpp" />
-    <ClInclude Include="deps\include\entt\entity\entity.hpp" />
-    <ClInclude Include="deps\include\entt\entity\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\entity\group.hpp" />
-    <ClInclude Include="deps\include\entt\entity\handle.hpp" />
-    <ClInclude Include="deps\include\entt\entity\helper.hpp" />
-    <ClInclude Include="deps\include\entt\entity\observer.hpp" />
-    <ClInclude Include="deps\include\entt\entity\organizer.hpp" />
-    <ClInclude Include="deps\include\entt\entity\registry.hpp" />
-    <ClInclude Include="deps\include\entt\entity\runtime_view.hpp" />
-    <ClInclude Include="deps\include\entt\entity\snapshot.hpp" />
-    <ClInclude Include="deps\include\entt\entity\sparse_set.hpp" />
-    <ClInclude Include="deps\include\entt\entity\storage.hpp" />
-    <ClInclude Include="deps\include\entt\entity\storage_mixin.hpp" />
-    <ClInclude Include="deps\include\entt\entity\view.hpp" />
-    <ClInclude Include="deps\include\entt\entt.hpp" />
-    <ClInclude Include="deps\include\entt\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\graph\adjacency_matrix.hpp" />
-    <ClInclude Include="deps\include\entt\graph\dot.hpp" />
-    <ClInclude Include="deps\include\entt\graph\flow.hpp" />
-    <ClInclude Include="deps\include\entt\graph\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\locator\locator.hpp" />
-    <ClInclude Include="deps\include\entt\meta\adl_pointer.hpp" />
-    <ClInclude Include="deps\include\entt\meta\container.hpp" />
-    <ClInclude Include="deps\include\entt\meta\context.hpp" />
-    <ClInclude Include="deps\include\entt\meta\factory.hpp" />
-    <ClInclude Include="deps\include\entt\meta\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\meta\meta.hpp" />
-    <ClInclude Include="deps\include\entt\meta\node.hpp" />
-    <ClInclude Include="deps\include\entt\meta\pointer.hpp" />
-    <ClInclude Include="deps\include\entt\meta\policy.hpp" />
-    <ClInclude Include="deps\include\entt\meta\range.hpp" />
-    <ClInclude Include="deps\include\entt\meta\resolve.hpp" />
-    <ClInclude Include="deps\include\entt\meta\template.hpp" />
-    <ClInclude Include="deps\include\entt\meta\type_traits.hpp" />
-    <ClInclude Include="deps\include\entt\meta\utility.hpp" />
-    <ClInclude Include="deps\include\entt\platform\android-ndk-r17.hpp" />
-    <ClInclude Include="deps\include\entt\poly\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\poly\poly.hpp" />
-    <ClInclude Include="deps\include\entt\process\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\process\process.hpp" />
-    <ClInclude Include="deps\include\entt\process\scheduler.hpp" />
-    <ClInclude Include="deps\include\entt\resource\cache.hpp" />
-    <ClInclude Include="deps\include\entt\resource\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\resource\loader.hpp" />
-    <ClInclude Include="deps\include\entt\resource\resource.hpp" />
-    <ClInclude Include="deps\include\entt\signal\delegate.hpp" />
-    <ClInclude Include="deps\include\entt\signal\dispatcher.hpp" />
-    <ClInclude Include="deps\include\entt\signal\emitter.hpp" />
-    <ClInclude Include="deps\include\entt\signal\fwd.hpp" />
-    <ClInclude Include="deps\include\entt\signal\sigh.hpp" />
-    <ClInclude Include="deps\include\glm\common.hpp" />
-    <ClInclude Include="deps\include\glm\detail\compute_common.hpp" />
-    <ClInclude Include="deps\include\glm\detail\compute_vector_relational.hpp" />
-    <ClInclude Include="deps\include\glm\detail\qualifier.hpp" />
-    <ClInclude Include="deps\include\glm\detail\setup.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_float.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_half.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat2x2.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat2x3.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat2x4.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat3x2.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat3x3.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat3x4.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat4x2.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat4x3.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_mat4x4.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_quat.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_vec1.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_vec2.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_vec3.hpp" />
-    <ClInclude Include="deps\include\glm\detail\type_vec4.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_features.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_fixes.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_noise.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_swizzle.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_swizzle_func.hpp" />
-    <ClInclude Include="deps\include\glm\detail\_vectorize.hpp" />
-    <ClInclude Include="deps\include\glm\exponential.hpp" />
-    <ClInclude Include="deps\include\glm\ext.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_clip_space.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_common.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double2x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double3x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_double4x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float2x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float3x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_float4x4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int2x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int3x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_int4x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_integer.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_projection.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_relational.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_transform.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint2x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint3x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\matrix_uint4x4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_common.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_double.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_double_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_exponential.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_float.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_float_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_geometric.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_relational.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_transform.hpp" />
-    <ClInclude Include="deps\include\glm\ext\quaternion_trigonometric.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_common.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_constants.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_integer.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_int_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_packing.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_reciprocal.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_relational.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_uint_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\scalar_ulp.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool1.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool1_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_bool4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_common.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double1.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double1_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_double4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float1.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float1_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float2_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float3_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_float4_precision.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int1.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int1_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_int4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_integer.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_packing.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_reciprocal.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_relational.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint1.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint1_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint2.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint2_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint3.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint3_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint4.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_uint4_sized.hpp" />
-    <ClInclude Include="deps\include\glm\ext\vector_ulp.hpp" />
-    <ClInclude Include="deps\include\glm\ext\_matrix_vectorize.hpp" />
-    <ClInclude Include="deps\include\glm\fwd.hpp" />
-    <ClInclude Include="deps\include\glm\geometric.hpp" />
-    <ClInclude Include="deps\include\glm\glm.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\bitfield.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\color_space.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\constants.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\epsilon.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\integer.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\matrix_access.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\matrix_integer.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\matrix_inverse.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\matrix_transform.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\noise.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\packing.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\quaternion.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\random.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\reciprocal.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\round.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\type_aligned.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\type_precision.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\type_ptr.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\ulp.hpp" />
-    <ClInclude Include="deps\include\glm\gtc\vec1.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\associated_min_max.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\bit.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\closest_point.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\color_encoding.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\color_space.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\color_space_YCoCg.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\common.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\compatibility.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\component_wise.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\dual_quaternion.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\easing.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\euler_angles.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\extend.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\extended_min_max.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\exterior_product.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\fast_exponential.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\fast_square_root.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\fast_trigonometry.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\functions.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\gradient_paint.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\handed_coordinate_space.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\hash.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\integer.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\intersect.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\io.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\log_base.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_cross_product.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_decompose.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_factorisation.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_interpolation.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_major_storage.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_operation.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_query.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\matrix_transform_2d.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\mixed_product.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\norm.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\normal.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\normalize_dot.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\number_precision.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\optimum_pow.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\orthonormalize.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\pca.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\perpendicular.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\polar_coordinates.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\projection.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\quaternion.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\range.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\raw_data.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\rotate_normalized_axis.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\rotate_vector.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\scalar_multiplication.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\scalar_relational.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\spline.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\std_based_type.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\string_cast.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\texture.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\transform.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\transform2.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\type_aligned.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\type_trait.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\vector_angle.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\vector_query.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\vec_swizzle.hpp" />
-    <ClInclude Include="deps\include\glm\gtx\wrap.hpp" />
-    <ClInclude Include="deps\include\glm\integer.hpp" />
-    <ClInclude Include="deps\include\glm\mat2x2.hpp" />
-    <ClInclude Include="deps\include\glm\mat2x3.hpp" />
-    <ClInclude Include="deps\include\glm\mat2x4.hpp" />
-    <ClInclude Include="deps\include\glm\mat3x2.hpp" />
-    <ClInclude Include="deps\include\glm\mat3x3.hpp" />
-    <ClInclude Include="deps\include\glm\mat3x4.hpp" />
-    <ClInclude Include="deps\include\glm\mat4x2.hpp" />
-    <ClInclude Include="deps\include\glm\mat4x3.hpp" />
-    <ClInclude Include="deps\include\glm\mat4x4.hpp" />
-    <ClInclude Include="deps\include\glm\matrix.hpp" />
-    <ClInclude Include="deps\include\glm\packing.hpp" />
-    <ClInclude Include="deps\include\glm\simd\common.h" />
-    <ClInclude Include="deps\include\glm\simd\exponential.h" />
-    <ClInclude Include="deps\include\glm\simd\geometric.h" />
-    <ClInclude Include="deps\include\glm\simd\integer.h" />
-    <ClInclude Include="deps\include\glm\simd\matrix.h" />
-    <ClInclude Include="deps\include\glm\simd\neon.h" />
-    <ClInclude Include="deps\include\glm\simd\packing.h" />
-    <ClInclude Include="deps\include\glm\simd\platform.h" />
-    <ClInclude Include="deps\include\glm\simd\trigonometric.h" />
-    <ClInclude Include="deps\include\glm\simd\vector_relational.h" />
-    <ClInclude Include="deps\include\glm\trigonometric.hpp" />
-    <ClInclude Include="deps\include\glm\vec2.hpp" />
-    <ClInclude Include="deps\include\glm\vec3.hpp" />
-    <ClInclude Include="deps\include\glm\vec4.hpp" />
-    <ClInclude Include="deps\include\glm\vector_relational.hpp" />
     <ClInclude Include="deps\include\metrohash.h" />
     <ClInclude Include="deps\include\metrohash128.h" />
     <ClInclude Include="deps\include\metrohash128crc.h" />
     <ClInclude Include="deps\include\metrohash64.h" />
     <ClInclude Include="deps\include\platform.h" />
     <ClInclude Include="deps\include\qoi.h" />
-    <ClInclude Include="deps\include\SDL3\SDL.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_assert.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_atomic.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_audio.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_begin_code.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_bits.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_blendmode.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_clipboard.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_close_code.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_copying.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_cpuinfo.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_egl.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_endian.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_error.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_events.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_filesystem.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_gamepad.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_guid.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_haptic.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_hidapi.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_hints.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_init.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_intrin.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_joystick.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_keyboard.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_keycode.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_loadso.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_locale.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_log.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_main.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_main_impl.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_messagebox.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_metal.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_misc.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_mouse.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_mutex.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_oldnames.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengl.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles2.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles2_gl2.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles2_gl2ext.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles2_gl2platform.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengles2_khrplatform.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_opengl_glext.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_pixels.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_platform.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_platform_defines.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_power.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_quit.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_rect.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_render.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_revision.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_rwops.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_scancode.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_sensor.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_shape.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_stdinc.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_surface.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_system.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_syswm.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_assert.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_common.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_compare.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_crc32.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_font.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_fuzzer.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_harness.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_log.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_md5.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_memory.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_test_random.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_thread.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_timer.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_touch.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_version.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_video.h" />
-    <ClInclude Include="deps\include\SDL3\SDL_vulkan.h" />
-    <ClInclude Include="deps\include\spdlog\async.h" />
-    <ClInclude Include="deps\include\spdlog\async_logger-inl.h" />
-    <ClInclude Include="deps\include\spdlog\async_logger.h" />
-    <ClInclude Include="deps\include\spdlog\cfg\argv.h" />
-    <ClInclude Include="deps\include\spdlog\cfg\env.h" />
-    <ClInclude Include="deps\include\spdlog\cfg\helpers-inl.h" />
-    <ClInclude Include="deps\include\spdlog\cfg\helpers.h" />
-    <ClInclude Include="deps\include\spdlog\common-inl.h" />
-    <ClInclude Include="deps\include\spdlog\common.h" />
-    <ClInclude Include="deps\include\spdlog\details\backtracer-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\backtracer.h" />
-    <ClInclude Include="deps\include\spdlog\details\circular_q.h" />
-    <ClInclude Include="deps\include\spdlog\details\console_globals.h" />
-    <ClInclude Include="deps\include\spdlog\details\file_helper-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\file_helper.h" />
-    <ClInclude Include="deps\include\spdlog\details\fmt_helper.h" />
-    <ClInclude Include="deps\include\spdlog\details\log_msg-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\log_msg.h" />
-    <ClInclude Include="deps\include\spdlog\details\log_msg_buffer-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\log_msg_buffer.h" />
-    <ClInclude Include="deps\include\spdlog\details\mpmc_blocking_q.h" />
-    <ClInclude Include="deps\include\spdlog\details\null_mutex.h" />
-    <ClInclude Include="deps\include\spdlog\details\os-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\os.h" />
-    <ClInclude Include="deps\include\spdlog\details\periodic_worker-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\periodic_worker.h" />
-    <ClInclude Include="deps\include\spdlog\details\registry-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\registry.h" />
-    <ClInclude Include="deps\include\spdlog\details\synchronous_factory.h" />
-    <ClInclude Include="deps\include\spdlog\details\tcp_client-windows.h" />
-    <ClInclude Include="deps\include\spdlog\details\tcp_client.h" />
-    <ClInclude Include="deps\include\spdlog\details\thread_pool-inl.h" />
-    <ClInclude Include="deps\include\spdlog\details\thread_pool.h" />
-    <ClInclude Include="deps\include\spdlog\details\udp_client-windows.h" />
-    <ClInclude Include="deps\include\spdlog\details\udp_client.h" />
-    <ClInclude Include="deps\include\spdlog\details\windows_include.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bin_to_hex.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\args.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\chrono.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\color.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\compile.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\core.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\format-inl.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\format.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\locale.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\os.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\ostream.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\printf.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\ranges.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\std.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\bundled\xchar.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\chrono.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\compile.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\fmt.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\ostr.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\ranges.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\std.h" />
-    <ClInclude Include="deps\include\spdlog\fmt\xchar.h" />
-    <ClInclude Include="deps\include\spdlog\formatter.h" />
-    <ClInclude Include="deps\include\spdlog\fwd.h" />
-    <ClInclude Include="deps\include\spdlog\logger-inl.h" />
-    <ClInclude Include="deps\include\spdlog\logger.h" />
-    <ClInclude Include="deps\include\spdlog\pattern_formatter-inl.h" />
-    <ClInclude Include="deps\include\spdlog\pattern_formatter.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\android_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\ansicolor_sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\ansicolor_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\base_sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\base_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\basic_file_sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\basic_file_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\callback_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\daily_file_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\dist_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\dup_filter_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\hourly_file_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\kafka_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\mongo_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\msvc_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\null_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\ostream_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\qt_sinks.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\ringbuffer_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\rotating_file_sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\rotating_file_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\stdout_color_sinks-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\stdout_color_sinks.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\stdout_sinks-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\stdout_sinks.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\syslog_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\systemd_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\tcp_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\udp_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\wincolor_sink-inl.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\wincolor_sink.h" />
-    <ClInclude Include="deps\include\spdlog\sinks\win_eventlog_sink.h" />
-    <ClInclude Include="deps\include\spdlog\spdlog-inl.h" />
-    <ClInclude Include="deps\include\spdlog\spdlog.h" />
-    <ClInclude Include="deps\include\spdlog\stopwatch.h" />
-    <ClInclude Include="deps\include\spdlog\tweakme.h" />
-    <ClInclude Include="deps\include\spdlog\version.h" />
     <ClInclude Include="deps\include\zstd.h" />
     <ClInclude Include="fs.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
-    <ClInclude Include="mathutil.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="sprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -5,11 +5,11 @@
 #include "game.h"
 #include "image.h"
 #include "input.h"
-#include "mathutil.h"
+#include "physics.h"
 #include "sprite.h"
 
 // Update entities
-static void UpdateEntities(Backend* backend, entt::registry& registry);
+static void UpdateEntities(Backend* backend, entt::registry& registry, InputState& input, PhysicsState& physics);
 
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
@@ -29,8 +29,8 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     Image sprites(backend, "assets/sprites.qoi");
 
     entt::registry registry;
-
-    b2World world(b2Vec2(0.0, -PHYSICS_GRAVITY));
+    InputState input;
+    PhysicsState physics;
 
     SPDLOG_INFO("Game initialized");
 
@@ -41,11 +41,8 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     chrono::milliseconds delta;
 
     entt::entity player = registry.create();
-    registry.emplace<Transform>(
-        player, Transform(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), 0.0f));
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
-    InputState input;
     while (run)
     {
         now = precise_clock::now();
@@ -59,18 +56,16 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         // Respect deadzones
         input.AdjustSticks();
 
-        //fmt::print("\r{}", input.GetStateDescription());
-
         if (!backend->BeginRender())
         {
             continue;
         }
 
-        world.Step(PHYSICS_STEP, PHYSICS_VELOCITY_ITERATIONS,
-                   PHYSICS_POSITION_ITERATIONS);
-        UpdateEntities(backend, registry);
+        UpdateEntities(backend, registry, input, physics);
 
         backend->EndRender();
+
+        physics.Update(delta);
 
         last = now;
     }
@@ -83,16 +78,15 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     return 0;
 }
 
-static void UpdateEntities(Backend* backend, entt::registry& registry)
+static void UpdateEntities(Backend* backend, entt::registry& registry,
+                           InputState& input, PhysicsState& physics)
 {
-    auto transformView = registry.view<Transform, b2Body*>();
-    auto spriteView = registry.view<Transform, Sprite>();
+    auto view = registry.view<Sprite>();
 
-    for (auto& entity : spriteView)
+    for (auto& entity : view)
     {
-        Transform& transform = registry.get<Transform>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        backend->DrawSprite(sprite, (uint32_t)transform.position.x,
-                            (uint32_t)transform.position.y);
+        backend->DrawSprite(sprite, (uint32_t)0,
+                            (uint32_t)0);
     }
 }

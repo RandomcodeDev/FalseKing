@@ -16,6 +16,7 @@ void Filesystem::Initialize(const std::vector<fs::path>& paths)
             s_paths.push_back(path);
         }
     }
+    SPDLOG_INFO("{}/{} search paths available", s_paths.size(), paths.size());
 
     SPDLOG_INFO("Filesystem initialized");
 }
