@@ -35,9 +35,6 @@
     <Filter Include="Content\Source Files\External">
       <UniqueIdentifier>{ba92aea6-769d-480a-83df-fc76f0cad83a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Content\Header Files\External">
-      <UniqueIdentifier>{ce5501de-48a2-4e46-902c-3d3715e71f1f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="UwpAssets\StoreLogo.png">
@@ -79,6 +76,7 @@
   <ItemGroup>
     <None Include="UwpAssets\BlankCursor.cur" />
     <None Include="copyfiles.bat" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UwpAssets\Resources.rc" />
@@ -101,27 +99,6 @@
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Content\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\metrohash.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\metrohash64.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\metrohash128.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\metrohash128crc.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\platform.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\qoi.h">
-      <Filter>Content\Header Files\External</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\include\zstd.h">
-      <Filter>Content\Header Files\External</Filter>
     </ClInclude>
     <ClInclude Include="physics.h">
       <Filter>Content\Header Files</Filter>

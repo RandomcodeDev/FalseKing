@@ -356,6 +356,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="copyfiles.bat" />
+    <None Include="README.md" />
     <None Include="UwpAssets\BlankCursor.cur" />
   </ItemGroup>
   <ItemGroup>
@@ -363,13 +364,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend.h" />
-    <ClInclude Include="deps\include\metrohash.h" />
-    <ClInclude Include="deps\include\metrohash128.h" />
-    <ClInclude Include="deps\include\metrohash128crc.h" />
-    <ClInclude Include="deps\include\metrohash64.h" />
-    <ClInclude Include="deps\include\platform.h" />
-    <ClInclude Include="deps\include\qoi.h" />
-    <ClInclude Include="deps\include\zstd.h" />
     <ClInclude Include="fs.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="image.h" />
