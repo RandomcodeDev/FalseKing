@@ -32,12 +32,21 @@ PhysicsState::PhysicsState()
         Quit("PxCreatePhysics failed");
     }
 
+    m_dispatcher = PxDefaultCpuDispatcherCreate(2);
+
+    PxSceneDesc sceneDesc = PxSceneDesc(m_physics->getTolerancesScale());
+    sceneDesc.gravity = PxVec3(0.0f, -GRAVITY, 0.0f);
+    sceneDesc.cpuDispatcher = m_dispatcher;
+    sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+    m_scene = m_physics->createScene(sceneDesc);
+
     SPDLOG_INFO("Physics initialized");
 }
 
 PhysicsState::~PhysicsState()
 {
     SPDLOG_INFO("Shutting down physics");
+    m_scene->release();
     m_physics->release();
     m_foundation->release();
     SPDLOG_INFO("Physics shut down");
@@ -45,4 +54,5 @@ PhysicsState::~PhysicsState()
 
 void PhysicsState::Update(chrono::milliseconds delta)
 {
+    m_scene->simulate(delta.count() / (float)chrono::milliseconds::period::den);
 }

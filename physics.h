@@ -2,13 +2,6 @@
 
 #include "game.h"
 
-// Scene implementation
-class PhysicsScene : public PxScene
-{
-  public:
-    virtual bool advance(PxReal delta);
-};
-
 // Stores physics stuff
 class PhysicsState
 {
@@ -35,7 +28,10 @@ class PhysicsState
     }
 
   private:
+    static constexpr float GRAVITY = 9.8f;
+
     PxFoundation* m_foundation;
     PxPhysics* m_physics;
-    PhysicsScene* m_scene;
+    PxCpuDispatcher* m_dispatcher;
+    PxScene* m_scene;
 };

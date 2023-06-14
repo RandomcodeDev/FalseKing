@@ -9,7 +9,8 @@
 #include "sprite.h"
 
 // Update entities
-static void UpdateEntities(Backend* backend, entt::registry& registry, InputState& input, PhysicsState& physics);
+static void UpdateEntities(Backend* backend, entt::registry& registry,
+                           InputState& input, PhysicsState& physics);
 
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
@@ -43,13 +44,19 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     PxMaterial* material =
         physics.GetPhysics().createMaterial(1.0f, 1.0f, 1.0f);
 
-    PxRigidStatic* floorActor = physics.GetPhysics().createRigidStatic(PxTransform(PxVec3(0.0f, -1.0f, 0.0f)));
-    PxShape* floorShape = PxRigidActorExt::createExclusiveShape(*floorActor, PxBoxGeometry(50.0f, 0.5f, 50.0f), *material);
+    PxRigidStatic* floorActor = physics.GetPhysics().createRigidStatic(
+        PxTransform(PxVec3(0.0f, -1.0f, 0.0f)));
+    PxShape* floorShape = PxRigidActorExt::createExclusiveShape(
+        *floorActor, PxBoxGeometry(50.0f, 0.5f, 50.0f), *material);
+    physics.GetScene().addActor(*floorActor);
 
     entt::entity player = registry.create();
-    PxRigidDynamic* playerActor = physics.GetPhysics().createRigidDynamic(PxTransform(PxVec3(0.0f)));
+    PxRigidDynamic* playerActor =
+        physics.GetPhysics().createRigidDynamic(PxTransform(PxVec3(0.0f)));
     PxShape* playerShape = PxRigidActorExt::createExclusiveShape(
         *playerActor, PxBoxGeometry(0.5f, 0.5f, 0.5f), *material);
+    physics.GetScene().addActor(*playerActor);
+    registry.emplace<PxRigidActor*>(player, playerActor);
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
     while (run)
@@ -69,6 +76,9 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         {
             continue;
         }
+
+        playerActor->addForce(PxVec3(input.GetLeftStickDirection().x,
+                                     input.GetLeftStickDirection().y, 0.0f));
 
         UpdateEntities(backend, registry, input, physics);
 
@@ -90,12 +100,14 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 static void UpdateEntities(Backend* backend, entt::registry& registry,
                            InputState& input, PhysicsState& physics)
 {
-    auto view = registry.view<Sprite>();
+    auto view = registry.view<PxRigidActor*, Sprite>();
 
     for (auto& entity : view)
     {
+        PxRigidActor* body = registry.get<PxRigidActor*>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        backend->DrawSprite(sprite, (uint32_t)0,
-                            (uint32_t)0);
+        uint32_t x = (uint32_t)body->getGlobalPose().p.x;
+        uint32_t y = (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
+        backend->DrawSprite(sprite, x, y);
     }
 }
