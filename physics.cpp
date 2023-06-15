@@ -40,6 +40,8 @@ PhysicsState::PhysicsState()
     sceneDesc.filterShader = PxDefaultSimulationFilterShader;
     m_scene = m_physics->createScene(sceneDesc);
 
+    m_controllerManager = PxCreateControllerManager(*m_scene);
+
     SPDLOG_INFO("Physics initialized");
 }
 
@@ -52,7 +54,12 @@ PhysicsState::~PhysicsState()
     SPDLOG_INFO("Physics shut down");
 }
 
-void PhysicsState::Update(chrono::milliseconds delta)
+void PhysicsState::Update(float delta)
 {
-    m_scene->simulate(delta.count() / (float)chrono::milliseconds::period::den);
+    if (delta < 0.001f)
+    {
+        return;
+    }
+    m_scene->simulate(delta);
+    m_scene->fetchResults(true);
 }

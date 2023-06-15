@@ -6,6 +6,8 @@
 class PhysicsState
 {
   public:
+    static constexpr float GRAVITY = 9.8f;
+
     // Initialize physics stuff
     PhysicsState();
 
@@ -13,7 +15,7 @@ class PhysicsState
     ~PhysicsState();
 
     // Update state
-    void Update(chrono::milliseconds delta);
+    void Update(float delta);
 
     // Get physics
     PxPhysics& GetPhysics()
@@ -27,11 +29,17 @@ class PhysicsState
         return *m_scene;
     }
 
+    // Get controller manager
+    PxControllerManager& GetControllerManager()
+    {
+        return *m_controllerManager;
+    }
+
   private:
-    static constexpr float GRAVITY = 9.8f;
 
     PxFoundation* m_foundation;
     PxPhysics* m_physics;
     PxCpuDispatcher* m_dispatcher;
     PxScene* m_scene;
+    PxControllerManager* m_controllerManager;
 };

@@ -9,8 +9,7 @@
 #include "sprite.h"
 
 // Update entities
-static void UpdateEntities(Backend* backend, entt::registry& registry,
-                           InputState& input, PhysicsState& physics);
+static void UpdateEntities(Backend* backend, entt::registry& registry);
 
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
@@ -35,14 +34,8 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     SPDLOG_INFO("Game initialized");
 
-    bool run = true;
-    chrono::time_point<precise_clock> start = precise_clock::now();
-    chrono::time_point<precise_clock> now;
-    chrono::time_point<precise_clock> last;
-    chrono::milliseconds delta;
-
     PxMaterial* material =
-        physics.GetPhysics().createMaterial(1.0f, 1.0f, 1.0f);
+        physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
 
     PxRigidStatic* floorActor = physics.GetPhysics().createRigidStatic(
         PxTransform(PxVec3(0.0f, -1.0f, 0.0f)));
@@ -51,18 +44,25 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     physics.GetScene().addActor(*floorActor);
 
     entt::entity player = registry.create();
-    PxRigidDynamic* playerActor =
-        physics.GetPhysics().createRigidDynamic(PxTransform(PxVec3(0.0f)));
-    PxShape* playerShape = PxRigidActorExt::createExclusiveShape(
-        *playerActor, PxSphereGeometry(0.5f), *material);
-    physics.GetScene().addActor(*playerActor);
-    registry.emplace<PxRigidActor*>(player, playerActor);
+    PxCapsuleControllerDesc playerControllerDesc;
+    playerControllerDesc.setToDefault();
+    playerControllerDesc.radius = Sprite::TILE_SIZE / 2;
+    playerControllerDesc.height = 1.0f;
+    playerControllerDesc.material = material;
+    PxController* playerController =
+        physics.GetControllerManager().createController(playerControllerDesc);
+    registry.emplace<PxController*>(player, playerController);
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
 
+    bool run = true;
+    chrono::time_point<precise_clock> start = precise_clock::now();
+    chrono::time_point<precise_clock> now;
+    chrono::time_point<precise_clock> last;
     while (run)
     {
         now = precise_clock::now();
-        delta = chrono::duration_cast<chrono::milliseconds>(now - last);
+        chrono::milliseconds delta = chrono::duration_cast<chrono::milliseconds>(now - last);
+        float floatDelta = (float)delta.count() / chrono::milliseconds::period::den;
 
         if (!backend->Update(input))
         {
@@ -77,13 +77,30 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
             continue;
         }
 
-        UpdateEntities(backend, registry, input, physics);
+        UpdateEntities(backend, registry);
+        
+        SPDLOG_INFO("{} {} {}", input.GetLeftStickDirection().x, input.GetLeftStickDirection().y, floatDelta);
+        playerController->move(
+            PxVec3(input.GetLeftStickDirection().x * floatDelta, -PhysicsState::GRAVITY,
+                   input.GetLeftStickDirection().y * floatDelta),
+            0.0f, floatDelta,
+            PxControllerFilters());
+        bool canJump = playerController->getFootPosition().y - floorActor->getGlobalPose().p.y < 0.01;
+        if (input.GetA() && canJump)
+        {
+            playerController->move(PxVec3(0, 10.0f, 0), 0.0f, floatDelta, PxControllerFilters());
+        }
 
         backend->EndRender();
 
-        physics.Update(delta);
-
+        physics.Update(floatDelta);
+        
         last = now;
+        float ratio = 1.0f / 60.0f;
+        if (floatDelta < ratio)
+        {
+            std::this_thread::sleep_for(chrono::milliseconds((uint32_t)((ratio - floatDelta) * 1000.0f)));
+        }
     }
 
     SPDLOG_INFO("Shutting down game");
@@ -94,18 +111,29 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     return 0;
 }
 
-static void UpdateEntities(Backend* backend, entt::registry& registry,
-                           InputState& input, PhysicsState& physics)
+static void UpdateEntities(Backend* backend, entt::registry& registry)
 {
+    auto playerView = registry.view<PxController*, Sprite>();
     auto view = registry.view<PxRigidActor*, Sprite>();
+
+    for (auto& player : playerView)
+    {
+        PxController* controller = registry.get<PxController*>(player);
+        Sprite& sprite = registry.get<Sprite>(player);
+        uint32_t x = (uint32_t)controller->getPosition().x;
+        uint32_t y = (uint32_t)(controller->getPosition().x +
+                                controller->getPosition().y);
+        SPDLOG_INFO("{} {}", x, y);
+        backend->DrawSprite(sprite, x - GAME_WIDTH / 2, y - GAME_HEIGHT / 2);
+    }
 
     for (auto& entity : view)
     {
         PxRigidActor* body = registry.get<PxRigidActor*>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        uint32_t x = (uint32_t)body->getGlobalPose().p.x;
+        uint32_t x = (uint32_t)body->getGlobalPose().p.x - GAME_WIDTH / 2;
         uint32_t y =
-            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
+            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z) - GAME_HEIGHT / 2;
         backend->DrawSprite(sprite, x, y);
     }
 }

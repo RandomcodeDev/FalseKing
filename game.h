@@ -11,9 +11,11 @@
 #include <iostream>
 #include <locale>
 #include <string>
+#include <thread>
 
 #ifndef TOOL
 #include "PxPhysicsAPI.h"
+#include "characterkinematic/PxController.h"
 using namespace physx;
 
 #ifndef __WINRT__
