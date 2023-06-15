@@ -54,7 +54,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     PxRigidDynamic* playerActor =
         physics.GetPhysics().createRigidDynamic(PxTransform(PxVec3(0.0f)));
     PxShape* playerShape = PxRigidActorExt::createExclusiveShape(
-        *playerActor, PxBoxGeometry(0.5f, 0.5f, 0.5f), *material);
+        *playerActor, PxSphereGeometry(0.5f), *material);
     physics.GetScene().addActor(*playerActor);
     registry.emplace<PxRigidActor*>(player, playerActor);
     registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
@@ -76,9 +76,6 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         {
             continue;
         }
-
-        playerActor->addForce(PxVec3(input.GetLeftStickDirection().x,
-                                     input.GetLeftStickDirection().y, 0.0f));
 
         UpdateEntities(backend, registry, input, physics);
 
@@ -107,7 +104,8 @@ static void UpdateEntities(Backend* backend, entt::registry& registry,
         PxRigidActor* body = registry.get<PxRigidActor*>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
         uint32_t x = (uint32_t)body->getGlobalPose().p.x;
-        uint32_t y = (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
+        uint32_t y =
+            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
         backend->DrawSprite(sprite, x, y);
     }
 }
