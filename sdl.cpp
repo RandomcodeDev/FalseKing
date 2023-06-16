@@ -234,11 +234,11 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         bool down = event.type == SDL_EVENT_KEY_DOWN;
         if (key == m_mapping.w)
         {
-            input.leftStick.y = down ? 1.0f : 0.0f;
+            input.leftStick.y = down ? -1.0f : 0.0f;
         }
         else if (key == m_mapping.s)
         {
-            input.leftStick.y = down ? -1.0f : 0.0f;
+            input.leftStick.y = down ? 1.0f : 0.0f;
         }
         else if (key == m_mapping.a)
         {

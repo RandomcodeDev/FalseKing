@@ -40,7 +40,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     PxRigidStatic* floorActor = physics.GetPhysics().createRigidStatic(
         PxTransform(PxVec3(0.0f, -1.0f, 0.0f)));
     PxShape* floorShape = PxRigidActorExt::createExclusiveShape(
-        *floorActor, PxBoxGeometry(50.0f, 0.5f, 50.0f), *material);
+        *floorActor, PxBoxGeometry(1000.0f, 0.5f, 1000.0f), *material);
     physics.GetScene().addActor(*floorActor);
 
     entt::entity player = registry.create();
@@ -80,16 +80,12 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         UpdateEntities(backend, registry);
         
         SPDLOG_INFO("{} {} {}", input.GetLeftStickDirection().x, input.GetLeftStickDirection().y, floatDelta);
+        bool canJump = playerController->getFootPosition().y - floorActor->getGlobalPose().p.y < 0.6;
         playerController->move(
-            PxVec3(input.GetLeftStickDirection().x, -PhysicsState::GRAVITY,
+            PxVec3(input.GetLeftStickDirection().x, input.GetA() && canJump ? 3.0f : -PhysicsState::GRAVITY,
                    input.GetLeftStickDirection().y),
             0.0f, floatDelta,
             PxControllerFilters());
-        bool canJump = playerController->getFootPosition().y - floorActor->getGlobalPose().p.y < 0.01;
-        if (input.GetA() && canJump)
-        {
-            playerController->move(PxVec3(0, 10.0f, 0), 0.0f, floatDelta, PxControllerFilters());
-        }
 
         backend->EndRender();
 
@@ -121,8 +117,8 @@ static void UpdateEntities(Backend* backend, entt::registry& registry)
         PxController* controller = registry.get<PxController*>(player);
         Sprite& sprite = registry.get<Sprite>(player);
         uint32_t x = (uint32_t)controller->getPosition().x;
-        uint32_t y = (uint32_t)(controller->getPosition().x +
-                                controller->getPosition().y);
+        uint32_t y = (uint32_t)std::max((controller->getPosition().z -
+                                controller->getPosition().y), 0.0);
         SPDLOG_INFO("{} {}", x, y);
         backend->DrawSprite(sprite, x, y);
     }
