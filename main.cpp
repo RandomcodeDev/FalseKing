@@ -81,8 +81,8 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         
         SPDLOG_INFO("{} {} {}", input.GetLeftStickDirection().x, input.GetLeftStickDirection().y, floatDelta);
         playerController->move(
-            PxVec3(input.GetLeftStickDirection().x * floatDelta, -PhysicsState::GRAVITY,
-                   input.GetLeftStickDirection().y * floatDelta),
+            PxVec3(input.GetLeftStickDirection().x, -PhysicsState::GRAVITY,
+                   input.GetLeftStickDirection().y),
             0.0f, floatDelta,
             PxControllerFilters());
         bool canJump = playerController->getFootPosition().y - floorActor->getGlobalPose().p.y < 0.01;
@@ -124,16 +124,16 @@ static void UpdateEntities(Backend* backend, entt::registry& registry)
         uint32_t y = (uint32_t)(controller->getPosition().x +
                                 controller->getPosition().y);
         SPDLOG_INFO("{} {}", x, y);
-        backend->DrawSprite(sprite, x - GAME_WIDTH / 2, y - GAME_HEIGHT / 2);
+        backend->DrawSprite(sprite, x, y);
     }
 
     for (auto& entity : view)
     {
         PxRigidActor* body = registry.get<PxRigidActor*>(entity);
         Sprite& sprite = registry.get<Sprite>(entity);
-        uint32_t x = (uint32_t)body->getGlobalPose().p.x - GAME_WIDTH / 2;
+        uint32_t x = (uint32_t)body->getGlobalPose().p.x;
         uint32_t y =
-            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z) - GAME_HEIGHT / 2;
+            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
         backend->DrawSprite(sprite, x, y);
     }
 }
