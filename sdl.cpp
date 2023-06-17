@@ -9,7 +9,7 @@
 
 int SDL_main(int argc, char* argv[])
 {
-#if defined(__WINRT__) && defined(_DEBUG)
+#if defined(_WIN32) && defined(_DEBUG)
     AllocConsole();
     FILE* dummy;
     freopen_s(&dummy, "CONIN$", "r", stdin);

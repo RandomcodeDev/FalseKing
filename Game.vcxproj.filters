@@ -66,9 +66,6 @@
     <ClCompile Include="deps\src\metrohash128.cpp">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash128crc.cpp">
-      <Filter>Content\Source Files\External</Filter>
-    </ClCompile>
     <ClCompile Include="physics.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>

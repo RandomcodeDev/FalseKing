@@ -23,7 +23,10 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     std::vector<fs::path> paths;
     paths.push_back("custom");
-    paths.append_range(backendPaths);
+    for (const auto& path : backendPaths)
+    {
+        paths.push_back(path);
+    }
     Filesystem::Initialize(paths);
 
     Image sprites(backend, "assets/sprites.qoi");

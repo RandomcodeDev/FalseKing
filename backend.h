@@ -109,7 +109,7 @@ class SdlBackend : protected Backend
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
-    static constexpr KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
+    static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
                                                   SDL_SCANCODE_TAB,
                                                   SDL_SCANCODE_Q,
                                                   SDL_SCANCODE_C,
@@ -128,7 +128,7 @@ class SdlBackend : protected Backend
                                                   SDL_SCANCODE_A,
                                                   SDL_SCANCODE_D};
 
-    static constexpr SDL_GamepadButton BUTTONS_IN_ORDER[] = {
+    static const inline SDL_GamepadButton BUTTONS_IN_ORDER[] = {
         SDL_GAMEPAD_BUTTON_START,
         SDL_GAMEPAD_BUTTON_BACK,
         SDL_GAMEPAD_BUTTON_DPAD_UP,

@@ -14,13 +14,8 @@
 #include <thread>
 
 #ifndef TOOL
-#include "PxPhysicsAPI.h"
-#include "characterkinematic/PxController.h"
-using namespace physx;
 
-#ifndef __WINRT__
 #include "entt/entt.hpp"
-#endif
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
@@ -28,6 +23,10 @@ using namespace physx;
 #endif
 
 #include "metrohash.h"
+
+#include "PxPhysicsAPI.h"
+#include "characterkinematic/PxController.h"
+using namespace physx;
 
 #define QOI_NO_STDIO
 #include "qoi.h"

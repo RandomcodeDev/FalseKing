@@ -48,6 +48,7 @@ PhysicsState::PhysicsState()
 PhysicsState::~PhysicsState()
 {
     SPDLOG_INFO("Shutting down physics");
+    m_controllerManager->release();
     m_scene->release();
     m_physics->release();
     m_foundation->release();

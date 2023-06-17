@@ -26,7 +26,6 @@
 #    include <io.h>      // for _get_osfhandle, _isatty, _fileno
 #    include <process.h> // for _get_pid
 #    include <spdlog/details/windows_include.h>
-#    include <fileapi.h> // for FlushFileBuffers
 
 #    ifdef __MINGW32__
 #        include <share.h>
