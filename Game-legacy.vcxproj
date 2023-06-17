@@ -89,7 +89,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(SolutionDir)deps\src;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -109,7 +109,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(SolutionDir)deps\src;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(SolutionDir)deps\src;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,7 +153,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)deps\include;$(SolutionDir)deps\src;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,6 +176,7 @@
     <ClInclude Include="sprite.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="deps\src\flecs.c" />
     <ClCompile Include="deps\src\metrohash128.cpp" />
     <ClCompile Include="deps\src\metrohash64.cpp" />
     <ClCompile Include="fs.cpp" />

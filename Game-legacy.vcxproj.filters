@@ -65,5 +65,8 @@
     <ClCompile Include="deps\src\metrohash128.cpp">
       <Filter>Source Files\External</Filter>
     </ClCompile>
+    <ClCompile Include="deps\src\flecs.c">
+      <Filter>Source Files\External</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

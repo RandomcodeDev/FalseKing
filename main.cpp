@@ -8,11 +8,15 @@
 #include "physics.h"
 #include "sprite.h"
 
+Backend* g_backend;
+
 // Update entities
-static void UpdateEntities(Backend* backend, entt::registry& registry);
+static void Draw(ecs_iter_t* iter);
 
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
+    g_backend = backend;
+
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else
@@ -29,9 +33,13 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     }
     Filesystem::Initialize(paths);
 
-    Image sprites(backend, "assets/sprites.qoi");
+    Image sprites(g_backend, "assets/sprites.qoi");
 
-    entt::registry registry;
+    ecs_world_t* world = ecs_init();
+    ECS_COMPONENT(world, PhysicsController);
+    ECS_COMPONENT(world, Sprite);
+    ECS_SYSTEM(world, Draw, EcsOnUpdate, PhysicsController, Sprite);
+
     InputState input;
     PhysicsState physics;
 
@@ -46,7 +54,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         *floorActor, PxBoxGeometry(1000.0f, 0.5f, 1000.0f), *material);
     physics.GetScene().addActor(*floorActor);
 
-    entt::entity player = registry.create();
+    ecs_entity_t player = ecs_new_id(world);
     PxCapsuleControllerDesc playerControllerDesc;
     playerControllerDesc.setToDefault();
     playerControllerDesc.radius = Sprite::TILE_SIZE / 2;
@@ -54,8 +62,8 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     playerControllerDesc.material = material;
     PxController* playerController =
         physics.GetControllerManager().createController(playerControllerDesc);
-    registry.emplace<PxController*>(player, playerController);
-    registry.emplace<Sprite>(player, Sprite(sprites, 0, 0));
+    ecs_set(world, player, PhysicsController, PhysicsController(playerController));
+    ecs_set(world, player, Sprite, Sprite(sprites, 0, 0));
 
     bool run = true;
     chrono::time_point<precise_clock> start = precise_clock::now();
@@ -64,8 +72,10 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     while (run)
     {
         now = precise_clock::now();
-        chrono::milliseconds delta = chrono::duration_cast<chrono::milliseconds>(now - last);
-        float floatDelta = (float)delta.count() / chrono::milliseconds::period::den;
+        chrono::milliseconds delta =
+            chrono::duration_cast<chrono::milliseconds>(now - last);
+        float floatDelta =
+            (float)delta.count() / chrono::milliseconds::period::den;
 
         if (!backend->Update(input))
         {
@@ -80,29 +90,33 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
             continue;
         }
 
-        UpdateEntities(backend, registry);
-        
-        SPDLOG_INFO("{} {} {}", input.GetLeftStickDirection().x, input.GetLeftStickDirection().y, floatDelta);
-        bool canJump = playerController->getFootPosition().y - floorActor->getGlobalPose().p.y < 0.6;
+        ecs_progress(world, floatDelta);
+
+        bool canJump = playerController->getFootPosition().y -
+                           floorActor->getGlobalPose().p.y <
+                       0.6;
         playerController->move(
-            PxVec3(input.GetLeftStickDirection().x, input.GetA() && canJump ? 3.0f : -PhysicsState::GRAVITY,
+            PxVec3(input.GetLeftStickDirection().x,
+                   input.GetA() && canJump ? 3.0f : -PhysicsState::GRAVITY,
                    input.GetLeftStickDirection().y),
-            0.0f, floatDelta,
-            PxControllerFilters());
+            0.0f, floatDelta, PxControllerFilters());
 
         backend->EndRender();
 
         physics.Update(floatDelta);
-        
+
         last = now;
         float ratio = 1.0f / 60.0f;
         if (floatDelta < ratio)
         {
-            std::this_thread::sleep_for(chrono::milliseconds((uint32_t)((ratio - floatDelta) * 1000.0f)));
+            std::this_thread::sleep_for(chrono::milliseconds(
+                (uint32_t)((ratio - floatDelta) * 1000.0f)));
         }
     }
 
     SPDLOG_INFO("Shutting down game");
+
+    ecs_quit(world);
 
     SPDLOG_INFO("Game shut down");
     SPDLOG_INFO("Game ran for {:%T}", now - start);
@@ -110,29 +124,12 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     return 0;
 }
 
-static void UpdateEntities(Backend* backend, entt::registry& registry)
+static void Draw(ecs_iter_t* iter)
 {
-    auto playerView = registry.view<PxController*, Sprite>();
-    auto view = registry.view<PxRigidActor*, Sprite>();
-
-    for (auto& player : playerView)
-    {
-        PxController* controller = registry.get<PxController*>(player);
-        Sprite& sprite = registry.get<Sprite>(player);
-        uint32_t x = (uint32_t)controller->getPosition().x;
-        uint32_t y = (uint32_t)std::max((controller->getPosition().z -
-                                controller->getPosition().y), 0.0);
-        SPDLOG_INFO("{} {}", x, y);
-        backend->DrawSprite(sprite, x, y);
-    }
-
-    for (auto& entity : view)
-    {
-        PxRigidActor* body = registry.get<PxRigidActor*>(entity);
-        Sprite& sprite = registry.get<Sprite>(entity);
-        uint32_t x = (uint32_t)body->getGlobalPose().p.x;
-        uint32_t y =
-            (uint32_t)(body->getGlobalPose().p.y + body->getGlobalPose().p.z);
-        backend->DrawSprite(sprite, x, y);
-    }
+    PhysicsController& controller = *ecs_field(iter, PhysicsController, 1);
+    Sprite& sprite = *ecs_field(iter, Sprite, 2);
+    uint32_t x = (uint32_t)controller.GetTransform().p.x;
+    uint32_t y = (uint32_t)std::max(
+        (controller.GetTransform().p.z - controller.GetTransform().p.y), 0.0f);
+    g_backend->DrawSprite(sprite, x, y);
 }

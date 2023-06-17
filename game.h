@@ -15,7 +15,7 @@
 
 #ifndef TOOL
 
-#include "entt/entt.hpp"
+#include "flecs.h"
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
