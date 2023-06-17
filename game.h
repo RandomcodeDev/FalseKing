@@ -15,6 +15,10 @@
 
 #ifndef TOOL
 
+#ifdef _MSC_VER
+#pragma intrinsic(_InterlockedDecrement64)
+#pragma intrinsic(_InterlockedIncrement64)
+#endif
 #include "flecs.h"
 
 #include "glm/vec2.hpp"

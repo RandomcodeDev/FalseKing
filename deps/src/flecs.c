@@ -19933,14 +19933,14 @@ static
 int64_t win_lainc(
     int64_t *count) 
 {
-    return InterlockedIncrement64(count);
+    return ++(*count);
 }
 
 static
 int64_t win_ladec(
     int64_t *count) 
 {
-    return InterlockedDecrement64(count);
+    return --(*count);
 }
 
 static
@@ -19977,9 +19977,14 @@ void win_mutex_unlock(
 
 static
 ecs_os_cond_t win_cond_new(void) {
+
+#ifdef _WIN32_WINNT == _WIN32_WINNT_WINXP
+    return (ecs_os_cond_t)(uintptr_t)1;
+#else
     CONDITION_VARIABLE *cond = ecs_os_malloc_t(CONDITION_VARIABLE);
     InitializeConditionVariable(cond);
     return (ecs_os_cond_t)(uintptr_t)cond;
+#endif
 }
 
 static 
@@ -19993,16 +19998,24 @@ static
 void win_cond_signal(
     ecs_os_cond_t c) 
 {
+#ifdef _WIN32_WINNT == _WIN32_WINNT_WINXP
+    return;
+#else
     CONDITION_VARIABLE *cond = (CONDITION_VARIABLE*)(intptr_t)c;
     WakeConditionVariable(cond);
+#endif
 }
 
 static 
 void win_cond_broadcast(
     ecs_os_cond_t c) 
 {
+#ifdef _WIN32_WINNT == _WIN32_WINNT_WINXP
+    return;
+#else
     CONDITION_VARIABLE *cond = (CONDITION_VARIABLE*)(intptr_t)c;
     WakeAllConditionVariable(cond);
+#endif
 }
 
 static 
@@ -20010,9 +20023,13 @@ void win_cond_wait(
     ecs_os_cond_t c, 
     ecs_os_mutex_t m) 
 {
+#ifdef _WIN32_WINNT == _WIN32_WINNT_WINXP
+    return;
+#else
     CRITICAL_SECTION *mutex = (CRITICAL_SECTION*)(intptr_t)m;
     CONDITION_VARIABLE *cond = (CONDITION_VARIABLE*)(intptr_t)c;
     SleepConditionVariableCS(cond, mutex, INFINITE);
+#endif
 }
 
 static bool win_time_initialized;
