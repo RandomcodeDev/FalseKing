@@ -329,7 +329,9 @@ bool SdlBackend::BeginRender()
     return true;
 }
 
-void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y, float scale, uint32_t srcX, uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight)
+void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
+                           float scale, uint32_t srcX, uint32_t srcY,
+                           uint32_t srcWidth, uint32_t srcHeight)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
@@ -344,17 +346,17 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y, float sca
     {
         imageHeight = srcHeight;
     }
-    SDL_FRect srcRegion{(float)srcX, (float)srcY,
-                        (float)imageWidth,
+    SDL_FRect srcRegion{(float)srcX, (float)srcY, (float)imageWidth,
                         (float)imageHeight};
     imageWidth *= scale;
     imageHeight *= scale;
-    SDL_FRect destRegion{(float)x, (float)y, (float)imageWidth, (float)imageHeight};
-    
+    SDL_FRect destRegion{(float)x, (float)y, (float)imageWidth,
+                         (float)imageHeight};
+
     float xScale = 0;
     float yScale = 0;
     SDL_GetRenderScale(m_renderer, &xScale, &yScale);
-    SDL_SetRenderScale(m_renderer, xScale * scale, yScale * scale);
+    SDL_SetRenderScale(m_renderer, xScale + scale, yScale + scale);
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,
                       &destRegion);

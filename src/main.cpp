@@ -64,7 +64,10 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
         ecs_progress(world, floatDelta);
 
-        Text::DrawString(backend, "ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'\",.+-*/:;%$&?!", glm::uvec2(0));
+        Text::DrawString(backend,
+                         "#include <stdio.h>\n\nint main(int argc, char* "
+                         "argv[])\n{\n\tprintf(\"Привет, мир!\\n\");\n}",
+                         glm::uvec2(0), 0.5f);
 
         backend->EndRender();
 

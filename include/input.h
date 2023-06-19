@@ -46,8 +46,7 @@ class InputState
     static constexpr float RIGHT_STICK_MAX_Y = 1.0f;
 
     // Probably better ways to do this
-    template <typename T>
-    T Deadzone(T value, T min, T max)
+    template <typename T> T Deadzone(T value, T min, T max)
     {
         if (std::abs(value) < min)
         {
@@ -70,11 +69,12 @@ class InputState
             "{:.03}\tstart={}, select={}, "
             "up={}, down={}, left={}, right={}, A={}, B={}, X={}, Y={}, "
             "shoulders={}, {}, stick buttons={}, {}",
-            GetLeftStickDirection().x, GetLeftStickDirection().y, GetRightStickDirection().x, GetRightStickDirection().y, GetLeftTrigger(),
-            GetRightTrigger(), GetStart(), GetSelect(), GetDpadUp(), GetDpadDown(),
-            GetDpadLeft(), GetDpadRight(), GetA(), GetB(), GetX(), GetY(),
-            GetLeftShoulder(), GetRightShoulder(), GetLeftStickPressed(),
-            GetRightStickPressed());
+            GetLeftStickDirection().x, GetLeftStickDirection().y,
+            GetRightStickDirection().x, GetRightStickDirection().y,
+            GetLeftTrigger(), GetRightTrigger(), GetStart(), GetSelect(),
+            GetDpadUp(), GetDpadDown(), GetDpadLeft(), GetDpadRight(), GetA(),
+            GetB(), GetX(), GetY(), GetLeftShoulder(), GetRightShoulder(),
+            GetLeftStickPressed(), GetRightStickPressed());
     }
 
     // Constrain sticks to deadzones
@@ -82,8 +82,10 @@ class InputState
     {
         leftStick.x = Deadzone(leftStick.x, LEFT_STICK_MIN_X, LEFT_STICK_MAX_X);
         leftStick.y = Deadzone(leftStick.y, LEFT_STICK_MIN_Y, LEFT_STICK_MAX_Y);
-        rightStick.x = Deadzone(rightStick.x, RIGHT_STICK_MIN_X, RIGHT_STICK_MAX_X);
-        rightStick.y = Deadzone(rightStick.y, RIGHT_STICK_MIN_Y, RIGHT_STICK_MAX_Y);
+        rightStick.x =
+            Deadzone(rightStick.x, RIGHT_STICK_MIN_X, RIGHT_STICK_MAX_X);
+        rightStick.y =
+            Deadzone(rightStick.y, RIGHT_STICK_MIN_Y, RIGHT_STICK_MAX_Y);
     }
 
     const glm::vec2& GetLeftStickDirection() const
