@@ -1,3 +1,5 @@
+#define QOI_IMPLEMENTATION
+
 #include "image.h"
 #include "backend.h"
 #include "fs.h"

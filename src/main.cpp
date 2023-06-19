@@ -1,6 +1,4 @@
-﻿#define QOI_IMPLEMENTATION
-
-#include "backend.h"
+﻿#include "backend.h"
 #include "fs.h"
 #include "game.h"
 #include "image.h"
