@@ -62,17 +62,26 @@
     <ClCompile Include="src\sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\deps\src\metrohash64.cpp">
-      <Filter>Source Files\External</Filter>
-    </ClCompile>
-    <ClCompile Include="src\deps\src\metrohash128.cpp">
-      <Filter>Source Files\External</Filter>
-    </ClCompile>
     <ClCompile Include="deps\src\flecs.c">
       <Filter>Source Files\External</Filter>
     </ClCompile>
     <ClCompile Include="src\text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deps\src\metrohash128.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+    <None Include="copyfiles.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LICENSE.txt" />
   </ItemGroup>
 </Project>

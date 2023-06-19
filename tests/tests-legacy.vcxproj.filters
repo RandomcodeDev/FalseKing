@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="stuff">
+      <UniqueIdentifier>{2294dfdf-fb65-4045-ae37-bd21a2f342d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\backend.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\fs.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\game.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\image.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\input.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\physics.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\text.h">
+      <Filter>stuff</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\fs.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\image.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\physics.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sdl.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\text.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deps\src\flecs.c">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deps\src\metrohash64.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deps\src\metrohash128.cpp">
+      <Filter>stuff</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copytestfiles.bat" />
+  </ItemGroup>
+</Project>

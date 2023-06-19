@@ -148,17 +148,6 @@ bool SdlBackend::Update(InputState& input)
 {
     SDL_Event event{};
 
-    // Scrolling is goofy but this seems legit
-    if (m_scrollAmount > 0)
-    {
-        m_scrollAmount--;
-    }
-    else
-    {
-        input.state &=
-            ~(InputState::LEFT_SHOULDER | InputState::RIGHT_SHOULDER);
-    }
-
     while (SDL_PollEvent(&event))
     {
         if (!HandleEvent(event, input))
@@ -224,9 +213,12 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     }
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
-        input.state |= event.wheel.y > 0 ? InputState::LEFT_SHOULDER
-                                         : InputState::RIGHT_SHOULDER;
-        m_scrollAmount = abs(event.wheel.y) * SCROLLING_SENSITIVITY;
+        uint16_t mask = event.wheel.y > 0 ? InputState::LEFT_SHOULDER
+                                          : InputState::RIGHT_SHOULDER;
+        input.state &= event.wheel.y > 0 ? ~InputState::LEFT_SHOULDER
+                                         : ~InputState::RIGHT_SHOULDER;
+        input.state |= mask;
+        input.scrollAmount = event.wheel.y / 19;
     }
     else if (event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP)
     {
@@ -268,12 +260,27 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     {
         // Same as keyboard buttons
         bool down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
-        for (uint8_t i = 0; i < ARRAY_SIZE(BUTTONS_IN_ORDER); i++)
+        if (event.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
         {
-            if (event.gbutton.button == BUTTONS_IN_ORDER[i])
+            input.state = (input.state & ~InputState::RIGHT_SHOULDER) |
+                          (-down & InputState::RIGHT_SHOULDER);
+            input.scrollAmount = down ? -1.0 : 0.0;
+        }
+        else if (event.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)
+        {
+            input.state = (input.state & ~InputState::LEFT_SHOULDER) |
+                          (-down & InputState::LEFT_SHOULDER);
+            input.scrollAmount = down ? -1.0 : 0.0;
+        }
+        else
+        {
+            for (uint8_t i = 0; i < ARRAY_SIZE(BUTTONS_IN_ORDER); i++)
             {
-                uint32_t mapping = 1 << i;
-                input.state = (input.state & ~mapping) | (-down & mapping);
+                if (event.gbutton.button == BUTTONS_IN_ORDER[i])
+                {
+                    uint32_t mapping = 1 << i;
+                    input.state = (input.state & ~mapping) | (-down & mapping);
+                }
             }
         }
     }
@@ -324,14 +331,15 @@ bool SdlBackend::BeginRender()
     SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH,
                        (float)m_windowInfo.height / GAME_HEIGHT);
 
-    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
     SDL_RenderClear(m_renderer);
     return true;
 }
 
 void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
                            float scale, uint32_t srcX, uint32_t srcY,
-                           uint32_t srcWidth, uint32_t srcHeight)
+                           uint32_t srcWidth, uint32_t srcHeight,
+                           glm::u8vec3 color)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
@@ -357,10 +365,11 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
     float yScale = 0;
     SDL_GetRenderScale(m_renderer, &xScale, &yScale);
     SDL_SetRenderScale(m_renderer, xScale + scale, yScale + scale);
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+    SDL_SetTextureColorMod((SDL_Texture*)image.backendData, color.r, color.g,
+                           color.b);
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,
                       &destRegion);
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+    SDL_SetTextureColorMod((SDL_Texture*)image.backendData, 255, 255, 255);
     SDL_SetRenderScale(m_renderer, xScale, yScale);
     SDL_SetRenderTarget(m_renderer, nullptr);
 }

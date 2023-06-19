@@ -1,5 +1,6 @@
 @echo off
 
+echo %1 %2 %3
 mkdir %1
 copy %~dp0deps\lib\%2\%3\*.dll %1
 copy %~dp0deps\lib\%2\%3\*.pdb %1

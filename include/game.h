@@ -57,6 +57,9 @@ constexpr const char* GAME_NAME = "False King";
 constexpr uint32_t GAME_WIDTH = 256;
 constexpr uint32_t GAME_HEIGHT = 168;
 
+// Frame smoothing
+constexpr float FRAME_SMOOTHING = 0.9f;
+
 // Get the size of an array
 template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])
 {

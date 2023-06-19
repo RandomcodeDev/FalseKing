@@ -13,6 +13,7 @@ class InputState
     glm::vec2 rightStick; // mouse/right stick
     float leftTrigger;    // left trigger/mouse 2
     float rightTrigger;   // right trigger/mouse 1
+    float scrollAmount;   // shoulders/mouse wheel
 
     // Stores all the binary inputs
     uint16_t state;
@@ -58,7 +59,8 @@ class InputState
     // A lot of getters
   public:
     InputState()
-        : leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0), state(0)
+        : leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0),
+          scrollAmount(0), state(0)
     {
     }
 
@@ -68,13 +70,13 @@ class InputState
             "left={:.03}, {:.03}\tright={:.03}, {:.03}\ttriggers={:.03}, "
             "{:.03}\tstart={}, select={}, "
             "up={}, down={}, left={}, right={}, A={}, B={}, X={}, Y={}, "
-            "shoulders={}, {}, stick buttons={}, {}",
+            "shoulders={}, {}, stick buttons={}, {}, scroll amount={}",
             GetLeftStickDirection().x, GetLeftStickDirection().y,
             GetRightStickDirection().x, GetRightStickDirection().y,
             GetLeftTrigger(), GetRightTrigger(), GetStart(), GetSelect(),
             GetDpadUp(), GetDpadDown(), GetDpadLeft(), GetDpadRight(), GetA(),
             GetB(), GetX(), GetY(), GetLeftShoulder(), GetRightShoulder(),
-            GetLeftStickPressed(), GetRightStickPressed());
+            GetLeftStickPressed(), GetRightStickPressed(), GetScrollAmount());
     }
 
     // Constrain sticks to deadzones
@@ -86,6 +88,7 @@ class InputState
             Deadzone(rightStick.x, RIGHT_STICK_MIN_X, RIGHT_STICK_MAX_X);
         rightStick.y =
             Deadzone(rightStick.y, RIGHT_STICK_MIN_Y, RIGHT_STICK_MAX_Y);
+        scrollAmount = Deadzone(scrollAmount, 0.0f, 1.0f);
     }
 
     const glm::vec2& GetLeftStickDirection() const
@@ -106,6 +109,16 @@ class InputState
     const float GetRightTrigger() const
     {
         return rightTrigger;
+    }
+
+    const float GetScrollAmount() const
+    {
+        return scrollAmount;
+    }
+
+    void ResetScrollAmount()
+    {
+        scrollAmount = 0.0f;
     }
 
     const bool GetStart() const

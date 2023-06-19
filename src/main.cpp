@@ -39,6 +39,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     chrono::time_point<precise_clock> start = precise_clock::now();
     chrono::time_point<precise_clock> now;
     chrono::time_point<precise_clock> last;
+    float fps = 0.0f;
     while (run)
     {
         now = precise_clock::now();
@@ -46,6 +47,11 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
             chrono::duration_cast<chrono::milliseconds>(now - last);
         float floatDelta =
             (float)delta.count() / chrono::milliseconds::period::den;
+        if (delta.count() > 0)
+        {
+            fps = (fps * FRAME_SMOOTHING) +
+                  ((1000.0f / delta.count()) * (1.0f - FRAME_SMOOTHING));
+        }
 
         if (!backend->Update(input))
         {
@@ -62,21 +68,22 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
         ecs_progress(world, floatDelta);
 
-        Text::DrawString(backend,
-                         "#include <stdio.h>\n\nint main(int argc, char* "
-                         "argv[])\n{\n\tprintf(\"Привет, мир!\\n\");\n}",
-                         glm::uvec2(0), 0.5f);
+        Text::DrawString(
+            backend, fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),
+            glm::uvec2(0), 0.3f, glm::u8vec3(0, 255, 0));
 
         backend->EndRender();
 
         physics.Update(floatDelta);
 
         last = now;
-        float ratio = 1.0f / 60.0f;
-        if (floatDelta < ratio)
+        const float ratio = 1.0f / 60.0f;
+        while (chrono::duration_cast<
+                   chrono::duration<float, std::milli>>(
+                   now - last)
+                   .count() <= ratio * 1000.0f)
         {
-            std::this_thread::sleep_for(chrono::milliseconds(
-                (uint32_t)((ratio - floatDelta) * 1000.0f)));
+            now = precise_clock::now();
         }
     }
 

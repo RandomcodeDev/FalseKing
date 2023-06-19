@@ -61,7 +61,8 @@ class Backend
     virtual void DrawImage(const Image& image, uint32_t x, uint32_t y,
                            float scale = 1.0f, uint32_t srcX = 0,
                            uint32_t srcY = 0, uint32_t srcWidth = 0,
-                           uint32_t destWidth = 0) = 0;
+                           uint32_t srcHeight = 0,
+                           glm::u8vec3 color = glm::u8vec3(255, 255, 255)) = 0;
 
     // Draw a sprite
     void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);
@@ -90,7 +91,7 @@ class SdlBackend : protected Backend
     bool BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scale,
                    uint32_t srcX, uint32_t srcY, uint32_t srcWidth,
-                   uint32_t destWidth);
+                   uint32_t srcHeight, glm::u8vec3 color);
     void EndRender();
     const WindowInfo& GetWindowInformation() const
     {
@@ -107,7 +108,6 @@ class SdlBackend : protected Backend
     WindowInfo m_windowInfo;
     int32_t m_windowId;
     KeyMapping m_mapping;
-    float m_scrollAmount;
     SDL_Gamepad* m_gamepad;
     SDL_JoystickID m_gamepadId;
 

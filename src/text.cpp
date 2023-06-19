@@ -41,8 +41,8 @@ void Text::Initialize(Backend* backend)
 }
 
 void Text::DrawString(Backend* backend, const std::string& text,
-                      glm::uvec2 position, float scale, glm::uvec2 box,
-                      bool cutOff, glm::uvec2 padding, glm::u8vec4 color)
+                      glm::uvec2 position, float scale, glm::u8vec3 color,
+                      glm::uvec2 box, bool cutOff, glm::uvec2 padding)
 {
     if (!s_initialized)
     {
@@ -55,8 +55,8 @@ void Text::DrawString(Backend* backend, const std::string& text,
 
     uint32_t x = 0;
     uint32_t y = 0;
-    uint32_t xSize = (CHARACTER_SIZE + padding.x) * scale;
-    uint32_t ySize = (CHARACTER_SIZE + padding.y) * scale;
+    uint32_t xSize = (uint32_t)((CHARACTER_SIZE + padding.x) * scale);
+    uint32_t ySize = (uint32_t)((CHARACTER_SIZE + padding.y) * scale);
     for (wchar_t c : wideText)
     {
         if (box.y > 0 && cutOff && y * ySize > box.y)
@@ -80,12 +80,19 @@ void Text::DrawString(Backend* backend, const std::string& text,
             y++;
             break;
         }
+        case '\r': {
+            x = 0;
+            break;
+        }
         default: {
-            backend->DrawImage(*s_font, x * xSize, y * ySize, scale,
-                               s_characterPositions[c].x * CHARACTER_SIZE,
-                               s_characterPositions[c].y * CHARACTER_SIZE,
-                               CHARACTER_SIZE, CHARACTER_SIZE);
-            x++;
+            if (c >= ' ')
+            {
+                backend->DrawImage(*s_font, x * xSize, y * ySize, scale,
+                                   s_characterPositions[c].x * CHARACTER_SIZE,
+                                   s_characterPositions[c].y * CHARACTER_SIZE,
+                                   CHARACTER_SIZE, CHARACTER_SIZE, color);
+                x++;
+            }
             break;
         }
         }
