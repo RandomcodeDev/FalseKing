@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="62281MobSlicer152.FalseKing.Test"
+    Publisher="CN=226F0228-2A14-49C0-8CB9-FDB4B16D6A76"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="a430d85b-5cf1-4705-9fe1-7da520f91d4b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>False King (test)</DisplayName>
+    <PublisherDisplayName>MobSlicer152</PublisherDisplayName>
+    <Logo>StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="test_main.App">
+      <uap:VisualElements
+        DisplayName="False King (Tests)"
+        Square150x150Logo="Square150x150Logo.png"
+        Square44x44Logo="Square44x44Logo.png"
+        Description="Testing code for False King"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Wide310x150Logo.png"/>
+        <uap:SplashScreen Image="SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
