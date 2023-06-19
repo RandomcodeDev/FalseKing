@@ -329,26 +329,38 @@ bool SdlBackend::BeginRender()
     return true;
 }
 
-void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y)
+void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y, float scale, uint32_t srcX, uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
-    SDL_FRect region{(float)x, (float)y, (float)imageWidth, (float)imageHeight};
-    SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, nullptr,
-                      &region);
-}
 
-void SdlBackend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
-{
+    if (srcWidth > 0)
+    {
+        imageWidth = srcWidth;
+    }
+    if (srcHeight > 0)
+    {
+        imageHeight = srcHeight;
+    }
+    SDL_FRect srcRegion{(float)srcX, (float)srcY,
+                        (float)imageWidth,
+                        (float)imageHeight};
+    imageWidth *= scale;
+    imageHeight *= scale;
+    SDL_FRect destRegion{(float)x, (float)y, (float)imageWidth, (float)imageHeight};
+    
+    float xScale = 0;
+    float yScale = 0;
+    SDL_GetRenderScale(m_renderer, &xScale, &yScale);
+    SDL_SetRenderScale(m_renderer, xScale * scale, yScale * scale);
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+    SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,
+                      &destRegion);
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+    SDL_SetRenderScale(m_renderer, xScale, yScale);
     SDL_SetRenderTarget(m_renderer, nullptr);
-    SDL_FRect srcRegion{(float)sprite.x, (float)sprite.y, (float)sprite.width,
-                        (float)sprite.height};
-    SDL_FRect destRegion{(float)x, (float)y, (float)sprite.width,
-                         (float)sprite.height};
-    SDL_RenderTexture(m_renderer, (SDL_Texture*)sprite.sheet.backendData,
-                      &srcRegion, &destRegion);
 }
 
 void SdlBackend::EndRender()

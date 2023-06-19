@@ -11,3 +11,9 @@ Sprite::Sprite(const Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
     : sheet(spriteSheet), x(x), y(y), width(width), height(height)
 {
 }
+
+void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
+{
+    DrawImage(sprite.sheet, x, y, 1.0f, sprite.x, sprite.y, sprite.width,
+              sprite.height);
+}

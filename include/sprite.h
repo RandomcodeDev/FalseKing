@@ -6,7 +6,6 @@
 // Forward declarations
 class Backend;
 
-
 // Sprite
 struct Sprite
 {

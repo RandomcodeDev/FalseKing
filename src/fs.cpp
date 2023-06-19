@@ -1,6 +1,6 @@
 #include "fs.h"
 
-std::vector<fs::path> Filesystem::s_paths;
+static std::vector<fs::path> s_paths;
 
 void Filesystem::Initialize(const std::vector<fs::path>& paths)
 {
@@ -31,7 +31,7 @@ std::vector<uint8_t> Filesystem::Read(const fs::path& path)
         std::ifstream file(root / path, std::ios::ate);
         if (file.is_open())
         {
-            std::vector<uint8_t> data(file.tellg());
+            std::vector<uint8_t> data((size_t)file.tellg());
             file.seekg(std::ios::beg);
             file.read((char*)data.data(), data.size());
             return data;

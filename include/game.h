@@ -15,10 +15,6 @@
 
 #ifndef TOOL
 
-#ifdef _MSC_VER
-#pragma intrinsic(_InterlockedDecrement64)
-#pragma intrinsic(_InterlockedIncrement64)
-#endif
 #include "flecs.h"
 
 #include "glm/vec2.hpp"
@@ -43,6 +39,9 @@ using namespace physx;
 #include "spdlog/fmt/chrono.h"
 #include "spdlog/fmt/fmt.h"
 #include "spdlog/spdlog.h"
+
+#define TOML_FLOAT_CHARCONV 0
+#include "toml++/toml.h"
 
 #include "zstd.h"
 

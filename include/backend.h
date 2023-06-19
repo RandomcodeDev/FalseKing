@@ -58,10 +58,13 @@ class Backend
     virtual bool BeginRender() = 0;
 
     // Draw an image
-    virtual void DrawImage(const Image& image, uint32_t x, uint32_t y) = 0;
+    virtual void DrawImage(const Image& image, uint32_t x, uint32_t y,
+                           float scale = 1.0f, uint32_t srcX = 0,
+                           uint32_t srcY = 0, uint32_t srcWidth = 0,
+                           uint32_t destWidth = 0) = 0;
 
     // Draw a sprite
-    virtual void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y) = 0;
+    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);
 
     // Complete rendering
     virtual void EndRender() = 0;
@@ -85,8 +88,9 @@ class SdlBackend : protected Backend
     void CleanupImage(Image& image);
     bool Update(class InputState& input);
     bool BeginRender();
-    void DrawImage(const Image& image, uint32_t x, uint32_t y);
-    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);
+    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scale,
+                   uint32_t srcX, uint32_t srcY, uint32_t srcWidth,
+                   uint32_t destWidth);
     void EndRender();
     const WindowInfo& GetWindowInformation() const
     {
@@ -110,23 +114,23 @@ class SdlBackend : protected Backend
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
     static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
-                                                  SDL_SCANCODE_TAB,
-                                                  SDL_SCANCODE_Q,
-                                                  SDL_SCANCODE_C,
-                                                  SDL_SCANCODE_X,
-                                                  SDL_SCANCODE_V,
-                                                  SDL_SCANCODE_SPACE,
-                                                  SDL_SCANCODE_F,
-                                                  SDL_SCANCODE_E,
-                                                  SDL_SCANCODE_R,
-                                                  0,
-                                                  0,
-                                                  SDL_SCANCODE_LSHIFT,
-                                                  SDL_SCANCODE_LCTRL,
-                                                  SDL_SCANCODE_W,
-                                                  SDL_SCANCODE_S,
-                                                  SDL_SCANCODE_A,
-                                                  SDL_SCANCODE_D};
+                                                     SDL_SCANCODE_TAB,
+                                                     SDL_SCANCODE_Q,
+                                                     SDL_SCANCODE_C,
+                                                     SDL_SCANCODE_X,
+                                                     SDL_SCANCODE_V,
+                                                     SDL_SCANCODE_SPACE,
+                                                     SDL_SCANCODE_F,
+                                                     SDL_SCANCODE_E,
+                                                     SDL_SCANCODE_R,
+                                                     0,
+                                                     0,
+                                                     SDL_SCANCODE_LSHIFT,
+                                                     SDL_SCANCODE_LCTRL,
+                                                     SDL_SCANCODE_W,
+                                                     SDL_SCANCODE_S,
+                                                     SDL_SCANCODE_A,
+                                                     SDL_SCANCODE_D};
 
     static const inline SDL_GamepadButton BUTTONS_IN_ORDER[] = {
         SDL_GAMEPAD_BUTTON_START,
