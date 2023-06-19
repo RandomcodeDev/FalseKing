@@ -60,13 +60,19 @@
     <ClCompile Include="src\fs.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\deps\src\metrohash64.cpp">
-      <Filter>Content\Source Files\External</Filter>
-    </ClCompile>
-    <ClCompile Include="src\deps\src\metrohash128.cpp">
-      <Filter>Content\Source Files\External</Filter>
-    </ClCompile>
     <ClCompile Include="src\physics.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\flecs.c">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash128.cpp">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash64.cpp">
+      <Filter>Content\Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="src\text.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,6 +104,9 @@
       <Filter>Content\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\physics.h">
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\text.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

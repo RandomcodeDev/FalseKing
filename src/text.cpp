@@ -55,9 +55,11 @@ void Text::DrawString(Backend* backend, const std::string& text,
 
     uint32_t x = 0;
     uint32_t y = 0;
+    uint32_t xSize = (CHARACTER_SIZE + padding.x) * scale;
+    uint32_t ySize = (CHARACTER_SIZE + padding.y) * scale;
     for (wchar_t c : wideText)
     {
-        if (box.y > 0 && cutOff && y * CHARACTER_SIZE > box.y)
+        if (box.y > 0 && cutOff && y * ySize > box.y)
         {
             break;
         }
@@ -66,7 +68,7 @@ void Text::DrawString(Backend* backend, const std::string& text,
         {
             continue;
         }
-        
+
         switch (c)
         {
         case '\t': {
@@ -79,8 +81,7 @@ void Text::DrawString(Backend* backend, const std::string& text,
             break;
         }
         default: {
-            backend->DrawImage(*s_font, x * (CHARACTER_SIZE + padding.x), y * (CHARACTER_SIZE + padding.y),
-                               scale,
+            backend->DrawImage(*s_font, x * xSize, y * ySize, scale,
                                s_characterPositions[c].x * CHARACTER_SIZE,
                                s_characterPositions[c].y * CHARACTER_SIZE,
                                CHARACTER_SIZE, CHARACTER_SIZE);
@@ -89,7 +90,7 @@ void Text::DrawString(Backend* backend, const std::string& text,
         }
         }
 
-        if (box.x > 0 && x * (CHARACTER_SIZE + padding.x) >= box.x)
+        if (box.x > 0 && x * xSize >= box.x)
         {
             x = 0;
             y++;

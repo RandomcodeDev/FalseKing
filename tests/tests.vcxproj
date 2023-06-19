@@ -35,7 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{95943bbe-f378-4068-a3fd-dae1b8309b6e}</ProjectGuid>
+    <ProjectGuid>{DC040A58-0566-4767-B558-315C4A688A5C}</ProjectGuid>
     <Keyword>DirectXApp</Keyword>
     <RootNamespace>testdraw</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -150,7 +150,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -175,7 +175,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -200,7 +200,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -225,7 +225,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -250,7 +250,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -275,7 +275,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -300,7 +300,7 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -325,17 +325,17 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Image Include="UwpAssets\LockScreenLogo.scale-200.png" />
-    <Image Include="UwpAssets\SplashScreen.scale-200.png" />
-    <Image Include="UwpAssets\Square150x150Logo.scale-200.png" />
-    <Image Include="UwpAssets\Square44x44Logo.scale-200.png" />
-    <Image Include="UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="UwpAssets\StoreLogo.png" />
-    <Image Include="UwpAssets\Wide310x150Logo.scale-200.png" />
+    <Image Include="$(SolutionDir)UwpAssets\LockScreenLogo.scale-200.png" />
+    <Image Include="$(SolutionDir)UwpAssets\SplashScreen.scale-200.png" />
+    <Image Include="$(SolutionDir)UwpAssets\Square150x150Logo.scale-200.png" />
+    <Image Include="$(SolutionDir)UwpAssets\Square44x44Logo.scale-200.png" />
+    <Image Include="$(SolutionDir)UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="$(SolutionDir)UwpAssets\StoreLogo.png" />
+    <Image Include="$(SolutionDir)UwpAssets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -343,14 +343,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="deps\src\flecs.c" />
-    <ClCompile Include="deps\src\metrohash128.cpp" />
-    <ClCompile Include="deps\src\metrohash64.cpp" />
-    <ClCompile Include="src\fs.cpp" />
-    <ClCompile Include="src\image.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\physics.cpp" />
-    <ClCompile Include="src\sdl.cpp">
+    <ClCompile Include="$(SolutionDir)deps\src\flecs.c" />
+    <ClCompile Include="$(SolutionDir)deps\src\metrohash128.cpp" />
+    <ClCompile Include="$(SolutionDir)deps\src\metrohash64.cpp" />
+    <ClCompile Include="$(SolutionDir)src\fs.cpp" />
+    <ClCompile Include="$(SolutionDir)src\image.cpp" />
+    <ClCompile Include="$(SolutionDir)src\physics.cpp" />
+    <ClCompile Include="$(SolutionDir)src\sdl.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">stdcpp17</LanguageStandard>
@@ -368,16 +367,16 @@
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</CompileAsWinRT>
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</CompileAsWinRT>
     </ClCompile>
-    <ClCompile Include="src\sprite.cpp" />
-    <ClCompile Include="src\text.cpp" />
+    <ClCompile Include="$(SolutionDir)src\sprite.cpp" />
+    <ClCompile Include="$(SolutionDir)src\text.cpp" />
+    <ClCompile Include="test_main.cpp" />
+    <ClCompile Include="test_text.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="copyfiles.bat" />
-    <None Include="README.md" />
-    <None Include="UwpAssets\BlankCursor.cur" />
+    <None Include="$(SolutionDir)UwpAssets\BlankCursor.cur" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="UwpAssets\Resources.rc" />
+    <ResourceCompile Include="$(SolutionDir)UwpAssets\Resources.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\backend.h" />
