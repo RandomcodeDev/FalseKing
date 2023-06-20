@@ -4,10 +4,13 @@
 #include "input.h"
 #include "text.h"
 
-extern void TestText(Backend* backend, InputState& input);
+Backend* g_backend;
+
+extern void TestText(InputState& input);
 
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
+    g_backend = backend;
     Filesystem::Initialize(backendPaths);
     Text::Initialize();
 

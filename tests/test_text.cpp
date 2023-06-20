@@ -4,11 +4,8 @@
 #include "input.h"
 #include "text.h"
 
-Backend* g_backend;
-
-void TestText(Backend* backend, InputState& input)
+void TestText(InputState& input)
 {
-    g_backend = backend;
     std::vector<uint8_t> textData = Filesystem::Read("communism.txt");
     std::string text(textData.begin(), textData.end());
     float zoom = 0.5f;
@@ -27,12 +24,12 @@ void TestText(Backend* backend, InputState& input)
         float floatDelta =
             (float)delta.count() / chrono::milliseconds::period::den;
 
-        if (!backend->Update(input) || input.GetStart())
+        if (!g_backend->Update(input) || input.GetStart())
         {
             break;
         }
 
-        if (!backend->BeginRender())
+        if (!g_backend->BeginRender())
         {
             continue;
         }
@@ -40,9 +37,9 @@ void TestText(Backend* backend, InputState& input)
         zoom += input.GetScrollAmount() / 2;
         input.ResetScrollAmount();
 
-        Text::DrawString(text, glm::uvec2(0), zoom);
+        Text::DrawString(text, glm::uvec2(0), zoom, glm::u8vec3(0, 255, 0));
 
-        backend->EndRender();
+        g_backend->EndRender();
 
         last = now;
         float ratio = 1.0f / 60.0f;
