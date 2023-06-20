@@ -75,6 +75,12 @@
     <ClCompile Include="src\text.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\components.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\systems.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="UwpAssets\BlankCursor.cur" />
@@ -107,6 +113,12 @@
       <Filter>Content\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\text.h">
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components.h">
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\systems.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -346,6 +346,7 @@
     <ClCompile Include="deps\src\flecs.c" />
     <ClCompile Include="deps\src\metrohash128.cpp" />
     <ClCompile Include="deps\src\metrohash64.cpp" />
+    <ClCompile Include="src\components.cpp" />
     <ClCompile Include="src\fs.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -369,6 +370,7 @@
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</CompileAsWinRT>
     </ClCompile>
     <ClCompile Include="src\sprite.cpp" />
+    <ClCompile Include="src\systems.cpp" />
     <ClCompile Include="src\text.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -381,12 +383,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\backend.h" />
+    <ClInclude Include="include\components.h" />
     <ClInclude Include="include\fs.h" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\image.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\physics.h" />
     <ClInclude Include="include\sprite.h" />
+    <ClInclude Include="include\systems.h" />
     <ClInclude Include="include\text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
