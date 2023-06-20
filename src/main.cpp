@@ -1,4 +1,5 @@
 ﻿#include "backend.h"
+#include "components.h"
 #include "fs.h"
 #include "game.h"
 #include "image.h"
@@ -7,8 +8,12 @@
 #include "sprite.h"
 #include "text.h"
 
+Backend* g_backend;
+
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
+    g_backend = backend;
+
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else
@@ -24,16 +29,32 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         paths.push_back(path);
     }
     Filesystem::Initialize(paths);
-    Text::Initialize(backend);
+    Text::Initialize();
 
-    Image sprites(backend, "assets/sprites.qoi");
+    Image sprites("assets/sprites.qoi");
 
-    ecs_world_t* world = ecs_init();
+    flecs::world world;
+
+    world.system<PhysicsController, const Sprite>().each(
+        Systems::DrawControlled);
 
     InputState input;
     PhysicsState physics;
 
     SPDLOG_INFO("Game initialized");
+
+    PxMaterial* material =
+        physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
+
+    PxCapsuleControllerDesc controllerDesc;
+    controllerDesc.setToDefault();
+    controllerDesc.radius = Sprite::TILE_SIZE / 2;
+    controllerDesc.height = 1.0f;
+    controllerDesc.material = material;
+
+    flecs::entity player = world.entity("Player")
+                               .set(PhysicsController(physics, controllerDesc))
+                               .set(Sprite(sprites, 0, 0));
 
     bool run = true;
     chrono::time_point<precise_clock> start = precise_clock::now();
@@ -53,7 +74,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
                   ((1000.0f / delta.count()) * (1.0f - FRAME_SMOOTHING));
         }
 
-        if (!backend->Update(input))
+        if (!g_backend->Update(input))
         {
             break;
         }
@@ -61,26 +82,25 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         // Respect deadzones
         input.AdjustSticks();
 
-        if (!backend->BeginRender())
+        if (!g_backend->BeginRender())
         {
             continue;
         }
 
-        ecs_progress(world, floatDelta);
+        world.progress(floatDelta);
 
         Text::DrawString(
-            backend, fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),
+            fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),
             glm::uvec2(0), 0.3f, glm::u8vec3(0, 255, 0));
 
-        backend->EndRender();
+        g_backend->EndRender();
 
         physics.Update(floatDelta);
 
         last = now;
         const float ratio = 1.0f / 60.0f;
-        while (chrono::duration_cast<
-                   chrono::duration<float, std::milli>>(
-                   now - last)
+        while (chrono::duration_cast<chrono::duration<float, std::milli>>(now -
+                                                                          last)
                    .count() <= ratio * 1000.0f)
         {
             now = precise_clock::now();
@@ -89,7 +109,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     SPDLOG_INFO("Shutting down game");
 
-    ecs_quit(world);
+    Text::Shutdown();
 
     SPDLOG_INFO("Game shut down");
     SPDLOG_INFO("Game ran for {:%T}", now - start);

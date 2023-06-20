@@ -2,27 +2,6 @@
 
 #include "game.h"
 
-// Physics body
-struct PhysicsController
-{
-    PhysicsController(PxController* controller) : m_controller(controller)
-    {
-    }
-
-    PxController& GetController()
-    {
-        return *m_controller;
-    }
-
-    PxTransform GetTransform()
-    {
-        return GetController().getActor()->getGlobalPose();
-    }
-
-  private:
-    PxController* m_controller;
-};
-
 // Stores physics stuff
 class PhysicsState
 {
@@ -62,4 +41,26 @@ class PhysicsState
     PxCpuDispatcher* m_dispatcher;
     PxScene* m_scene;
     PxControllerManager* m_controllerManager;
+};
+
+// Physics controller
+struct PhysicsController
+{
+    PhysicsController(PhysicsState& physics, const PxControllerDesc& desc)
+    {
+        physics.GetControllerManager().createController(desc);
+    };
+
+    PxController& GetController()
+    {
+        return *m_controller;
+    }
+
+    PxTransform GetTransform()
+    {
+        return GetController().getActor()->getGlobalPose();
+    }
+
+  private:
+    PxController* m_controller;
 };

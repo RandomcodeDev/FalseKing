@@ -9,13 +9,13 @@ extern void TestText(Backend* backend, InputState& input);
 int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
     Filesystem::Initialize(backendPaths);
-    Text::Initialize(backend);
+    Text::Initialize();
 
     InputState input;
 
-    TestText(backend, input);
+    TestText(input);
 
-    Text::Shutdown(backend);
+    Text::Shutdown();
 
     return 0;
 }

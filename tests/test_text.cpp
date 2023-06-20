@@ -4,8 +4,11 @@
 #include "input.h"
 #include "text.h"
 
+Backend* g_backend;
+
 void TestText(Backend* backend, InputState& input)
 {
+    g_backend = backend;
     std::vector<uint8_t> textData = Filesystem::Read("communism.txt");
     std::string text(textData.begin(), textData.end());
     float zoom = 0.5f;
@@ -37,7 +40,7 @@ void TestText(Backend* backend, InputState& input)
         zoom += input.GetScrollAmount() / 2;
         input.ResetScrollAmount();
 
-        Text::DrawString(backend, text, glm::uvec2(0), zoom);
+        Text::DrawString(text, glm::uvec2(0), zoom);
 
         backend->EndRender();
 

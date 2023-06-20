@@ -42,6 +42,12 @@
     <ClInclude Include="include\text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\systems.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\sdl.cpp">
@@ -68,11 +74,17 @@
     <ClCompile Include="src\text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash128.cpp">
+    <ClCompile Include="src\components.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\systems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="deps\src\metrohash64.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\src\metrohash128.cpp">
+      <Filter>Source Files\External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

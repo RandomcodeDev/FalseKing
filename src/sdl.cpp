@@ -264,13 +264,13 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         {
             input.state = (input.state & ~InputState::RIGHT_SHOULDER) |
                           (-down & InputState::RIGHT_SHOULDER);
-            input.scrollAmount = down ? -1.0 : 0.0;
+            input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else if (event.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)
         {
             input.state = (input.state & ~InputState::LEFT_SHOULDER) |
                           (-down & InputState::LEFT_SHOULDER);
-            input.scrollAmount = down ? -1.0 : 0.0;
+            input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else
         {
@@ -337,8 +337,8 @@ bool SdlBackend::BeginRender()
 }
 
 void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
-                           float scale, uint32_t srcX, uint32_t srcY,
-                           uint32_t srcWidth, uint32_t srcHeight,
+                           float scaleX, float scaleY, uint32_t srcX,
+                           uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight,
                            glm::u8vec3 color)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
@@ -356,15 +356,15 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
     }
     SDL_FRect srcRegion{(float)srcX, (float)srcY, (float)imageWidth,
                         (float)imageHeight};
-    imageWidth *= scale;
-    imageHeight *= scale;
+    imageWidth = (uint32_t)(imageWidth * scaleX);
+    imageHeight = (uint32_t)(imageHeight * scaleY);
     SDL_FRect destRegion{(float)x, (float)y, (float)imageWidth,
                          (float)imageHeight};
 
     float xScale = 0;
     float yScale = 0;
     SDL_GetRenderScale(m_renderer, &xScale, &yScale);
-    SDL_SetRenderScale(m_renderer, xScale + scale, yScale + scale);
+    SDL_SetRenderScale(m_renderer, xScale + scaleX, yScale + scaleY);
     SDL_SetTextureColorMod((SDL_Texture*)image.backendData, color.r, color.g,
                            color.b);
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,

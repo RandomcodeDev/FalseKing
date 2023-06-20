@@ -6,9 +6,14 @@ static bool s_initialized;
 
 // FUCK UNICODE ARRRGGHH
 
-void Text::Initialize(Backend* backend)
+void Text::Initialize()
 {
-    s_font = new Image(backend, "assets/font.qoi");
+    if (s_initialized)
+    {
+        return;
+    }
+
+    s_font = new Image("assets/font.qoi");
 
     toml::table& fontDefinition = toml::parse_file("assets/font.toml");
     if (!fontDefinition["font"].is_table())
@@ -40,7 +45,17 @@ void Text::Initialize(Backend* backend)
     s_initialized = true;
 }
 
-void Text::DrawString(Backend* backend, const std::string& text,
+void Text::Shutdown()
+{
+    if (!s_initialized)
+    {
+        return;
+    }
+    s_initialized = false;
+    delete s_font;
+}
+
+void Text::DrawString(const std::string& text,
                       glm::uvec2 position, float scale, glm::u8vec3 color,
                       glm::uvec2 box, bool cutOff, glm::uvec2 padding)
 {
@@ -87,7 +102,7 @@ void Text::DrawString(Backend* backend, const std::string& text,
         default: {
             if (c >= ' ')
             {
-                backend->DrawImage(*s_font, x * xSize, y * ySize, scale,
+                g_backend->DrawImage(*s_font, x * xSize, y * ySize, scale, scale,
                                    s_characterPositions[c].x * CHARACTER_SIZE,
                                    s_characterPositions[c].y * CHARACTER_SIZE,
                                    CHARACTER_SIZE, CHARACTER_SIZE, color);
@@ -103,10 +118,4 @@ void Text::DrawString(Backend* backend, const std::string& text,
             y++;
         }
     }
-}
-
-void Text::Shutdown(Backend* backend)
-{
-    s_initialized = false;
-    delete s_font;
 }

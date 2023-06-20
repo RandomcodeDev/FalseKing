@@ -13,7 +13,11 @@ class Image
     void* backendData;
 
     // Load the image at the specified path
-    Image(Backend* backend, const std::string& path);
+    Image(const std::string& path);
+    Image(const Image& other)
+    {
+        *this = other;
+    }
 
     // Free image memory
     ~Image();
@@ -44,7 +48,6 @@ class Image
     }
 
   private:
-    Backend* m_backend;
     void* m_data;
     qoi_desc m_info;
 };

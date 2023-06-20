@@ -171,6 +171,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\components.h" />
     <ClInclude Include="include\backend.h" />
     <ClInclude Include="include\fs.h" />
     <ClInclude Include="include\game.h" />
@@ -179,8 +180,10 @@
     <ClInclude Include="include\physics.h" />
     <ClInclude Include="include\sprite.h" />
     <ClInclude Include="include\text.h" />
+    <ClInclude Include="include\systems.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components.cpp" />
     <ClCompile Include="deps\src\flecs.c" />
     <ClCompile Include="deps\src\metrohash128.cpp" />
     <ClCompile Include="deps\src\metrohash64.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="src\physics.cpp" />
     <ClCompile Include="src\sdl.cpp" />
     <ClCompile Include="src\sprite.cpp" />
+    <ClCompile Include="src\systems.cpp" />
     <ClCompile Include="src\text.cpp" />
   </ItemGroup>
   <ItemGroup>

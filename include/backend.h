@@ -59,9 +59,9 @@ class Backend
 
     // Draw an image
     virtual void DrawImage(const Image& image, uint32_t x, uint32_t y,
-                           float scale = 1.0f, uint32_t srcX = 0,
-                           uint32_t srcY = 0, uint32_t srcWidth = 0,
-                           uint32_t srcHeight = 0,
+                           float scaleX = 1.0f, float scaleY = 1.0f,
+                           uint32_t srcX = 0, uint32_t srcY = 0,
+                           uint32_t srcWidth = 0, uint32_t srcHeight = 0,
                            glm::u8vec3 color = glm::u8vec3(255, 255, 255)) = 0;
 
     // Draw a sprite
@@ -89,9 +89,9 @@ class SdlBackend : protected Backend
     void CleanupImage(Image& image);
     bool Update(class InputState& input);
     bool BeginRender();
-    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scale,
-                   uint32_t srcX, uint32_t srcY, uint32_t srcWidth,
-                   uint32_t srcHeight, glm::u8vec3 color);
+    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
+                   float scaleY, uint32_t srcX, uint32_t srcY,
+                   uint32_t srcWidth, uint32_t srcHeight, glm::u8vec3 color);
     void EndRender();
     const WindowInfo& GetWindowInformation() const
     {
@@ -155,3 +155,6 @@ class SdlBackend : protected Backend
 
 // Program entry point
 extern int GameMain(Backend* backend, std::vector<fs::path> backendPaths);
+
+// Global backend pointer
+extern Backend* g_backend;
