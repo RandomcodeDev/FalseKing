@@ -63,6 +63,5 @@ struct PhysicsController
     }
 
   private:
-    bool m_notInitialized; // hopefully good enough, very low chance of being auto-initialized to 0
     PxController* m_controller;
 };
