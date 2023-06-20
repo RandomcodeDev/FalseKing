@@ -4,7 +4,6 @@
 
 namespace Components
 {
-
 // Is a player
 struct Player
 {
