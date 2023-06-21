@@ -6,6 +6,7 @@
 #include "input.h"
 #include "physics.h"
 #include "sprite.h"
+#include "systems.h"
 #include "text.h"
 
 Backend* g_backend;
@@ -33,13 +34,11 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     Image sprites("assets/sprites.qoi");
 
-    flecs::world world;
-
-    world.system<PhysicsController, const Sprite>().each(
-        Systems::DrawControlled);
-
     InputState input;
     PhysicsState physics;
+
+    flecs::world world;
+    Systems::Register(world, &input);
 
     SPDLOG_INFO("Game initialized");
 
@@ -54,7 +53,10 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     flecs::entity player = world.entity("Player")
                                .set(PhysicsController(physics, controllerDesc))
-                               .set(Sprite(sprites, 0, 0));
+                               .set(Sprite(sprites, 0, 0))
+                               .set(Components::MovementSpeed{0.5f, 0.75f})
+                               .set(Components::Health{100.0f, 100.0f})
+                               .add<Components::LocalPlayer>();
 
     bool run = true;
     chrono::time_point<precise_clock> start = precise_clock::now();

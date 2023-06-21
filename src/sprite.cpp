@@ -22,12 +22,11 @@ void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
     }
 }
 
-void Systems::DrawControlled(flecs::entity entity,
-                             PhysicsController& controller,
-                             const Sprite& sprite)
+void Systems::DrawControlled(flecs::iter& iter, PhysicsController* controller,
+                             const Sprite* sprite)
 {
-    uint32_t x = (uint32_t)controller.GetTransform().p.x;
+    uint32_t x = (uint32_t)controller->GetTransform().p.x;
     uint32_t y = (uint32_t)std::max(
-        (controller.GetTransform().p.z - controller.GetTransform().p.y), 0.0f);
-    g_backend->DrawSprite(sprite, x, y);
+        (controller->GetTransform().p.z - controller->GetTransform().p.y), 0.0f);
+    g_backend->DrawSprite(*sprite, x, y);
 }

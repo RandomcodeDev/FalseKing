@@ -33,6 +33,6 @@ struct PhysicsController;
 namespace Systems
 {
 // Draw a sprite with a physics controller
-void DrawControlled(flecs::entity entity, PhysicsController& controller,
-                    const Sprite& sprite);
+void DrawControlled(flecs::iter& iter, PhysicsController* controller,
+                    const Sprite* sprite);
 } // namespace Systems

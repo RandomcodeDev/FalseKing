@@ -33,8 +33,8 @@ class InputState
     static constexpr uint16_t LEFT_SHOULDER = 0b0000010000000000; // Scroll up
     static constexpr uint16_t RIGHT_SHOULDER =
         0b0000100000000000;                                     // Scroll down
-    static constexpr uint16_t LEFT_STICK = 0b0001000000000000;  // Shift
-    static constexpr uint16_t RIGHT_STICK = 0b0010000000000000; // Left control
+    static constexpr uint16_t LEFT_STICK = 0b0001000000000000;  // Left control
+    static constexpr uint16_t RIGHT_STICK = 0b0010000000000000; // Left shift
 
     // FIXME: hardcoded deadzones based on my specific controller
     static constexpr float LEFT_STICK_MIN_X = 0.3f;

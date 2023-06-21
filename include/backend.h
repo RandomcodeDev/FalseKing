@@ -27,8 +27,8 @@ union KeyMapping {
         uint32_t r;          // Y
         uint32_t scrollUp;   // Left shoulder
         uint32_t scrollDown; // Right shoulder
-        uint32_t shift;      // Left stick
-        uint32_t control;    // Right stick
+        uint32_t control;    // Left stick
+        uint32_t shift;      // Right stick
         uint32_t w;
         uint32_t s;
         uint32_t a;
