@@ -42,6 +42,11 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} Game.sln
 
+    - name: chmod scripts
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: matrix.os != 'windows-latest'
+      run: chmod a+x scrips/*.sh
+
     - name: Build (Make)
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os != 'windows-latest'
