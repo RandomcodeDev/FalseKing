@@ -2,11 +2,30 @@
 
 ROOT=$(dirname $0)/..
 
-CONF=$1
+ARCH=$1
+if [ ! $ARCH ]; then
+    ARCH=$($ROOT/scripts/arch.sh)
+fi
+
+CONF=$2
 if [ ! $CONF ]; then
     CONF=Debug
 fi
 
-mkdir -p $($ROOT/scripts/arch.sh)/$CONF
-bmake -C $ROOT -f BSDMakefile CONFIG=$CONF CC=clang++ CXX=clang++ LDFLAGS=-fuse-ld=lld MAKEOBJDIR=$($ROOT/scripts/arch.sh)/$CONF $2 $3 $4 $5 $6
+case $(uname) in
+Linux)
+    DLIBEXT=.so
+    SLIBEXT=.a
+    ;;
+Darwin)
+    DLIBEXT=.dylib
+    SLIBEXT=-darwin.a
+    ;;
+FreeBSD)
+    DLIBEXT=-freebsd.so
+    SLIBEXT=-freebsd.a
+esac
+
+mkdir -p $ARCH/$CONF
+bmake -C $ROOT -f Game-unix.mak ARCH=$ARCH CONFIG=$CONF DLIBEXT=$DLIBEXT SLIBEXT=$SLIBEXT CC=clang++ CXX=clang++ LDFLAGS=-fuse-ld=lld MAKEOBJDIR=$($ROOT/scripts/arch.sh)/$CONF $3 $4 $5 $6 $7
 
