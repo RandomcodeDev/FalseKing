@@ -1,0 +1,72 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: MSBuild
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: ${{ matrix.build-type }} build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build-type: [Debug, Release]
+        target: [x64, ARM64]
+        os: [
+            windows-latest,
+#            macOS-latest,
+            ubuntu-latest
+        ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build (MSBuild)
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: ${{matrix.os}} == 'windows-latest'
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration=${{matrix.build-type}} /p:Platform=${{matrix.target}} Game.sln
+
+    - name: Build (Make)
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: ${{matrix.os}} != 'windows-latest'
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: scripts/build.sh ${{matrix.target}} ${{matrix.build-type}}
+    
+    - name: Distrib
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: ${{matrix.os}} != 'windows-latest'
+      run: scripts/distrib.sh FalseKing-${{matrix.build-type}}-${{matrix.os}}-${{matrix.target}} ${{matrix.target}} ${{matrix.build-type}} Game
+      
+    - name: Upload a Build Artifact (MSBuild)
+      uses: actions/upload-artifact@v3.1.2
+      if: ${{matrix.os}} == 'windows-latest'
+      with:
+        name: FalseKing-${{matrix.build-type}}-${{matrix.os}}-${{matrix.target}}
+        path: ${{matrix.target}}/${{matrix.build-type}}/Game/Game.appx
+        
+    - name: Upload a Build Artifact (Make)
+      uses: actions/upload-artifact@v3.1.2
+      if: ${{matrix.os}} != 'windows-latest'
+      with:
+        name: FalseKing-${{matrix.build-type}}-${{matrix.os}}-${{matrix.target}}
+        path: Game.tar.xz
