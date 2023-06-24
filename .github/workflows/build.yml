@@ -45,7 +45,7 @@ jobs:
     - name: chmod scripts
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os != 'windows-latest'
-      run: chmod a+x scrips/*.sh
+      run: chmod a+x scripts/*.sh
 
     - name: Build (Make)
       working-directory: ${{env.GITHUB_WORKSPACE}}
