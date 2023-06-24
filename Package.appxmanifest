@@ -32,10 +32,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="Game.App">
       <uap:VisualElements
-        DisplayName="Game"
+        DisplayName="False King"
         Square150x150Logo="UwpAssets\Square150x150Logo.png"
         Square44x44Logo="UwpAssets\Square44x44Logo.png"
-        Description="Game"
+        Description="A game about a guy who kills kings with elemental powers to become the False King and take over"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="UwpAssets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="UwpAssets\SplashScreen.png" />
