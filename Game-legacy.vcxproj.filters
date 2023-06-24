@@ -91,7 +91,9 @@
     <None Include=".clang-format" />
     <None Include=".gitignore" />
     <None Include="README.md" />
-    <None Include="copyfiles.bat" />
+    <None Include="scripts\copyfiles.bat">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE.txt" />

@@ -99,7 +99,7 @@
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
+      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,7 +119,7 @@
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
+      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,7 +143,7 @@
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
+      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,7 +167,7 @@
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
+      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration) &amp;&amp; $(ProjectDir)copytestfiles.bat "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

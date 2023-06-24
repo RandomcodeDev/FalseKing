@@ -1,4 +1,4 @@
-ARCH!=${.CURDIR}/arch.sh
+ARCH!=${.CURDIR}/scripts/arch.sh
 CONFIG?=Debug
 
 PROG:=Game.${ARCH}
