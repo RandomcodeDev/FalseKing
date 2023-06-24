@@ -22,7 +22,11 @@ extern "C" int main(int argc, char* argv[])
     Backend* backend = (Backend*)new SdlBackend();
 
     std::vector<fs::path> paths;
-    paths.push_back(SDL_GetBasePath());
+    fs::path baseDir = SDL_GetBasePath();
+#ifndef __WINRT__
+    baseDir /= "assets";
+#endif
+    paths.push_back(baseDir);
     int returnCode = GameMain(backend, paths);
     SPDLOG_INFO("Destroying backend");
     delete backend;

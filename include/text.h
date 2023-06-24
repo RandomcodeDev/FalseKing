@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend.h"
+#include "fs.h"
 #include "game.h"
 #include "image.h"
 

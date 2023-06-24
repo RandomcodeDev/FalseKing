@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-   <ProjectConfiguration Include="Debug|x64">
+    <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
@@ -9,7 +9,7 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-   <ProjectConfiguration Include="Debug|ARM64">
+    <ProjectConfiguration Include="Debug|ARM64">
       <Configuration>Debug</Configuration>
       <Platform>ARM64</Platform>
     </ProjectConfiguration>
@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.22621.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
@@ -75,7 +75,17 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <PackageCertificateThumbprint>054DCE06BDE0402D8F22B06D86C99BDF394DED03</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppInstallerUri>\\Users\bramb\source\repos\FalseKing</AppInstallerUri>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -98,7 +108,8 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -123,7 +134,8 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -148,7 +160,8 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -173,7 +186,8 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copyfiles.bat "$(TargetDir)AppX" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -214,6 +228,39 @@
     <ClCompile Include="src\text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PhysX_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PhysXGpu_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PhysXFoundation_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PhysXCooking_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PhysXCommon_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\PVDRuntime_64.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\$(Configuration)\SDL3.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="deps\lib\$(Platform)\libzstd.dll">
+      <DeploymentContent>true</DeploymentContent>
+  </CopyFileToFolders>
+  <CopyFileToFolders Include="assets\font.qoi">
+      <DeploymentContent>true</DeploymentContent>
+  </CopyFileToFolders>
+  <CopyFileToFolders Include="assets\font.toml">
+      <DeploymentContent>true</DeploymentContent>
+  </CopyFileToFolders>
+  <CopyFileToFolders Include="assets\sprites.qoi">
+      <DeploymentContent>true</DeploymentContent>
+  </CopyFileToFolders>
     <None Include="scripts\copyfiles.bat" />
     <None Include="README.md" />
     <None Include="UwpAssets\BlankCursor.cur" />

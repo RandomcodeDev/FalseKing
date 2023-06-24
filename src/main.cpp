@@ -32,7 +32,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
     Filesystem::Initialize(paths);
     Text::Initialize();
 
-    Image sprites("assets/sprites.qoi");
+    Image sprites("sprites.qoi");
 
     InputState input;
     PhysicsState physics;

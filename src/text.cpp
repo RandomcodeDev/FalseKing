@@ -13,9 +13,12 @@ void Text::Initialize()
         return;
     }
 
-    s_font = new Image("assets/font.qoi");
+    s_font = new Image("font.qoi");
 
-    toml::table fontDefinition = toml::parse_file("assets/font.toml");
+    std::vector<uint8_t> fontTomlRaw = Filesystem::Read("font.toml");
+    std::string fontToml(fontTomlRaw.begin(), fontTomlRaw.end());
+    fontTomlRaw.clear();
+    toml::table fontDefinition = toml::parse(fontToml);
     if (!fontDefinition["font"].is_table())
     {
         Quit(fmt::format("Invalid font definition: missing [font]"), EINVAL);
