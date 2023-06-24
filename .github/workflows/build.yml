@@ -42,7 +42,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} Game.sln
+      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} Game.sln /t:Build;Deploy;
 
     - name: Install system dependencies
       if: matrix.os != 'windows-latest'
@@ -59,7 +59,12 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: scripts/build.sh ${{matrix.target}} ${{matrix.config}}
-    
+
+    - name: AppX
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: matrix.os == 'windows-latest'
+      run: scripts\appx.bat ${{matrix.target}}/${{matrix.config}}/Game Game
+
     - name: Distrib
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os != 'windows-latest'
