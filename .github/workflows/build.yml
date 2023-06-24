@@ -42,6 +42,10 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} Game.sln
 
+    - name: Install system dependencies
+      if: matrix.os != 'windows-latest'
+      run: sudo apt install -y bmake
+
     - name: chmod scripts
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os != 'windows-latest'
