@@ -154,6 +154,52 @@ bool SdlBackend::Update(InputState& input)
         {
             return false;
         }
+
+        int32_t keyCount = 0;
+        SDL_GetKeyboardState(&keyCount);
+        bool* keys = new bool[keyCount];
+        keys = (bool*)SDL_GetKeyboardState(&keyCount);
+
+        bool w = keys[m_mapping.w];
+        bool s = keys[m_mapping.s];
+        bool a = keys[m_mapping.a];
+        bool d = keys[m_mapping.d];
+
+        if (w && !s)
+        {
+            input.leftStick.y = -1.0f;
+        }
+        else if (!w && s)
+        {
+            input.leftStick.y = 1.0f;
+        }
+        else
+        {
+            input.leftStick.y = 0.0f;
+        }
+
+        if (a && !d)
+        {
+            input.leftStick.x = -1.0f;
+        }
+        else if (!a && d)
+        {
+            input.leftStick.x = 1.0f;
+        }
+        else
+        {
+            input.leftStick.x = 0.0f;
+        }
+
+        // There are 4 mappings that aren't bit flags
+        for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
+        {
+            bool down = keys[m_mapping.values[i]];
+            // Mapping is in same order as bit flags for state
+            // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
+            uint32_t mapping = 1 << i;
+            input.state = (input.state & ~mapping) | (-down & mapping);
+        }
     }
 
     return true;
@@ -220,41 +266,6 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
     }
-    else if (event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP)
-    {
-        SDL_Scancode key = event.key.keysym.scancode;
-        bool down = event.type == SDL_EVENT_KEY_DOWN;
-        if (key == m_mapping.w)
-        {
-            input.leftStick.y = down ? -1.0f : 0.0f;
-        }
-        else if (key == m_mapping.s)
-        {
-            input.leftStick.y = down ? 1.0f : 0.0f;
-        }
-        else if (key == m_mapping.a)
-        {
-            input.leftStick.x = down ? -1.0f : 0.0f;
-        }
-        else if (key == m_mapping.d)
-        {
-            input.leftStick.x = down ? 1.0f : 0.0f;
-        }
-        else
-        {
-            // There are 4 mappings that aren't bit flags
-            for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
-            {
-                if (key == m_mapping.values[i])
-                {
-                    // Mapping is in same order as bit flags for state
-                    // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
-                    uint32_t mapping = 1 << i;
-                    input.state = (input.state & ~mapping) | (-down & mapping);
-                }
-            }
-        }
-    }
     else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
              event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
     {
@@ -295,13 +306,13 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
             input.leftStick.x = value;
             break;
         case SDL_GAMEPAD_AXIS_LEFTY:
-            input.leftStick.y = -value;
+            input.leftStick.y = value;
             break;
         case SDL_GAMEPAD_AXIS_RIGHTX:
             input.rightStick.x = value;
             break;
         case SDL_GAMEPAD_AXIS_RIGHTY:
-            input.rightStick.y = -value;
+            input.rightStick.y = value;
             break;
         case SDL_GAMEPAD_AXIS_LEFT_TRIGGER:
             input.leftTrigger = value;
@@ -331,7 +342,7 @@ bool SdlBackend::BeginRender()
     SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH,
                        (float)m_windowInfo.height / GAME_HEIGHT);
 
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(m_renderer, 128, 128, 128, 255);
     SDL_RenderClear(m_renderer);
     return true;
 }

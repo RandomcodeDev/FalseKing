@@ -27,6 +27,6 @@ void Systems::PlayerInput(flecs::iter& iter)
                   ? movementSpeed->run
                   : movementSpeed->walk);
     controller->GetController().move(PxVec3(x, 0, z),
-                                    0.0001f, iter.delta_time(),
+                                    0.0001f, iter.delta_time() * 1000.0f,
                                     PxControllerFilters());
 }

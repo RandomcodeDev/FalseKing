@@ -90,6 +90,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         }
 
         world.progress(floatDelta);
+        
 
         Text::DrawString(
             fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),

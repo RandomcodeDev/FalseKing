@@ -26,7 +26,6 @@ void Systems::DrawControlled(flecs::iter& iter, PhysicsController* controller,
                              const Sprite* sprite)
 {
     uint32_t x = (uint32_t)controller->GetTransform().p.x;
-    uint32_t y = (uint32_t)std::max(
-        (controller->GetTransform().p.z - controller->GetTransform().p.y), 0.0f);
+    uint32_t y = (uint32_t)(controller->GetTransform().p.z - controller->GetTransform().p.y);
     g_backend->DrawSprite(*sprite, x, y);
 }
