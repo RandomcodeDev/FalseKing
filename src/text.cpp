@@ -15,7 +15,7 @@ void Text::Initialize()
 
     s_font = new Image("assets/font.qoi");
 
-    toml::table& fontDefinition = toml::parse_file("assets/font.toml");
+    toml::table fontDefinition = toml::parse_file("assets/font.toml");
     if (!fontDefinition["font"].is_table())
     {
         Quit(fmt::format("Invalid font definition: missing [font]"), EINVAL);

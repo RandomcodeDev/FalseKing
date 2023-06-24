@@ -112,6 +112,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     SPDLOG_INFO("Shutting down game");
 
+    world.quit();
     Text::Shutdown();
 
     SPDLOG_INFO("Game shut down");

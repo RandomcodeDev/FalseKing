@@ -7,7 +7,7 @@
 #include "input.h"
 #include "sprite.h"
 
-int SDL_main(int argc, char* argv[])
+extern "C" int main(int argc, char* argv[])
 {
 #if defined(_WIN32) && defined(_DEBUG)
     AllocConsole();
@@ -18,11 +18,13 @@ int SDL_main(int argc, char* argv[])
     spdlog::flush_every(std::chrono::seconds(5));
 #endif
 
+    SPDLOG_INFO("Creating backend");
     Backend* backend = (Backend*)new SdlBackend();
 
     std::vector<fs::path> paths;
     paths.push_back(SDL_GetBasePath());
     int returnCode = GameMain(backend, paths);
+    SPDLOG_INFO("Destroying backend");
     delete backend;
     return returnCode;
 }
