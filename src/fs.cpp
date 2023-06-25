@@ -28,7 +28,8 @@ std::vector<uint8_t> Filesystem::Read(const fs::path& path)
 
     for (auto& root : s_paths)
     {
-        std::ifstream file(root / path, std::ios::ate);
+        fs::path fullPath = root / path;
+        std::ifstream file(fullPath, std::ios::ate);
         if (file.is_open())
         {
             std::vector<uint8_t> data((size_t)file.tellg());
