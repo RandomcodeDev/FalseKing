@@ -29,7 +29,7 @@ std::vector<uint8_t> Filesystem::Read(const fs::path& path)
     for (auto& root : s_paths)
     {
         fs::path fullPath = root / path;
-        std::ifstream file(fullPath, std::ios::ate);
+        std::ifstream file(fullPath, std::ios::ate | std::ios::binary);
         if (file.is_open())
         {
             SPDLOG_INFO("Found file {} at {}", path.string(),
@@ -37,6 +37,7 @@ std::vector<uint8_t> Filesystem::Read(const fs::path& path)
             std::vector<uint8_t> data((size_t)file.tellg());
             file.seekg(std::ios::beg);
             file.read((char*)data.data(), data.size());
+            SPDLOG_INFO("Read {} byte(s)", data.size());
             return data;
         }
     }
