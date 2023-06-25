@@ -24,7 +24,7 @@ void Filesystem::Initialize(const std::vector<fs::path>& paths)
 
 std::vector<uint8_t> Filesystem::Read(const fs::path& path)
 {
-    SPDLOG_TRACE("Reading file {}", path);
+    SPDLOG_INFO("Reading file {}", path.string());
 
     for (auto& root : s_paths)
     {
@@ -32,6 +32,8 @@ std::vector<uint8_t> Filesystem::Read(const fs::path& path)
         std::ifstream file(fullPath, std::ios::ate);
         if (file.is_open())
         {
+            SPDLOG_INFO("Found file {} at {}", path.string(),
+                        fullPath.string());
             std::vector<uint8_t> data((size_t)file.tellg());
             file.seekg(std::ios::beg);
             file.read((char*)data.data(), data.size());
