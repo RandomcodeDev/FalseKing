@@ -1,3 +1,5 @@
+[![Build](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml/badge.svg)](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml)
+
 The game is basically about a guy who kills kings with elemental powers to become the False King and take over, which was my friend's idea.
 
 Things likely to be in game:
