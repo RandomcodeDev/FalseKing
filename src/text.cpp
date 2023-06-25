@@ -18,7 +18,15 @@ void Text::Initialize()
     std::vector<uint8_t> fontTomlRaw = Filesystem::Read("font.toml");
     std::string fontToml(fontTomlRaw.begin(), fontTomlRaw.end());
     fontTomlRaw.clear();
-    toml::table fontDefinition = toml::parse(fontToml);
+    toml::table fontDefinition;
+    try
+    {
+        fontDefinition = toml::parse(fontToml);
+    }
+    catch (toml::parse_error e)
+    {
+        Quit(fmt::format("Failed to parse font definition: {}", e.description()));
+    }
     if (!fontDefinition["font"].is_table())
     {
         Quit(fmt::format("Invalid font definition: missing [font]"), EINVAL);
