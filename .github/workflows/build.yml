@@ -37,6 +37,14 @@ jobs:
       if: matrix.os == 'windows-latest'
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: Decode signing key
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      env:
+        GAME_PFX_BASE64: ${{secrets.GAME_PFX_BASE64}}
+      run: |
+        echo %GAME_PFX_BASE64% > Game_TemporaryKey.pfx.base64
+        base64 -d Game_TemporaryKey.pfx.base64 > Game_TemporaryKey.pfx
+
     - name: Build (MSBuild)
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os == 'windows-latest'
@@ -70,7 +78,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       with:
         name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-        path: ${{matrix.target}}/${{matrix.config}}/Game_1.0.0.0_Bundle/Game_1.0.0.0_${{matrix.target}}_${{matrix.config}}.msix
+        path: AppPackages/Game/Game_1.0.0.0_Debug_Test/Game_1.0.0.0_${{matrix.target}}_${{matrix.config}}.msixbundle
         
     - name: Upload a Build Artifact (Make)
       uses: actions/upload-artifact@v3.1.2

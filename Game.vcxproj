@@ -77,6 +77,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <PackageCertificateKeyFile>Game_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
@@ -250,16 +251,17 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="deps\lib\$(Platform)\libzstd.dll">
       <DeploymentContent>true</DeploymentContent>
-  </CopyFileToFolders>
-  <CopyFileToFolders Include="assets\font.qoi">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="assets\font.qoi">
       <DeploymentContent>true</DeploymentContent>
-  </CopyFileToFolders>
-  <CopyFileToFolders Include="assets\font.toml">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="assets\font.toml">
       <DeploymentContent>true</DeploymentContent>
-  </CopyFileToFolders>
-  <CopyFileToFolders Include="assets\sprites.qoi">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="assets\sprites.qoi">
       <DeploymentContent>true</DeploymentContent>
-  </CopyFileToFolders>
+    </CopyFileToFolders>
+    <None Include="Game_TemporaryKey.pfx" />
     <None Include="scripts\copyfiles.bat" />
     <None Include="README.md" />
     <None Include="UwpAssets\BlankCursor.cur" />
