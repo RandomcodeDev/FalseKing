@@ -86,7 +86,7 @@ jobs:
       if: matrix.os == 'windows-latest' && matrix.config == 'Release'
       with:
         name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-        path: AppPackages/Game/Game_1.0.0.0_Debug_Test/Game_1.0.0.0_${{matrix.target}}.msixbundle
+        path: AppPackages/Game/Game_1.0.0.0_Test/Game_1.0.0.0_${{matrix.target}}.msixbundle
         
     - name: Upload a Build Artifact (Make)
       uses: actions/upload-artifact@v3.1.2
