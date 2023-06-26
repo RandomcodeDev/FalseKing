@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-ROOT=$(dirname $0)/..
+ROOT=$(realpath $(dirname $0)/..)
 
 ARCH=$1
 if [ ! $ARCH ]; then
@@ -26,6 +26,13 @@ FreeBSD)
     SLIBEXT=-freebsd.a
 esac
 
-mkdir -p $ARCH/$CONF
-bmake -C $ROOT -f Game-unix.mak ARCH=$ARCH CONFIG=$CONF DLIBEXT=$DLIBEXT SLIBEXT=$SLIBEXT CC=clang++ CXX=clang++ LDFLAGS=-fuse-ld=lld MAKEOBJDIR=$($ROOT/scripts/arch.sh)/$CONF $3 $4 $5 $6 $7
+PWD=$(pwd)
+BUILDDIR=$ROOT/build/unix/$ARCH/$CONF
 
+echo Building $CONF for $ARCH in $BUILDDIR
+mkdir -p $BUILDDIR
+cd $BUILDDIR
+bmake -j$(nproc) -f $ROOT/build/unix/Game.mak ARCH=$ARCH CONFIG=$CONF ROOT=$ROOT DLIBEXT=$DLIBEXT SLIBEXT=$SLIBEXT CC=clang++ CXX=clang++ LDFLAGS=-fuse-ld=lld $3 $4 $5 $6 $7
+$ROOT/scripts/copyfiles.sh $BUILDDIR $ARCH $CONF || true
+cd $PWD
+echo Done

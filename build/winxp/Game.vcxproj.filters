@@ -18,84 +18,84 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\backend.h">
+    <ClInclude Include="..\..\include\backend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\fs.h">
+    <ClInclude Include="..\..\include\fs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\game.h">
+    <ClInclude Include="..\..\include\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\image.h">
+    <ClInclude Include="..\..\include\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\input.h">
+    <ClInclude Include="..\..\include\input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\physics.h">
+    <ClInclude Include="..\..\include\physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sprite.h">
+    <ClInclude Include="..\..\include\sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\text.h">
+    <ClInclude Include="..\..\include\text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\components.h">
+    <ClInclude Include="..\..\include\components.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\systems.h">
+    <ClInclude Include="..\..\include\systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\sdl.cpp">
+    <ClCompile Include="..\..\src\sdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fs.cpp">
+    <ClCompile Include="..\..\src\fs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\image.cpp">
+    <ClCompile Include="..\..\src\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="..\..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\physics.cpp">
+    <ClCompile Include="..\..\src\physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sprite.cpp">
+    <ClCompile Include="..\..\src\sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\flecs.c">
+    <ClCompile Include="..\..\deps\src\flecs.c">
       <Filter>Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="src\text.cpp">
+    <ClCompile Include="..\..\src\text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\components.cpp">
+    <ClCompile Include="..\..\src\components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems.cpp">
+    <ClCompile Include="..\..\src\systems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash64.cpp">
+    <ClCompile Include="..\..\deps\src\metrohash64.cpp">
       <Filter>Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash128.cpp">
+    <ClCompile Include="..\..\deps\src\metrohash128.cpp">
       <Filter>Source Files\External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".clang-format" />
-    <None Include=".gitignore" />
-    <None Include="README.md" />
-    <None Include="scripts\copyfiles.bat">
+    <None Include="..\..\.clang-format" />
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\README.md" />
+    <None Include="..\..\scripts\copyfiles.bat">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="LICENSE.txt" />
+    <Text Include="..\..\LICENSE.txt" />
   </ItemGroup>
 </Project>

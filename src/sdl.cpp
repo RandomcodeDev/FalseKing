@@ -29,7 +29,7 @@ extern "C" int main(int argc, char* argv[])
     paths.push_back(baseDir);
     int returnCode = GameMain(backend, paths);
     SPDLOG_INFO("Destroying backend");
-    delete backend;
+    delete (SdlBackend*)backend;
     return returnCode;
 }
 

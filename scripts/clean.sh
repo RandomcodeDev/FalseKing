@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
-ROOT=$(dirname $0)/..
-rm -rf ARM x64 Debug Release
+ROOT=$(realpath $(dirname $0)/..)
+rm -rf $ROOT/build/unix/{ARM,x64,Debug,Release}

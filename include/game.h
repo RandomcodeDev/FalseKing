@@ -39,6 +39,10 @@ using namespace physx;
 #include "spdlog/fmt/chrono.h"
 #include "spdlog/fmt/fmt.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/sink.h"
+#ifdef _WIN32
+#include "spdlog/sinks/msvc_sink.h"
+#endif
 
 #define TOML_FLOAT_CHARCONV 0
 #include "toml++/toml.h"

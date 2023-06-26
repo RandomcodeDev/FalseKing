@@ -115,13 +115,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -134,19 +134,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -159,19 +159,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,19 +184,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -209,19 +209,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -234,19 +234,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -259,19 +259,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -284,19 +284,19 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(Platform)\$(Configuration);$(SolutionDir)deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -309,17 +309,17 @@
     </ClCompile>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"$(SolutionDir)scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
+      <Command>"$(SolutionDir)..\..\scripts\copyfiles.bat" "$(TargetDir)AppX" $(Platform) $(Configuration) &amp;&amp; "$(ProjectDir)copytestfiles.bat" "$(TargetDir)AppX"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Image Include="$(SolutionDir)UwpAssets\LockScreenLogo.scale-200.png" />
-    <Image Include="$(SolutionDir)UwpAssets\SplashScreen.scale-200.png" />
-    <Image Include="$(SolutionDir)UwpAssets\Square150x150Logo.scale-200.png" />
-    <Image Include="$(SolutionDir)UwpAssets\Square44x44Logo.scale-200.png" />
-    <Image Include="$(SolutionDir)UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="$(SolutionDir)UwpAssets\StoreLogo.png" />
-    <Image Include="$(SolutionDir)UwpAssets\Wide310x150Logo.scale-200.png" />
+    <Image Include="UwpAssets\LockScreenLogo.scale-200.png" />
+    <Image Include="UwpAssets\SplashScreen.scale-200.png" />
+    <Image Include="UwpAssets\Square150x150Logo.scale-200.png" />
+    <Image Include="UwpAssets\Square44x44Logo.scale-200.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="UwpAssets\StoreLogo.png" />
+    <Image Include="UwpAssets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -327,13 +327,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)deps\src\flecs.c" />
-    <ClCompile Include="$(SolutionDir)deps\src\metrohash128.cpp" />
-    <ClCompile Include="$(SolutionDir)deps\src\metrohash64.cpp" />
-    <ClCompile Include="$(SolutionDir)src\fs.cpp" />
-    <ClCompile Include="$(SolutionDir)src\image.cpp" />
-    <ClCompile Include="$(SolutionDir)src\physics.cpp" />
-    <ClCompile Include="$(SolutionDir)src\sdl.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\flecs.c" />
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\metrohash128.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\metrohash64.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\fs.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\image.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\physics.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\sdl.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">stdcpp17</LanguageStandard>
@@ -351,26 +351,26 @@
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</CompileAsWinRT>
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</CompileAsWinRT>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\sprite.cpp" />
-    <ClCompile Include="$(SolutionDir)src\text.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\sprite.cpp" />
+    <ClCompile Include="$(SolutionDir)..\..\src\text.cpp" />
     <ClCompile Include="test_main.cpp" />
     <ClCompile Include="test_text.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(SolutionDir)UwpAssets\BlankCursor.cur" />
+    <None Include="$(SolutionDir)..\..\UwpAssets\BlankCursor.cur" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="$(SolutionDir)UwpAssets\Resources.rc" />
+    <ResourceCompile Include="$(SolutionDir)..\..\UwpAssets\Resources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\backend.h" />
-    <ClInclude Include="include\fs.h" />
-    <ClInclude Include="include\game.h" />
-    <ClInclude Include="include\image.h" />
-    <ClInclude Include="include\input.h" />
-    <ClInclude Include="include\physics.h" />
-    <ClInclude Include="include\sprite.h" />
-    <ClInclude Include="include\text.h" />
+    <ClInclude Include="..\..\include\backend.h" />
+    <ClInclude Include="..\..\include\fs.h" />
+    <ClInclude Include="..\..\include\game.h" />
+    <ClInclude Include="..\..\include\image.h" />
+    <ClInclude Include="..\..\include\input.h" />
+    <ClInclude Include="..\..\include\physics.h" />
+    <ClInclude Include="..\..\include\sprite.h" />
+    <ClInclude Include="..\..\include\text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

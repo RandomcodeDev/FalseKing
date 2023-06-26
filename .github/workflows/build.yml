@@ -51,7 +51,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} Game.sln /t:"Build;Publish"
+      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
 
     - name: Install system dependencies
       if: matrix.os != 'windows-latest'

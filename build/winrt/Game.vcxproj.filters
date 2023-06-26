@@ -48,66 +48,66 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\image.cpp">
+    <ClCompile Include="..\..\src\image.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="..\..\src\main.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sdl.cpp">
+    <ClCompile Include="..\..\src\sdl.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sprite.cpp">
+    <ClCompile Include="..\..\src\sprite.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fs.cpp">
+    <ClCompile Include="..\..\src\fs.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\physics.cpp">
+    <ClCompile Include="..\..\src\physics.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\flecs.c">
+    <ClCompile Include="..\..\deps\src\flecs.c">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash128.cpp">
+    <ClCompile Include="..\..\deps\src\metrohash128.cpp">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="deps\src\metrohash64.cpp">
+    <ClCompile Include="..\..\deps\src\metrohash64.cpp">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="src\text.cpp">
+    <ClCompile Include="..\..\src\text.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\components.cpp">
+    <ClCompile Include="..\..\src\components.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems.cpp">
+    <ClCompile Include="..\..\src\systems.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="UwpAssets\BlankCursor.cur" />
-    <None Include="README.md" />
-    <None Include="scripts\copyfiles.bat" />
-    <None Include="deps\%24%28Platform%29\%24%28Configuration%29">
+    <None Include="..\..\README.md" />
+    <None Include="..\..\scripts\copyfiles.bat" />
+    <None Include="..\..\deps\%24%28Platform%29\%24%28Configuration%29">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysX_64.dll">
+    <None Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysX_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCommon_64.dll">
+    <None Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCommon_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\x64\Debug\PhysXCooking_64.dll">
+    <None Include="..\..\deps\lib\x64\Debug\PhysXCooking_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\x64\Debug\PhysXFoundation_64.dll">
+    <None Include="..\..\deps\lib\x64\Debug\PhysXFoundation_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\x64\Debug\PhysXGpu_64.dll">
+    <None Include="..\..\deps\lib\x64\Debug\PhysXGpu_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
-    <None Include="deps\lib\x64\Debug\PVDRuntime_64.dll">
+    <None Include="..\..\deps\lib\x64\Debug\PVDRuntime_64.dll">
       <Filter>Content\Deploy Files</Filter>
     </None>
   </ItemGroup>
@@ -115,39 +115,39 @@
     <ResourceCompile Include="UwpAssets\Resources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\backend.h">
+    <ClInclude Include="..\..\include\backend.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\fs.h">
+    <ClInclude Include="..\..\include\fs.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\game.h">
+    <ClInclude Include="..\..\include\game.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\image.h">
+    <ClInclude Include="..\..\include\image.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sprite.h">
+    <ClInclude Include="..\..\include\sprite.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\input.h">
+    <ClInclude Include="..\..\include\input.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\physics.h">
+    <ClInclude Include="..\..\include\physics.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\text.h">
+    <ClInclude Include="..\..\include\text.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\components.h">
+    <ClInclude Include="..\..\include\components.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\systems.h">
+    <ClInclude Include="..\..\include\systems.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="deps\lib\%24%28Platform%29\libzstd.dll">
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\libzstd.dll">
       <Filter>Content\Deploy Files</Filter>
     </CopyFileToFolders>
   </ItemGroup>

@@ -1,23 +1,24 @@
-_ARCH!=${.CURDIR}/scripts/arch.sh
+ROOT?=${.CURDIR}/../..
+_ARCH!=${ROOT}/scripts/arch.sh
 ARCH?=${_ARCH}
 CONFIG?=Debug
 
 PROG:=Game.${ARCH}
-SRCS=src/components.cpp \
-     src/fs.cpp \
-     src/image.cpp \
-     src/main.cpp \
-     src/physics.cpp \
-     src/sdl.cpp \
-     src/sprite.cpp \
-     src/systems.cpp \
-     src/text.cpp \
-     deps/src/flecs.c \
-     deps/src/metrohash128.cpp \
-     deps/src/metrohash64.cpp
+SRCS=${ROOT}/src/components.cpp \
+     ${ROOT}/src/fs.cpp \
+     ${ROOT}/src/image.cpp \
+     ${ROOT}/src/main.cpp \
+     ${ROOT}/src/physics.cpp \
+     ${ROOT}/src/sdl.cpp \
+     ${ROOT}/src/sprite.cpp \
+     ${ROOT}/src/systems.cpp \
+     ${ROOT}/src/text.cpp \
+     ${ROOT}/deps/src/flecs.c \
+     ${ROOT}/deps/src/metrohash128.cpp \
+     ${ROOT}/deps/src/metrohash64.cpp
 WARNS?=-Wall -Wextra
 CSTD=-std=c17
-CFLAGS+=-xc -DUSE_SDL=1 -I${.CURDIR}/include -I${.CURDIR}/deps/include
+CFLAGS+=-xc -DUSE_SDL=1 -I${ROOT}/include -I${ROOT}/deps/include
 CXXFLAGS+=-xc++ -std=c++17
 
 .if "${CONFIG}" == "Debug"
@@ -26,7 +27,7 @@ CXXFLAGS+=-xc++ -std=c++17
      CFLAGS+=-DNDEBUG=1
 .endif
 
-LIBDIR=${.CURDIR}/deps/lib
+LIBDIR=${ROOT}/deps/lib
 LDADD+=${LIBDIR}/${ARCH}/${CONFIG}/libPhysX_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCharacterKinematic_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCommon_static_64${SLIBEXT} \

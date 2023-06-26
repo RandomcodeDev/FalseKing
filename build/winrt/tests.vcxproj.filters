@@ -2,58 +2,58 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="test_main.cpp" />
-    <ClCompile Include="$(SolutionDir)deps\src\flecs.c">
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\flecs.c">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\fs.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\fs.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\image.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\image.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)deps\src\metrohash64.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\metrohash64.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)deps\src\metrohash128.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\deps\src\metrohash128.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\physics.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\physics.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\sdl.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\sdl.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\sprite.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\sprite.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)src\text.cpp">
+    <ClCompile Include="$(SolutionDir)..\..\src\text.cpp">
       <Filter>stuff</Filter>
     </ClCompile>
     <ClCompile Include="test_text.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\backend.h">
+    <ClInclude Include="..\..\include\backend.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\fs.h">
+    <ClInclude Include="..\..\include\fs.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\game.h">
+    <ClInclude Include="..\..\include\game.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\image.h">
+    <ClInclude Include="..\..\include\image.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\input.h">
+    <ClInclude Include="..\..\include\input.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\physics.h">
+    <ClInclude Include="..\..\include\physics.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\sprite.h">
+    <ClInclude Include="..\..\include\sprite.h">
       <Filter>stuff</Filter>
     </ClInclude>
-    <ClInclude Include="include\text.h">
+    <ClInclude Include="..\..\include\text.h">
       <Filter>stuff</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,7 +86,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(SolutionDir)UwpAssets\BlankCursor.cur">
+    <None Include="$(SolutionDir)..\..\UwpAssets\BlankCursor.cur">
       <Filter>stuff</Filter>
     </None>
   </ItemGroup>
@@ -96,7 +96,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="$(SolutionDir)UwpAssets\Resources.rc">
+    <ResourceCompile Include="$(SolutionDir)..\..\UwpAssets\Resources.rc">
       <Filter>stuff</Filter>
     </ResourceCompile>
   </ItemGroup>

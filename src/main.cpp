@@ -15,6 +15,11 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 {
     g_backend = backend;
 
+#ifdef _WIN32
+    spdlog::default_logger().get()->sinks().push_back(
+        std::make_shared<spdlog::sinks::msvc_sink_st>());
+#endif
+
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else
@@ -90,7 +95,6 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
         }
 
         world.progress(floatDelta);
-        
 
         Text::DrawString(
             fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),
