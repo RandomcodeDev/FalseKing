@@ -52,10 +52,10 @@
     <Import Project="ImportNintendoSdk.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">
-    <ApplicationDataDir>$(OutDir)assets</ApplicationDataDir>
+    <ApplicationDataDir>$(SolutionDir)..\..\assets</ApplicationDataDir>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros" Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">
-    <ApplicationDataDir>$(OutDir)assets</ApplicationDataDir>
+    <ApplicationDataDir>$(SolutionDir)..\..\assets</ApplicationDataDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">
     <TargetName>Game</TargetName>
@@ -90,7 +90,8 @@
       <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">
@@ -117,7 +118,8 @@
       <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" $(Platform) $(Configuration)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
