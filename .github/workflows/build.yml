@@ -38,13 +38,15 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Decode signing key
+      if: matrix.os == 'windows-latest'
       shell: bash
       working-directory: ${{env.GITHUB_WORKSPACE}}
       env:
         GAME_PFX_BASE64: ${{secrets.GAME_PFX_BASE64}}
       run: |
         printf "$GAME_PFX_BASE64" > Game_TemporaryKey.pfx.base64
-        base64 -d Game_TemporaryKey.pfx.base64 > Game_TemporaryKey.pfx
+        base64 -d Game_TemporaryKey.pfx.base64 > build/winrt/Game_TemporaryKey.pfx
+        rm Game_TemporaryKey.pfx.base64
 
     - name: Build (MSBuild)
       working-directory: ${{env.GITHUB_WORKSPACE}}
