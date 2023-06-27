@@ -1,5 +1,6 @@
 // SDL backend
 
+#include "SDL3/SDL.h"
 #include "SDL3/SDL_main.h"
 
 #include "backend.h"
@@ -7,9 +8,82 @@
 #include "input.h"
 #include "sprite.h"
 
+class SdlBackend : protected Backend
+{
+  public:
+    SdlBackend();
+    ~SdlBackend();
+    void SetupImage(Image& image);
+    void CleanupImage(Image& image);
+    bool Update(class InputState& input);
+    bool BeginRender();
+    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
+                   float scaleY, uint32_t srcX, uint32_t srcY,
+                   uint32_t srcWidth, uint32_t srcHeight, glm::u8vec3 color);
+    void EndRender();
+    const WindowInfo& GetWindowInformation() const
+    {
+        return m_windowInfo;
+    }
+    KeyMapping& GetKeyMapping()
+    {
+        return m_mapping;
+    }
+
+  private:
+    SDL_Window* m_window;
+    SDL_Renderer* m_renderer;
+    WindowInfo m_windowInfo;
+    int32_t m_windowId;
+    KeyMapping m_mapping;
+    SDL_Gamepad* m_gamepad;
+    SDL_JoystickID m_gamepadId;
+
+    bool HandleEvent(const SDL_Event& event, InputState& input);
+
+    static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
+                                                     SDL_SCANCODE_TAB,
+                                                     SDL_SCANCODE_Q,
+                                                     SDL_SCANCODE_C,
+                                                     SDL_SCANCODE_X,
+                                                     SDL_SCANCODE_V,
+                                                     SDL_SCANCODE_SPACE,
+                                                     SDL_SCANCODE_F,
+                                                     SDL_SCANCODE_E,
+                                                     SDL_SCANCODE_R,
+                                                     0,
+                                                     0,
+                                                     SDL_SCANCODE_LSHIFT,
+                                                     SDL_SCANCODE_LCTRL,
+                                                     SDL_SCANCODE_W,
+                                                     SDL_SCANCODE_S,
+                                                     SDL_SCANCODE_A,
+                                                     SDL_SCANCODE_D};
+
+    static const inline SDL_GamepadButton BUTTONS_IN_ORDER[] = {
+        SDL_GAMEPAD_BUTTON_START,
+        SDL_GAMEPAD_BUTTON_BACK,
+        SDL_GAMEPAD_BUTTON_DPAD_UP,
+        SDL_GAMEPAD_BUTTON_DPAD_DOWN,
+        SDL_GAMEPAD_BUTTON_DPAD_LEFT,
+        SDL_GAMEPAD_BUTTON_DPAD_RIGHT,
+        SDL_GAMEPAD_BUTTON_A,
+        SDL_GAMEPAD_BUTTON_B,
+        SDL_GAMEPAD_BUTTON_X,
+        SDL_GAMEPAD_BUTTON_Y,
+        SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
+        SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
+        SDL_GAMEPAD_BUTTON_LEFT_STICK,
+        SDL_GAMEPAD_BUTTON_RIGHT_STICK,
+    };
+
+    static constexpr float SCROLLING_SENSITIVITY = 20.0f;
+};
+
 extern "C" int main(int argc, char* argv[])
 {
-#if defined(_WIN32) && defined(_DEBUG)
+#ifdef _WIN32
+#ifdef _DEBUG
     AllocConsole();
     FILE* dummy;
     freopen_s(&dummy, "CONIN$", "r", stdin);
@@ -18,13 +92,17 @@ extern "C" int main(int argc, char* argv[])
     spdlog::flush_every(std::chrono::seconds(5));
 #endif
 
+    spdlog::default_logger().get()->sinks().push_back(
+        std::make_shared<spdlog::sinks::msvc_sink_st>());
+#endif
+
     SPDLOG_INFO("Creating backend");
     Backend* backend = (Backend*)new SdlBackend();
 
-    std::vector<fs::path> paths;
-    fs::path baseDir = SDL_GetBasePath();
+    std::vector<std::string> paths;
+    std::string baseDir = SDL_GetBasePath();
 #ifndef __WINRT__
-    baseDir /= "assets";
+    baseDir += "/assets";
 #endif
     paths.push_back(baseDir);
     int returnCode = GameMain(backend, paths);

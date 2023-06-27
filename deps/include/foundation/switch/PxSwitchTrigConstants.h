@@ -26,75 +26,50 @@
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
-#ifndef PX_WINDOWS_INCLUDE_H
-#define PX_WINDOWS_INCLUDE_H
+#ifndef PXFOUNDATION_PXSWITCHTRIGCONSTANTS_H
+#define PXFOUNDATION_PXSWITCHTRIGCONSTANTS_H
 
-#ifndef _WIN32
-#error "This file should only be included by Windows builds!!"
+#include "foundation/PxPreprocessor.h"
+
+namespace physx
+{
+namespace aos
+{
+
+#if PX_CLANG
+#if PX_LINUX
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+#endif
 #endif
 
-#ifdef _WINDOWS_ // windows already included
-#error "Only include windows.h through this file!!"
+#define PX_GLOBALCONST extern const __attribute__((weak))
+
+PX_ALIGN_PREFIX(16)
+struct PX_VECTORF32
+{
+	float f[4];
+} PX_ALIGN_SUFFIX(16);
+
+PX_GLOBALCONST PX_VECTORF32 g_PXSinCoefficients0 = { { 1.0f, -0.166666667f, 8.333333333e-3f, -1.984126984e-4f } };
+PX_GLOBALCONST PX_VECTORF32
+g_PXSinCoefficients1 = { { 2.755731922e-6f, -2.505210839e-8f, 1.605904384e-10f, -7.647163732e-13f } };
+PX_GLOBALCONST PX_VECTORF32
+g_PXSinCoefficients2 = { { 2.811457254e-15f, -8.220635247e-18f, 1.957294106e-20f, -3.868170171e-23f } };
+PX_GLOBALCONST PX_VECTORF32 g_PXCosCoefficients0 = { { 1.0f, -0.5f, 4.166666667e-2f, -1.388888889e-3f } };
+PX_GLOBALCONST PX_VECTORF32
+g_PXCosCoefficients1 = { { 2.480158730e-5f, -2.755731922e-7f, 2.087675699e-9f, -1.147074560e-11f } };
+PX_GLOBALCONST PX_VECTORF32
+g_PXCosCoefficients2 = { { 4.779477332e-14f, -1.561920697e-16f, 4.110317623e-19f, -8.896791392e-22f } };
+PX_GLOBALCONST PX_VECTORF32 g_PXReciprocalTwoPi = { { PxInvTwoPi, PxInvTwoPi, PxInvTwoPi, PxInvTwoPi } };
+PX_GLOBALCONST PX_VECTORF32 g_PXTwoPi = { { PxTwoPi, PxTwoPi, PxTwoPi, PxTwoPi } };
+
+#if PX_CLANG
+#if PX_LINUX
+#pragma clang diagnostic pop
 #endif
-
-// We only support >= Windows XP, and we need this for critical section and
-// Setting this hides some important APIs (e.g. LoadPackagedLibrary), so don't do it
-#define _WIN32_WINNT 0x0501
-
-// turn off as much as we can for windows. All we really need is the thread functions(critical sections/Interlocked*
-// etc)
-#define NOGDICAPMASKS
-#define NOVIRTUALKEYCODES
-#define NOWINMESSAGES
-#define NOWINSTYLES
-#define NOSYSMETRICS
-#define NOMENUS
-#define NOICONS
-#define NOKEYSTATES
-#define NOSYSCOMMANDS
-#define NORASTEROPS
-#define NOSHOWWINDOW
-#define NOATOM
-#define NOCLIPBOARD
-#define NOCOLOR
-#define NOCTLMGR
-#define NODRAWTEXT
-#define NOGDI
-#define NOMB
-#define NOMEMMGR
-#define NOMETAFILE
-#define NOMINMAX
-#define NOOPENFILE
-#define NOSCROLL
-#define NOSERVICE
-#define NOSOUND
-#define NOTEXTMETRIC
-#define NOWH
-#define NOWINOFFSETS
-#define NOCOMM
-#define NOKANJI
-#define NOHELP
-#define NOPROFILER
-#define NODEFERWINDOWPOS
-#define NOMCX
-#define WIN32_LEAN_AND_MEAN
-// We need a slightly wider API surface for e.g. MultiByteToWideChar
-#define NOUSER
-#define NONLS
-#define NOMSG
-
-#pragma warning(push)
-#pragma warning(disable : 4668) //'symbol' is not defined as a preprocessor macro, replacing with '0' for 'directives'
-#ifdef _XBOX
-#include <xtl.h>
-#else
-#include <windows.h>
 #endif
-#pragma warning(pop)
+} // namespace aos
+} // namespace physx
 
-#if PX_SSE2
-#include <xmmintrin.h>
-#endif
-
-#endif
-
+#endif //PXFOUNDATION_PXSWITCHTRIGCONSTANTS_H

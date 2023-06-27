@@ -6,7 +6,6 @@
 #include <cinttypes>
 #include <codecvt>
 #include <cstdlib>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <locale>
@@ -14,7 +13,6 @@
 #include <thread>
 
 #ifndef TOOL
-
 #include "flecs.h"
 
 #include "glm/vec2.hpp"
@@ -36,21 +34,24 @@ using namespace physx;
 #ifdef _DEBUG
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
 #endif
+#define FMT_NO_EXCEPTIONS
+#define SPDLOG_NO_EXCEPTIONS
 #include "spdlog/fmt/chrono.h"
 #include "spdlog/fmt/fmt.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/sink.h"
+#include "spdlog/sinks/base_sink.h"
 #ifdef _WIN32
 #include "spdlog/sinks/msvc_sink.h"
 #endif
 
 #define TOML_FLOAT_CHARCONV 0
+#define TOML_EXCEPTIONS 0
 #include "toml++/toml.h"
 
 #include "zstd.h"
 
 namespace chrono = std::chrono;
-namespace fs = std::filesystem;
 using precise_clock = chrono::high_resolution_clock;
 
 // Constants

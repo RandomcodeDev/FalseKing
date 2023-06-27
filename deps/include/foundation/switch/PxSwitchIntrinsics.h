@@ -26,75 +26,83 @@
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
-#ifndef PX_WINDOWS_INCLUDE_H
-#define PX_WINDOWS_INCLUDE_H
+#ifndef PSFOUNDATION_PSSWITCHINTRINSICS_H
+#define PSFOUNDATION_PSSWITCHINTRINSICS_H
 
-#ifndef _WIN32
-#error "This file should only be included by Windows builds!!"
+#include "foundation/PxAssert.h"
+#include <math.h>
+
+// this file is for internal intrinsics - that is, intrinsics that are used in
+// cross platform code but do not appear in the API
+
+#if !(__NX__)
+#error "This file should only be included by Switch builds!!"
 #endif
 
-#ifdef _WINDOWS_ // windows already included
-#error "Only include windows.h through this file!!"
+#if !PX_DOXYGEN
+namespace physx
+{
 #endif
 
-// We only support >= Windows XP, and we need this for critical section and
-// Setting this hides some important APIs (e.g. LoadPackagedLibrary), so don't do it
-#define _WIN32_WINNT 0x0501
+PX_FORCE_INLINE void PxMemoryBarrier()
+{
+	__sync_synchronize();
+}
 
-// turn off as much as we can for windows. All we really need is the thread functions(critical sections/Interlocked*
-// etc)
-#define NOGDICAPMASKS
-#define NOVIRTUALKEYCODES
-#define NOWINMESSAGES
-#define NOWINSTYLES
-#define NOSYSMETRICS
-#define NOMENUS
-#define NOICONS
-#define NOKEYSTATES
-#define NOSYSCOMMANDS
-#define NORASTEROPS
-#define NOSHOWWINDOW
-#define NOATOM
-#define NOCLIPBOARD
-#define NOCOLOR
-#define NOCTLMGR
-#define NODRAWTEXT
-#define NOGDI
-#define NOMB
-#define NOMEMMGR
-#define NOMETAFILE
-#define NOMINMAX
-#define NOOPENFILE
-#define NOSCROLL
-#define NOSERVICE
-#define NOSOUND
-#define NOTEXTMETRIC
-#define NOWH
-#define NOWINOFFSETS
-#define NOCOMM
-#define NOKANJI
-#define NOHELP
-#define NOPROFILER
-#define NODEFERWINDOWPOS
-#define NOMCX
-#define WIN32_LEAN_AND_MEAN
-// We need a slightly wider API surface for e.g. MultiByteToWideChar
-#define NOUSER
-#define NONLS
-#define NOMSG
+/*!
+Return the index of the highest set bit. Undefined for zero arg.
+*/
+PX_INLINE uint32_t PxHighestSetBitUnsafe(uint32_t v)
+{
 
-#pragma warning(push)
-#pragma warning(disable : 4668) //'symbol' is not defined as a preprocessor macro, replacing with '0' for 'directives'
-#ifdef _XBOX
-#include <xtl.h>
-#else
-#include <windows.h>
+	return uint32_t(31 - __builtin_clz(v));
+}
+
+/*!
+Return the index of the highest set bit. Undefined for zero arg.
+*/
+PX_INLINE uint32_t PxLowestSetBitUnsafe(uint32_t v)
+{
+	return uint32_t(__builtin_ctz(v));
+}
+
+/*!
+Returns the index of the highest set bit. Returns 32 for v=0.
+*/
+PX_INLINE uint32_t PxCountLeadingZeros(uint32_t v)
+{
+	if(v)
+		return uint32_t(__builtin_clz(v));
+	else
+		return 32u;
+}
+
+/*!
+Prefetch aligned 64B x86, 32b ARM around \c ptr+offset.
+*/
+PX_FORCE_INLINE void PxPrefetchLine(const void* ptr, uint32_t offset = 0)
+{
+	__builtin_prefetch(reinterpret_cast<const char* PX_RESTRICT>(ptr) + offset, 0, 3);
+}
+
+/*!
+Prefetch \c count bytes starting at \c ptr.
+*/
+PX_FORCE_INLINE void PxPrefetch(const void* ptr, uint32_t count = 1)
+{
+	const char* cp = reinterpret_cast<const char*>(ptr);
+	uint64_t p = size_t(ptr);
+	uint64_t startLine = p >> 6, endLine = (p + count - 1) >> 6;
+	uint64_t lines = endLine - startLine + 1;
+	do
+	{
+		PxPrefetchLine(cp);
+		cp += 64;
+	} while(--lines);
+}
+
+#if !PX_DOXYGEN
+} // namespace physx
 #endif
-#pragma warning(pop)
 
-#if PX_SSE2
-#include <xmmintrin.h>
-#endif
-
-#endif
-
+#endif // #ifndef PSFOUNDATION_PSSWITCHINTRINSICS_H

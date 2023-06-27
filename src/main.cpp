@@ -11,14 +11,9 @@
 
 Backend* g_backend;
 
-int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
+int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 {
     g_backend = backend;
-
-#ifdef _WIN32
-    spdlog::default_logger().get()->sinks().push_back(
-        std::make_shared<spdlog::sinks::msvc_sink_st>());
-#endif
 
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
@@ -28,8 +23,7 @@ int GameMain(Backend* backend, std::vector<fs::path> backendPaths)
 
     SPDLOG_INFO("Initializing game");
 
-    std::vector<fs::path> paths;
-    paths.push_back("custom");
+    std::vector<std::string> paths;
     for (const auto& path : backendPaths)
     {
         paths.push_back(path);

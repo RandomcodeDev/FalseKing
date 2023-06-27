@@ -17,10 +17,6 @@ Linux)
     DLIBEXT=.so
     SLIBEXT=.a
     ;;
-Darwin)
-    DLIBEXT=.dylib
-    SLIBEXT=-darwin.a
-    ;;
 FreeBSD)
     DLIBEXT=-freebsd.so
     SLIBEXT=-freebsd.a

@@ -18,20 +18,11 @@ void Text::Initialize()
     std::vector<uint8_t> fontTomlRaw = Filesystem::Read("font.toml");
     std::string fontToml(fontTomlRaw.begin(), fontTomlRaw.end());
     fontTomlRaw.clear();
-    toml::table fontDefinition;
-    try
+    toml::parse_result fontDefinition = toml::parse(fontToml);
+    if (fontDefinition.failed())
     {
-        fontDefinition = toml::parse(fontToml);
+        Quit(fmt::format("Failed to parse font definition: {}", fontDefinition.error().description()));
     }
-    catch (toml::parse_error e)
-    {
-        Quit(fmt::format("Failed to parse font definition: {}", e.description()));
-    }
-    if (!fontDefinition["font"].is_table())
-    {
-        Quit(fmt::format("Invalid font definition: missing [font]"), EINVAL);
-    }
-
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     for (const auto& character :
          (toml::table&)*fontDefinition["font"].as_table())

@@ -26,75 +26,58 @@
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
-#ifndef PX_WINDOWS_INCLUDE_H
-#define PX_WINDOWS_INCLUDE_H
+#ifndef PXFOUNDATION_PXSWITCHFPU_H
+#define PXFOUNDATION_PXSWITCHFPU_H
 
-#ifndef _WIN32
-#error "This file should only be included by Windows builds!!"
+#include "foundation/PxPreprocessor.h"
+
+#if PX_LINUX || PX_OSX
+
+#if PX_X86 || PX_X64
+#if PX_EMSCRIPTEN
+#include <emmintrin.h>
 #endif
-
-#ifdef _WINDOWS_ // windows already included
-#error "Only include windows.h through this file!!"
-#endif
-
-// We only support >= Windows XP, and we need this for critical section and
-// Setting this hides some important APIs (e.g. LoadPackagedLibrary), so don't do it
-#define _WIN32_WINNT 0x0501
-
-// turn off as much as we can for windows. All we really need is the thread functions(critical sections/Interlocked*
-// etc)
-#define NOGDICAPMASKS
-#define NOVIRTUALKEYCODES
-#define NOWINMESSAGES
-#define NOWINSTYLES
-#define NOSYSMETRICS
-#define NOMENUS
-#define NOICONS
-#define NOKEYSTATES
-#define NOSYSCOMMANDS
-#define NORASTEROPS
-#define NOSHOWWINDOW
-#define NOATOM
-#define NOCLIPBOARD
-#define NOCOLOR
-#define NOCTLMGR
-#define NODRAWTEXT
-#define NOGDI
-#define NOMB
-#define NOMEMMGR
-#define NOMETAFILE
-#define NOMINMAX
-#define NOOPENFILE
-#define NOSCROLL
-#define NOSERVICE
-#define NOSOUND
-#define NOTEXTMETRIC
-#define NOWH
-#define NOWINOFFSETS
-#define NOCOMM
-#define NOKANJI
-#define NOHELP
-#define NOPROFILER
-#define NODEFERWINDOWPOS
-#define NOMCX
-#define WIN32_LEAN_AND_MEAN
-// We need a slightly wider API surface for e.g. MultiByteToWideChar
-#define NOUSER
-#define NONLS
-#define NOMSG
-
-#pragma warning(push)
-#pragma warning(disable : 4668) //'symbol' is not defined as a preprocessor macro, replacing with '0' for 'directives'
-#ifdef _XBOX
-#include <xtl.h>
-#else
-#include <windows.h>
-#endif
-#pragma warning(pop)
-
-#if PX_SSE2
 #include <xmmintrin.h>
+#elif PX_NEON
+#include <arm_neon.h>
 #endif
 
+PX_INLINE physx::PxSIMDGuard::PxSIMDGuard(bool enable) 
+#if !PX_EMSCRIPTEN && (PX_X86 || PX_X64)
+	: mEnabled(enable)
 #endif
+{
+#if !PX_EMSCRIPTEN && (PX_X86 || PX_X64)
+	if(enable)
+	{
+		mControlWord = _mm_getcsr();
+		// set default (disable exceptions: _MM_MASK_MASK) and FTZ (_MM_FLUSH_ZERO_ON), DAZ (_MM_DENORMALS_ZERO_ON: (1<<6))
+		_mm_setcsr(_MM_MASK_MASK | _MM_FLUSH_ZERO_ON | (1 << 6));
+	}
+	else
+	{
+		PX_UNUSED(enable);
+		PX_ASSERT(_mm_getcsr() & _MM_FLUSH_ZERO_ON);
+		PX_ASSERT(_mm_getcsr() & (1 << 6));
+		PX_ASSERT(_mm_getcsr() & _MM_MASK_MASK);
+	}
+#endif
+}
 
+PX_INLINE physx::PxSIMDGuard::~PxSIMDGuard()
+{
+#if !PX_EMSCRIPTEN && (PX_X86 || PX_X64)
+	if(mEnabled)
+	{
+		// restore control word and clear exception flags
+		// (setting exception state flags cause exceptions on the first following fp operation)
+		_mm_setcsr(mControlWord & PxU32(~_MM_EXCEPT_MASK));
+	}
+#endif
+}
+
+#else
+	#error No SIMD implementation for this unix platform.
+#endif // PX_LINUX || PX_OSX
+
+#endif // #ifndef PXFOUNDATION_PXSWITCHFPU_H

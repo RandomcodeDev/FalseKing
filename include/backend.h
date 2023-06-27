@@ -77,84 +77,14 @@ class Backend
     virtual KeyMapping& GetKeyMapping() = 0;
 };
 
-#ifdef USE_SDL
-#include "SDL3/SDL.h"
-
-class SdlBackend : protected Backend
-{
-  public:
-    SdlBackend();
-    ~SdlBackend();
-    void SetupImage(Image& image);
-    void CleanupImage(Image& image);
-    bool Update(class InputState& input);
-    bool BeginRender();
-    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
-                   float scaleY, uint32_t srcX, uint32_t srcY,
-                   uint32_t srcWidth, uint32_t srcHeight, glm::u8vec3 color);
-    void EndRender();
-    const WindowInfo& GetWindowInformation() const
-    {
-        return m_windowInfo;
-    }
-    KeyMapping& GetKeyMapping()
-    {
-        return m_mapping;
-    }
-
-  private:
-    SDL_Window* m_window;
-    SDL_Renderer* m_renderer;
-    WindowInfo m_windowInfo;
-    int32_t m_windowId;
-    KeyMapping m_mapping;
-    SDL_Gamepad* m_gamepad;
-    SDL_JoystickID m_gamepadId;
-
-    bool HandleEvent(const SDL_Event& event, InputState& input);
-
-    static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
-                                                     SDL_SCANCODE_TAB,
-                                                     SDL_SCANCODE_Q,
-                                                     SDL_SCANCODE_C,
-                                                     SDL_SCANCODE_X,
-                                                     SDL_SCANCODE_V,
-                                                     SDL_SCANCODE_SPACE,
-                                                     SDL_SCANCODE_F,
-                                                     SDL_SCANCODE_E,
-                                                     SDL_SCANCODE_R,
-                                                     0,
-                                                     0,
-                                                     SDL_SCANCODE_LSHIFT,
-                                                     SDL_SCANCODE_LCTRL,
-                                                     SDL_SCANCODE_W,
-                                                     SDL_SCANCODE_S,
-                                                     SDL_SCANCODE_A,
-                                                     SDL_SCANCODE_D};
-
-    static const inline SDL_GamepadButton BUTTONS_IN_ORDER[] = {
-        SDL_GAMEPAD_BUTTON_START,
-        SDL_GAMEPAD_BUTTON_BACK,
-        SDL_GAMEPAD_BUTTON_DPAD_UP,
-        SDL_GAMEPAD_BUTTON_DPAD_DOWN,
-        SDL_GAMEPAD_BUTTON_DPAD_LEFT,
-        SDL_GAMEPAD_BUTTON_DPAD_RIGHT,
-        SDL_GAMEPAD_BUTTON_A,
-        SDL_GAMEPAD_BUTTON_B,
-        SDL_GAMEPAD_BUTTON_X,
-        SDL_GAMEPAD_BUTTON_Y,
-        SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
-        SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
-        SDL_GAMEPAD_BUTTON_LEFT_STICK,
-        SDL_GAMEPAD_BUTTON_RIGHT_STICK,
-    };
-
-    static constexpr float SCROLLING_SENSITIVITY = 20.0f;
-};
+#if __NX__
+class SwitchBackend;
+#elif defined(USE_SDL)
+class SdlBackend;
 #endif
 
 // Program entry point
-extern int GameMain(Backend* backend, std::vector<fs::path> backendPaths);
+extern int GameMain(Backend* backend, std::vector<std::string> backendPaths);
 
 // Global backend pointer
 extern Backend* g_backend;

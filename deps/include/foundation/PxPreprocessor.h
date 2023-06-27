@@ -99,7 +99,7 @@ Operating system defines, see http://sourceforge.net/p/predef/wiki/OperatingSyst
 	#define PX_LINUX 1
 #elif defined(__APPLE__)
 	#define PX_OSX 1
-#elif defined(__NX__)
+#elif defined(__NX__) || defined(__SWITCH__)
 	#define PX_SWITCH 1
 #else
 	#error "Unknown operating system"

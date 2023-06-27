@@ -467,7 +467,9 @@ extern "C" {
 #endif
 
 
-#if defined(_WIN32) || defined(_MSC_VER) || defined(__MING32__)
+#if defined(__NX__)
+#define ECS_TARGET_NX
+#elif defined(_WIN32) || defined(_MSC_VER) || defined(__MING32__)
 #define ECS_TARGET_WINDOWS
 #elif defined(__ANDROID__)
 #define ECS_TARGET_ANDROID
