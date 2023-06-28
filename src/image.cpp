@@ -10,7 +10,7 @@ Image::Image(const std::string& path)
     m_data = qoi_decode(data.data(), (int32_t)data.size(), &m_info, 4);
     if (!m_data)
     {
-        Quit(fmt::format("Failed to read image {}", path));
+        QUIT("Failed to read image {}", path);
     }
 
     g_backend->SetupImage(*this);

@@ -112,7 +112,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libPhysX_static_64-switch.a;libPhysXCharacterKinematic_static_64-switch.a;libPhysXCommon_static_64-switch.a;libPhysXExtensions_static_64-switch.a;libPhysXFoundation_static_64-switch.a;libPhysXPvdSDK_static_64-switch.a;SDL3.a.azstd.dll.a;d3d9.a;dxgi.a;kernel32.a;user32.a;gdi32.a;winspool.a;comdlg32.a;advapi32.a;shell32.a;ole32.a;oleaut32.a;uuid.a;odbc32.a;odbccp32.a;ws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libPhysX_static_64-switch.a;libPhysXCharacterKinematic_static_64-switch.a;libPhysXCommon_static_64-switch.a;libPhysXExtensions_static_64-switch.a;libPhysXFoundation_static_64-switch.a;libPhysXPvdSDK_static_64-switch.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>

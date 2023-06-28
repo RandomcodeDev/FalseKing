@@ -5,8 +5,9 @@
 class InputState
 {
   protected:
-    // Backend needs to set these
+    // Backends need to set these
     friend class SdlBackend;
+    friend class SwitchBackend;
 
     // Things that are usually analog on controller
     glm::vec2 leftStick;  // WASD/left stick

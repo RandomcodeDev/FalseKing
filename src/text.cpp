@@ -21,7 +21,7 @@ void Text::Initialize()
     toml::parse_result fontDefinition = toml::parse(fontToml);
     if (fontDefinition.failed())
     {
-        Quit(fmt::format("Failed to parse font definition: {}", fontDefinition.error().description()));
+        QUIT("Failed to parse font definition: {}", fontDefinition.error().description());
     }
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     for (const auto& character :

@@ -80,3 +80,5 @@ template <typename T> T SIGN(T val)
 
 // Exit the program
 [[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);
+#define QUIT(...) Quit(fmt::format(__VA_ARGS__))
+#define QUIT_CODE(exitCode, ...) Quit(fmt::format(__VA_ARGS__), exitCode)

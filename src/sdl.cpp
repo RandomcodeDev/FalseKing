@@ -125,7 +125,7 @@ SdlBackend::SdlBackend()
 
     if (SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_VIDEO) < 0)
     {
-        Quit(fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
+        QUIT("Failed to initialize SDL: {}", SDL_GetError());
     }
 
     m_window =
@@ -133,13 +133,13 @@ SdlBackend::SdlBackend()
                          SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);
     if (!m_window)
     {
-        Quit(fmt::format("Failed to create window: {}", SDL_GetError()));
+        QUIT("Failed to create window: {}", SDL_GetError());
     }
 
     m_renderer = SDL_CreateRenderer(m_window, nullptr, 0);
     if (!m_renderer)
     {
-        Quit(fmt::format("Failed to create renderer: {}", SDL_GetError()));
+        QUIT("Failed to create renderer: {}", SDL_GetError());
     }
 
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
