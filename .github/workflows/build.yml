@@ -21,14 +21,14 @@ jobs:
     strategy:
       matrix:
         config: [Debug, Release]
-        target: [x64]#, ARM64]
+        target: [x64]
         os: [
             windows-latest,
             macOS-13,
             ubuntu-latest
         ]
 
-    steps:
+    steps:  
     - uses: actions/checkout@v3
       with:
         lfs: true
