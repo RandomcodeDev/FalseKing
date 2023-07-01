@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-ROOT=$(realpath $(dirname $0)/..)
+ROOT=$(dirname $0)/..
 
 echo Copying libraries and assets
 mkdir -p $1

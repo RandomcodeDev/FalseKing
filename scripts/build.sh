@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-ROOT=$(realpath $(dirname $0)/..)
+ROOT=$(dirname $0)/..
 
 ARCH=$1
 if [ ! $ARCH ]; then
