@@ -3,7 +3,7 @@
 void Systems::Register(flecs::world& world, InputState* input)
 {
     // systems.h
-    world.system<const Components::LocalPlayer>()
+    world.system<const Tags::LocalPlayer>()
         .ctx(input)
         .kind(flecs::OnUpdate)
         .iter(PlayerInput);

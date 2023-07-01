@@ -55,7 +55,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
                                .set(Sprite(sprites, 0, 0))
                                .set(Components::MovementSpeed{0.5f, 0.75f})
                                .set(Components::Health{100.0f, 100.0f})
-                               .add<Components::LocalPlayer>();
+                               .add<Tags::Player>()
+                               .add<Tags::LocalPlayer>();
 
     bool run = true;
     chrono::time_point<precise_clock> start = precise_clock::now();
