@@ -17,7 +17,8 @@ permissions:
 jobs:
   build:
     name: ${{matrix.config}}-${{matrix.target}} build on ${{matrix.os}}
-    runs-on: ${{matrix.os}}
+
+runs-on: ${{matrix.os}}
     strategy:
       matrix:
         config: [Debug, Release]
@@ -55,7 +56,7 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
 
-    - name: Build (MSBuild, Legacy)
+    - name: Build (MSBuild Legacy)
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os == 'windows-latest'
       run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=Win32 build\winxp\Game.sln /t:"Build"
