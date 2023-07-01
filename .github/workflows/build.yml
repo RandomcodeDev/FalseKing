@@ -41,12 +41,12 @@ jobs:
         if: matrix.os != 'windows-latest'
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: scripts/pulldeps.sh
-      - name: Install Windows XP toolchain
-        if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        shell: cmd
-        run: |
-          "C:/Program Files (x86)/Microsoft Visual Studio/Installer/setup.exe" modify --installPath "C:/Program Files/Microsoft Visual Studio/2022/Enterprise" --add Microsoft.VisualStudio.Component.WinXP
+      #- name: Install Windows XP toolchain
+      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
+      #  working-directory: ${{env.GITHUB_WORKSPACE}}
+      #  shell: cmd
+      #  run: |
+      #    "C:/Program Files (x86)/Microsoft Visual Studio/Installer/setup.exe" modify --installPath "C:/Program Files/Microsoft Visual Studio/2022/Enterprise" --add Microsoft.VisualStudio.Component.WinXP
       - name: Add MSBuild to PATH
         if: matrix.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.0.2
@@ -67,11 +67,11 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: msbuild /m /p:Configuration=${{matrix.config}}
           /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
-      - name: Build (MSBuild Legacy)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86
-          build\winxp\Game.sln /t:"Build"
+      #- name: Build (MSBuild Legacy)
+      #  working-directory: ${{env.GITHUB_WORKSPACE}}
+      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
+      #  run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86
+      #    build\winxp\Game.sln /t:"Build"
       - name: Build (Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
@@ -81,11 +81,11 @@ jobs:
         if: matrix.os == 'macOS-13'
         run: xcodebuild -project build/darwin/False\ King.xcodeproj -config
           ${{matrix.config}}
-      - name: Distrib (Windows Legacy)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86
-          ${{matrix.config}} Game
+      #- name: Distrib (Windows Legacy)
+      #  working-directory: ${{env.GITHUB_WORKSPACE}}
+      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
+      #  run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86
+      #    ${{matrix.config}} Game
       - name: Distrib (Linux)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
@@ -104,12 +104,12 @@ jobs:
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
           path: AppPackages/Game/Game_1.0.0.0_Test
-      - name: Upload a Build Artifact (MSBuild Legacy)
-        uses: actions/upload-artifact@v3.1.2
-        if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        with:
-          name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
-          path: Game.tar.xz
+      #- name: Upload a Build Artifact (MSBuild Legacy)
+      #  uses: actions/upload-artifact@v3.1.2
+      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
+      #  with:
+      #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
+      #    path: Game.tar.xz
       - name: Upload a Build Artifact (Xcode)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'macOS-13'
