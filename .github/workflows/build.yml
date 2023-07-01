@@ -17,8 +17,7 @@ permissions:
 jobs:
   build:
     name: ${{matrix.config}}-${{matrix.target}} build on ${{matrix.os}}
-
-runs-on: ${{matrix.os}}
+    runs-on: ${{matrix.os}}
     strategy:
       matrix:
         config: [Debug, Release]
