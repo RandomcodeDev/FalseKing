@@ -14,7 +14,8 @@ The game is basically about a guy who kills kings with elemental powers to becom
 C++ syntax is used to represent things that could be done with function pointer tables and preprocessor macros in C, more than OOP (game uses ECS).
 
 ## Build instructions
-- [WinRT](build/winrt/BUILD.md)
+- [UWP/Xbox](build/winrt/BUILD.md)
 - [Windows legacy (Windows XP/7/etc)](build/winxp/BUILD.md)
+- [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
 - [Nintendo Switch](build/switch/BUILD.md)
