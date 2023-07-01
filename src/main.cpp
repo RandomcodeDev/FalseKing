@@ -37,6 +37,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     PhysicsState physics;
 
     flecs::world world;
+    Components::Register(world);
     Systems::Register(world, &input);
 
     SPDLOG_INFO("Game initialized");

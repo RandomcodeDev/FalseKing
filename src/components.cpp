@@ -4,5 +4,5 @@
 
 void Components::Register(flecs::world& world)
 {
-    world.component<LocalPlayer>().is_a<Player>();
+    world.component<Tags::LocalPlayer>().is_a<Tags::Player>();
 }

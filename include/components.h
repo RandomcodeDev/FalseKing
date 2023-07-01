@@ -18,6 +18,9 @@ struct LocalPlayer
 
 namespace Components
 {
+// Register components
+void Register(flecs::world& world);
+
 // Health
 struct Health
 {
