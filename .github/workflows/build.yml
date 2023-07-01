@@ -1,125 +1,116 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
+---
 name: Build
-
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
 permissions:
   contents: read
-
 jobs:
   build:
     name: ${{matrix.config}}-${{matrix.target}} build on ${{matrix.os}}
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        config: [Debug, Release]
-        target: [x64]
-        os: [
-            windows-latest,
-            macOS-13,
-            ubuntu-latest
-        ]
-
+        config:
+          - Debug
+          - Release
+        target:
+          - x64
+        os:
+          - windows-latest
+          - macOS-13
+          - ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           lfs: true
-  
       - name: Install Windows XP toolchain
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
         working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: "C:/Program Files (x86)/Microsoft Visual Studio/Installer/setup.exe" modify --installPath "C:/Program Files/Microsoft Visual Studio/2022/Enterprise" --add Microsoft.VisualStudio.Component.WinXP
-  
+        run: >
+          "C:/Program Files (x86)/Microsoft Visual Studio/Installer/setup.exe" modify
+          --installPath "C:/Program Files/Microsoft Visual
+          Studio/2022/Enterprise" --add Microsoft.VisualStudio.Component.WinXP
       - name: Add MSBuild to PATH
         if: matrix.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.0.2
-  
       - name: Decode signing key
         if: matrix.os == 'windows-latest'
         shell: bash
         working-directory: ${{env.GITHUB_WORKSPACE}}
         env:
           GAME_PFX_BASE64: ${{secrets.GAME_PFX_BASE64}}
-        run: |
+        run: >
           printf "$GAME_PFX_BASE64" > Game_TemporaryKey.pfx.base64
+
           base64 -d Game_TemporaryKey.pfx.base64 > build/winrt/Game_TemporaryKey.pfx
+
           rm Game_TemporaryKey.pfx.base64
-  
       - name: Build (MSBuild)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'windows-latest'
-        run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
-  
+        run: msbuild /m /p:Configuration=${{matrix.config}}
+          /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
       - name: Build (MSBuild Legacy)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86 build\winxp\Game.sln /t:"Build"
-  
+        run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86
+          build\winxp\Game.sln /t:"Build"
       - name: Install system dependencies
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install -y bmake
-  
       - name: chmod scripts
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os != 'windows-latest'
         run: chmod a+x scripts/*.sh
-  
       - name: Build (Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
         run: scripts/build.sh ${{matrix.target}} ${{matrix.config}}
-  
       - name: Build (Xcode)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'macOS-13'
-        run: xcodebuild -project build/darwin/False\ King.xcodeproj -config ${{matrix.config}}
-  
+        run: xcodebuild -project build/darwin/False\ King.xcodeproj -config
+          ${{matrix.config}}
       - name: Distrib (Windows Legacy)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-        run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86 ${{matrix.config}} Game
-  
+        run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86
+          ${{matrix.config}} Game
       - name: Distrib (Linux)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
-        run: scripts/distrib.sh FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}} ${{matrix.target}} ${{matrix.config}} Game
-        
+        run: scripts/distrib.sh
+          FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
+          ${{matrix.target}} ${{matrix.config}} Game
       - name: Upload a Build Artifact (MSBuild Debug)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'windows-latest' && matrix.config == 'Debug'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
           path: AppPackages/Game/Game_1.0.0.0_Debug_Test
-        
       - name: Upload a Build Artifact (MSBuild Release)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'windows-latest' && matrix.config == 'Release'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
           path: AppPackages/Game/Game_1.0.0.0_Test
-  
       - name: Upload a Build Artifact (MSBuild Legacy)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
           path: Game.tar.xz
-        
       - name: Upload a Build Artifact (Xcode)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'macOS-13'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          path: "build/darwin/build/${{matrix.config}}/False King.app"
-  
+          path: build/darwin/build/${{matrix.config}}/False King.app
       - name: Upload a Build Artifact (Make)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'ubuntu-latest'
