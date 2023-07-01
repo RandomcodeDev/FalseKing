@@ -26,8 +26,21 @@ jobs:
           - ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          lfs: true
+      - name: Install system dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install -y bmake
+      - name: chmod scripts
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        if: matrix.os != 'windows-latest'
+        run: chmod a+x scripts/*.sh
+      - name: Download dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: cmd /c scripts\pulldeps.bat
+      - name: Download dependencies (Unix)
+        if: matrix.os != 'windows-latest'
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: scripts/pulldeps.sh
       - name: Install Windows XP toolchain
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
         working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -59,13 +72,6 @@ jobs:
         if: matrix.os == 'windows-latest' && matrix.target == 'x64'
         run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86
           build\winxp\Game.sln /t:"Build"
-      - name: Install system dependencies
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt install -y bmake
-      - name: chmod scripts
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os != 'windows-latest'
-        run: chmod a+x scripts/*.sh
       - name: Build (Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
