@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 .DS_Store
 ._*
+build/darwin/build
+

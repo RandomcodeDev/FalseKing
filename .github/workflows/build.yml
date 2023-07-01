@@ -21,10 +21,10 @@ jobs:
     strategy:
       matrix:
         config: [Debug, Release]
-        target: [x64]
+        target: [x64, ARM64]
         os: [
             windows-latest,
-#           macOS-latest,
+            macOS-latest,
             ubuntu-latest
         ]
 
@@ -55,6 +55,11 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
 
+    - name: Build (MSBuild, Legacy)
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: matrix.os == 'windows-latest'
+      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=Win32 build\winxp\Game.sln /t:"Build"
+
     - name: Install system dependencies
       if: matrix.os != 'windows-latest'
       run: sudo apt install -y bmake
@@ -66,14 +71,22 @@ jobs:
 
     - name: Build (Make)
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      if: matrix.os != 'windows-latest'
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      if: matrix.os == 'ubuntu-latest'
       run: scripts/build.sh ${{matrix.target}} ${{matrix.config}}
 
-    - name: Distrib
+    - name: Build (Xcode)
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      if: matrix.os != 'windows-latest'
+      if: matrix.os == 'macOS-latest'
+      run: xcodebuild -project build/darwin/False\ King.xcodeproj -config ${{matrix.config}}
+
+    - name: Distrib (Legacy Windows)
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: matrix.os == 'windows-latest'
+      run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-Win32 Win32 ${{matrix.config}} Game
+
+    - name: Distrib (Linux)
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      if: matrix.os == 'ubuntu-latest'
       run: scripts/distrib.sh FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}} ${{matrix.target}} ${{matrix.config}} Game
       
     - name: Upload a Build Artifact (MSBuild Debug)
@@ -89,10 +102,16 @@ jobs:
       with:
         name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
         path: AppPackages/Game/Game_1.0.0.0_Test
-        
+      
+    - name: Upload a Build Artifact (Xcode)
+      uses: actions/upload-artifact@v3.1.2
+      if: matrix.os == 'macOS-latest'
+      with:
+        name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
+
     - name: Upload a Build Artifact (Make)
       uses: actions/upload-artifact@v3.1.2
-      if: matrix.os != 'windows-latest'
+      if: matrix.os == 'ubuntu-latest'
       with:
         name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
         path: Game.tar.xz
