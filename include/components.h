@@ -3,11 +3,8 @@
 #include "game.h"
 #include "input.h"
 
-namespace Components
+namespace Tags
 {
-// Set up components
-extern void Register(flecs::world& world);
-
 // Is a player
 struct Player
 {
@@ -17,7 +14,10 @@ struct Player
 struct LocalPlayer
 {
 };
+} // namespace Tags
 
+namespace Components
+{
 // Health
 struct Health
 {

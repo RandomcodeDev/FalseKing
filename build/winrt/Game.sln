@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game.vcxproj", "{95943BBE-F378-4068-A3FD-DAE1B8309B6E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcxproj", "{DC040A58-0566-4767-B558-315C4A688A5C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -27,14 +25,6 @@ Global
 		{95943BBE-F378-4068-A3FD-DAE1B8309B6E}.Release|x64.ActiveCfg = Release|x64
 		{95943BBE-F378-4068-A3FD-DAE1B8309B6E}.Release|x64.Build.0 = Release|x64
 		{95943BBE-F378-4068-A3FD-DAE1B8309B6E}.Release|x64.Deploy.0 = Release|x64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Debug|x64.ActiveCfg = Debug|x64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Debug|x64.Deploy.0 = Debug|x64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Release|ARM64.ActiveCfg = Release|ARM64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Release|ARM64.Deploy.0 = Release|ARM64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Release|x64.ActiveCfg = Release|x64
-		{DC040A58-0566-4767-B558-315C4A688A5C}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
