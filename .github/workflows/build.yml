@@ -59,7 +59,7 @@ runs-on: ${{matrix.os}}
     - name: Build (MSBuild Legacy)
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os == 'windows-latest'
-      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=Win32 build\winxp\Game.sln /t:"Build"
+      run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86 build\winxp\Game.sln /t:"Build"
 
     - name: Install system dependencies
       if: matrix.os == 'ubuntu-latest'
@@ -80,10 +80,10 @@ runs-on: ${{matrix.os}}
       if: matrix.os == 'macOS-latest'
       run: xcodebuild -project build/darwin/False\ King.xcodeproj -config ${{matrix.config}}
 
-    - name: Distrib (Legacy Windows)
+    - name: Distrib (Windows Legacy)
       working-directory: ${{env.GITHUB_WORKSPACE}}
       if: matrix.os == 'windows-latest'
-      run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-Win32 Win32 ${{matrix.config}} Game
+      run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86 ${{matrix.config}} Game
 
     - name: Distrib (Linux)
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -108,7 +108,7 @@ runs-on: ${{matrix.os}}
       uses: actions/upload-artifact@v3.1.2
       if: matrix.os == 'windows-latest'
       with:
-        name: FalseKing-${{matrix.config}}-${{matrix.os}}-Win32
+        name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
         path: Game.tar.xz
       
     - name: Upload a Build Artifact (Xcode)
