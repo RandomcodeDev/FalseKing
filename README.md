@@ -17,6 +17,7 @@ C++ syntax is used to represent things that could be done with function pointer 
 - Have `curl` (always available on supported Windows, may need to install on others)
 - Have `7z` available in your path (install 7-zip/p7zip)
 - Run `scripts\pulldeps.bat` or `scripts/pulldeps.sh` depending on your platform
+- On Unix-like platforms (macOS, Linux, etc), run `chmod +x scripts/*.sh` in order for the build process to work
 
 ## Platform-specific instructions
 - [UWP/Xbox](build/winrt/BUILD.md)
