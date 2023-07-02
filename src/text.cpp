@@ -18,18 +18,23 @@ void Text::Initialize()
     std::vector<uint8_t> fontTomlRaw = Filesystem::Read("font.toml");
     std::string fontToml(fontTomlRaw.begin(), fontTomlRaw.end());
     fontTomlRaw.clear();
-    toml::parse_result fontDefinition = toml::parse(fontToml);
-    if (fontDefinition.failed())
+    std::istringstream tomlStream(fontToml);
+    toml::ParseResult fontDefinition = toml::parse(tomlStream);
+    if (!fontDefinition.valid())
     {
-        QUIT("Failed to parse font definition: {}", fontDefinition.error().description());
+        QUIT("Failed to parse font definition: {}", fontDefinition.errorReason);
+    }
+    if (!fontDefinition.value.is<toml::Table>())
+    {
+        QUIT("Font definition missing font table");
     }
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    for (const auto& character :
-         (toml::table&)*fontDefinition["font"].as_table())
+    const toml::Table& table = fontDefinition.value["font"].as<toml::Table>();
+    for (const auto& character : table)
     {
-        toml::array* position = character.second.as_array();
-        if (!position || position->size() != 2 ||
-            !position->at(0).is_integer() || !position->at(1).is_integer())
+        const toml::Array& position = character.second.as<toml::Array>();
+        if (position.size() != 2 ||
+            !position.at(0).is<int32_t>() || !position.at(1).is<int32_t>())
         {
             Quit(fmt::format("Invalid character definition \"{}\", expected "
                              "array of 2 integers",
@@ -38,11 +43,11 @@ void Text::Initialize()
 
         std::string chr(character.first);
         std::wstring wideChr = converter.from_bytes(chr);
-        toml::value<int64_t> x = *position->at(0).as_integer();
-        toml::value<int64_t> y = *position->at(1).as_integer();
-        glm::u8vec2 pos((uint8_t)*x, (uint8_t)*y);
+        int32_t x = position.at(0).as<int32_t>();
+        int32_t y = position.at(1).as<int32_t>();
+        glm::u8vec2 pos((uint8_t)x, (uint8_t)y);
         s_characterPositions[wideChr[0]] = pos;
-    }
+    };
 
     s_initialized = true;
 }

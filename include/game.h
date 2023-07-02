@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -45,9 +46,7 @@ using namespace physx;
 #include "spdlog/sinks/msvc_sink.h"
 #endif
 
-#define TOML_FLOAT_CHARCONV 0
-#define TOML_EXCEPTIONS 0
-#include "toml++/toml.h"
+#include "toml.h"
 
 #include "zstd.h"
 

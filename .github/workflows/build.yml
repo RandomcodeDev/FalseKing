@@ -109,7 +109,7 @@ jobs:
       #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
       #  with:
       #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
-      #    path: Game.tar.xz
+      #    path: Game.zip
       - name: Upload a Build Artifact (Xcode)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'macOS-13'
@@ -121,4 +121,4 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          path: Game.tar.xz
+          path: Game.zip
