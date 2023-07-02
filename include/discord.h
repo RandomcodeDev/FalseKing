@@ -17,6 +17,9 @@ void Update(chrono::seconds runtime, chrono::milliseconds delta);
 // Shut down the Discord SDK
 void Shutdown();
 
+// Whether Discord is available
+bool Available();
+
 // Whether Discord is connected
 bool Connected();
 }

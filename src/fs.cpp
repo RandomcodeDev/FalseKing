@@ -9,8 +9,21 @@ void Filesystem::Initialize(const std::vector<std::string>& paths)
     SPDLOG_INFO("Search paths: {}", paths.size());
     for (auto path : paths)
     {
-        SPDLOG_INFO("\t{}", path);
-        s_paths.push_back(path);
+        std::string cleanPath = path;
+        size_t i = 0;
+        for (; i < cleanPath.size(); i++)
+        {
+            if (cleanPath[i] == '\\')
+            {
+                cleanPath[i] = '/';
+            }
+        }
+        if (cleanPath[i - 1] == '/')
+        {
+            cleanPath.resize(cleanPath.size() - 1);
+        }
+        SPDLOG_INFO("\t{}", cleanPath);
+        s_paths.push_back(cleanPath);
     }
     s_paths.push_back("");
 
@@ -23,13 +36,12 @@ std::vector<uint8_t> Filesystem::Read(const std::string& path)
 
     for (auto& root : s_paths)
     {
-        std::string fullPath = root + "/" + path;
+        std::string fullPath = root + (root.length() ? "/" : "") + path;
         SPDLOG_DEBUG("Trying path {} for {}", fullPath, path);
         std::ifstream file(fullPath, std::ios::ate | std::ios::binary);
         if (file.is_open())
         {
-            SPDLOG_INFO("Found file {} at {}", path,
-                        fullPath);
+            SPDLOG_INFO("Found file {} at {}", path, fullPath);
             std::vector<uint8_t> data((size_t)file.tellg());
             file.seekg(std::ios::beg);
             file.read((char*)data.data(), data.size());

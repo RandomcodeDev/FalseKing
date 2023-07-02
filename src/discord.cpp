@@ -11,12 +11,50 @@
 
 static discord::Core* core{};
 static bool connected;
+static bool available;
 static chrono::milliseconds requestCooldown;
 static chrono::milliseconds activityCooldown;
 
 static std::unordered_map<discord::LogLevel, spdlog::level::level_enum>
     levelMap;
 static std::vector<uint64_t> friends;
+
+static void* discordSdkDll;
+typedef enum EDiscordResult(DISCORD_API* DiscordCreatePtr)(
+    DiscordVersion version, struct DiscordCreateParams* params,
+    struct IDiscordCore** result);
+static DiscordCreatePtr DiscordCreate_loaded;
+
+extern "C" enum EDiscordResult DISCORD_API
+DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
+              struct IDiscordCore** result)
+{
+    if (!discordSdkDll)
+    {
+        SPDLOG_INFO("Loading Discord SDK");
+        discordSdkDll = g_backend->LoadLibrary("discord_game_sdk");
+        if (!discordSdkDll)
+        {
+            SPDLOG_ERROR("Failed to load Discord SDK");
+            available = false;
+            return DiscordResult_InvalidVersion;
+        }
+
+        DiscordCreate_loaded = (DiscordCreatePtr)g_backend->GetSymbol(
+            discordSdkDll, "DiscordCreate");
+        if (!DiscordCreate_loaded)
+        {
+            SPDLOG_ERROR("Failed to get symbol DiscordCreate");
+            available = false;
+            return DiscordResult_InvalidVersion;
+        }
+
+        available = true;
+        SPDLOG_INFO("Discord SDK loaded");
+    }
+
+    return DiscordCreate_loaded(version, params, result);
+}
 
 void Discord::Initialize()
 {
@@ -50,7 +88,6 @@ void Discord::Initialize()
     friends.push_back(621474796500418570);
     friends.push_back(691017722934329394);
     friends.push_back(515919551444025407);
-    friends.push_back(405454975750373376);
     friends.push_back(273987143523762176);
     friends.push_back(733739521438646342);
     friends.push_back(642135253615640598);
@@ -82,32 +119,41 @@ void Discord::Initialize()
 }
 
 #if DISCORD_ENABLE
-static bool IsMe()
+static bool IsMyFriend(discord::UserId id)
 {
-    if (!connected)
-    {
-        return false;
-    }
-
-    discord::User user;
-    core->UserManager().GetCurrentUser(&user);
-
-    return user.GetId() == 532320702611587112;
-}
-#endif
-
-#if DISCORD_ENABLE
-static bool IsMyFriend()
-{
-    if (!connected)
-    {
-        return false;
-    }
-
-    discord::User user;
-    core->UserManager().GetCurrentUser(&user);
-    return std::find(friends.begin(), friends.end(), (uint64_t)user.GetId()) !=
+    return std::find(friends.begin(), friends.end(), (uint64_t)id) !=
            friends.end();
+}
+
+static const char* GetCoolString()
+{
+    if (!connected)
+    {
+        return "game";
+    }
+
+    discord::User user;
+    core->UserManager().GetCurrentUser(&user);
+    discord::UserId id = user.GetId();
+    
+    switch (id)
+    {
+    case 532320702611587112:
+        return "my game";
+    case 1078816552629051423:
+        return "my brother's game";
+    case 405454975750373376:
+        return "the game I came up with for my friend";
+    default:
+        if (IsMyFriend(id))
+        {
+            return "my friend's game";
+        }
+        else
+        {
+            return "game";
+        }
+    }
 }
 #endif
 
@@ -122,9 +168,7 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
     discord::Activity activity{};
 
     std::string state =
-        fmt::format("Playing {}game", IsMe()         ? "my "
-                                      : IsMyFriend() ? "my friend's "
-                                                     : "");
+        fmt::format("Playing {} for {:%T}", GetCoolString(), runtime);
     activity.SetState(state.c_str());
     std::string details = fmt::format(
         "{} {}.{}.{}\nCommit {:.7}\nRunning {} build\n{}", GAME_NAME,
@@ -182,6 +226,11 @@ void Discord::Shutdown()
     delete core;
     SPDLOG_INFO("Discord disconnected");
 #endif
+}
+
+bool Discord::Available()
+{
+    return available;
 }
 
 bool Discord::Connected()

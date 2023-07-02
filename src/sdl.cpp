@@ -35,6 +35,22 @@ class SdlBackend : protected Backend
         return m_mapping;
     }
     const std::string& DescribeSystem() const;
+    void* LoadLibrary(const std::string& path) const
+    {
+        std::string fullPath = path +
+#ifdef _WIN32
+                               ".dll";
+#elif defined(__APPLE__)
+                               ".dylib";
+#else
+                               ".so";
+#endif
+        return SDL_LoadObject(fullPath.c_str());
+    }
+    Symbol GetSymbol(void* dll, const std::string& symbol) const
+    {
+        return (Symbol)SDL_LoadFunction(dll, symbol.c_str());
+    }
 
   private:
     SDL_Window* m_window;
@@ -108,7 +124,7 @@ extern "C" int main(int argc, char* argv[])
     std::vector<std::string> paths;
     std::string baseDir = SDL_GetBasePath();
 #ifndef __WINRT__
-    baseDir += "/assets";
+    baseDir += "assets";
 #endif
     paths.push_back(baseDir);
     int returnCode = GameMain(backend, paths);
@@ -494,11 +510,11 @@ const std::string& SdlBackend::DescribeSystem() const
     // All versions
     HKEY CurrentVersionHandle;
     CHAR EditionId[32] = {};
-    CHAR InstallationType[32] = {};
     CHAR ProductName[32] = {};
     DWORD Size;
 
     // Windows 10 and above
+    CHAR InstallationType[32] = {};
     DWORD CurrentMajorVersionNumber;
     DWORD CurrentMinorVersionNumber;
     CHAR CurrentBuildNumber[8] = {};
@@ -508,7 +524,8 @@ const std::string& SdlBackend::DescribeSystem() const
 
     // Windows 8 and below
     CHAR CurrentVersion[4] = {};
-    CHAR VersionName[32] = {};
+    CHAR CSDVersion[8] = {};
+    CHAR BuildLab[64] = {};
 
     PCSTR Name = nullptr;
 
@@ -520,10 +537,6 @@ const std::string& SdlBackend::DescribeSystem() const
     RegQueryValueExA(CurrentVersionHandle, "EditionID", nullptr, nullptr,
                      (LPBYTE)EditionId, &Size);
 
-    Size = sizeof(InstallationType);
-    RegQueryValueExA(CurrentVersionHandle, "InstallationType", nullptr, nullptr,
-                     (LPBYTE)InstallationType, &Size);
-
     Size = sizeof(ProductName);
     RegQueryValueExA(CurrentVersionHandle, "ProductName", nullptr, nullptr,
                      (LPBYTE)ProductName, &Size);
@@ -533,6 +546,10 @@ const std::string& SdlBackend::DescribeSystem() const
                          nullptr, nullptr, (LPBYTE)&CurrentMajorVersionNumber,
                          &Size) == ERROR_SUCCESS)
     {
+        Size = sizeof(InstallationType);
+        RegQueryValueExA(CurrentVersionHandle, "InstallationType", nullptr,
+                         nullptr, (LPBYTE)InstallationType, &Size);
+
         Size = sizeof(INT);
         RegQueryValueExA(CurrentVersionHandle, "CurrentMinorVersionNumber",
                          nullptr, nullptr, (LPBYTE)&CurrentMinorVersionNumber,
@@ -574,89 +591,15 @@ const std::string& SdlBackend::DescribeSystem() const
     }
     else
     {
-        Size = sizeof(CurrentVersion);
-        RegQueryValueExA(CurrentVersionHandle, "CurrentVersion", nullptr,
-                         nullptr, (LPBYTE)CurrentVersion, &Size);
+        Size = sizeof(CSDVersion);
+        RegQueryValueExA(CurrentVersionHandle, "CSDVersion", nullptr, nullptr,
+                         (LPBYTE)BuildLab, &Size);
+        Size = sizeof(BuildLab);
+        RegQueryValueExA(CurrentVersionHandle, "BuildLab", nullptr, nullptr,
+                         (LPBYTE)BuildLab, &Size);
 
-        if (strncmp(InstallationType, "Client", ARRAY_SIZE(InstallationType)) ==
-            0)
-        {
-            switch (CurrentVersion[0])
-            {
-            case '5':
-                if (CurrentVersion[2] == '0')
-                {
-                    Name = "2000";
-                }
-                else
-                {
-                    Name = "XP";
-                }
-                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
-                break;
-            case '6':
-                switch (CurrentVersion[2])
-                {
-                case '0':
-                    Name = "Vista";
-                    break;
-                case '1':
-                    Name = "7";
-                    break;
-                case '2':
-                    Name = "8";
-                    break;
-                case '3':
-                    Name = "8.1";
-                    break;
-                }
-                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
-                break;
-            default:
-                strncpy(VersionName, CurrentVersion, ARRAY_SIZE(VersionName));
-                break;
-            }
-        }
-        else
-        {
-            switch (CurrentVersion[0])
-            {
-            case '5':
-                if (CurrentVersion[2] == '0')
-                {
-                    Name = "2000";
-                }
-                else
-                {
-                    Name = "Server 2003";
-                }
-                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
-                break;
-            case '6':
-                switch (CurrentVersion[2])
-                {
-                case '0':
-                    Name = "Server 2008";
-                    break;
-                case '1':
-                    Name = "Server 2008 R2";
-                    break;
-                case '2':
-                    Name = "Server 2012";
-                    break;
-                case '3':
-                    Name = "Server 2012 R2";
-                    break;
-                }
-                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
-                break;
-            default:
-                strncpy(VersionName, CurrentVersion, ARRAY_SIZE(VersionName));
-                break;
-            }
-        }
-        Description = fmt::format("Windows {} {} (identifies as \"{}\")",
-                                  VersionName, EditionId, ProductName);
+        Description = fmt::format("Windows {} {} {} (build lab {})",
+                                  ProductName, EditionId, CSDVersion, BuildLab);
     }
 #else
     std::ifstream osRelease("/etc/os-release", std::ios::ate);

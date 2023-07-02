@@ -9,6 +9,7 @@
 #include <nv/nv_MemoryManagement.h>
 
 #include "backend.h"
+#include "fs.h"
 #include "image.h"
 #include "input.h"
 #include "sprite.h"
@@ -51,12 +52,22 @@ class SwitchBackend : protected Backend
     {
         return m_windowInfo;
     }
-    // unused, no keyboard support on switch
+    // Unused, no keyboard support on Switch
     KeyMapping& GetKeyMapping()
     {
         return m_mapping;
     }
     const std::string& DescribeSystem() const;
+
+    // No actual use for these on Switch yet
+    void* LoadLibrary(const std::string& path) const
+    {
+        return nullptr;
+    }
+    Symbol GetSymbol(void* dll, const std::string& symbol) const
+    {
+        return nullptr;
+    }
 
     static const inline char* ROM_MOUNT = "rom";
 

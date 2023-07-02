@@ -78,6 +78,14 @@ class Backend
 
     // Get a string describing the system
     virtual const std::string& DescribeSystem() const = 0;
+
+    // Load a library
+    virtual void* LoadLibrary(const std::string& path) const = 0;
+
+    typedef void* (*Symbol)(...);
+
+    // Get a symbol from a library
+    virtual Symbol GetSymbol(void* dll, const std::string& path) const = 0;
 };
 
 #if __NX__

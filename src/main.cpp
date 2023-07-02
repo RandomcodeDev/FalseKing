@@ -95,11 +95,14 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         world.progress(floatDelta);
 
         Text::DrawString(
-            fmt::format("FPS: {:0.3}\nFrame delta: {}\nSystem: {}\nDiscord: {}",
-                        fps, delta, g_backend->DescribeSystem(),
-                        Discord::Connected() ? "connected" : "not connected"),
+            fmt::format(
+                "FPS: {:0.3}\nFrame delta: {}\nSystem: {}\nDiscord: {}, {}",
+                fps, delta, g_backend->DescribeSystem(),
+                Discord::Available() ? "available" : "not available",
+                Discord::Connected() ? "connected" : "not connected"),
             glm::uvec2(0), 0.3f, glm::u8vec3(0, 255, 0));
-        Discord::Update(chrono::duration_cast<chrono::seconds>(now - start), delta);
+        Discord::Update(chrono::duration_cast<chrono::seconds>(now - start),
+                        delta);
 
         g_backend->EndRender();
 
