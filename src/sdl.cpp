@@ -149,7 +149,7 @@ SdlBackend::SdlBackend()
     SDL_GetWindowSize(m_window, &m_windowInfo.width, &m_windowInfo.height);
     m_windowInfo.focused = true;
 
-    SDL_SetRelativeMouseMode(SDL_TRUE);
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
 
     SPDLOG_INFO("Enumerating gamepads");
     int32_t gamepadCount = 0;

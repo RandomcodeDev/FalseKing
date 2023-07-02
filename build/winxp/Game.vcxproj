@@ -44,12 +44,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>Game</TargetName>
-    <OutDir>$(SolutionDir)..\..\$(Platform)\$(Configuration)\$(TargetName)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\$(TargetName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>Game</TargetName>
-    <OutDir>$(SolutionDir)..\..\$(Platform)\$(Configuration)\$(TargetName)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\$(TargetName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
