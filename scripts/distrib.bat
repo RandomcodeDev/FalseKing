@@ -7,10 +7,8 @@ del %4.zip
 
 call %~dp0copyfiles %1 %2 %3
 
-copy %~dp0..\build\winxp\%2\%3\Game\*.exe %1
-copy %~dp0..\build\winxp\%2\%3\Game\*.pdb %1
-copy %~dp0..\build\winxp\%2\%3\test\*.exe %1
-copy %~dp0..\build\winxp\%2\%3\test\*.pdb %1
+copy %~dp0..\build\winxp\%2\%3\Game.%2\*.exe %1
+copy %~dp0..\build\winxp\%2\%3\Game.%2\*.pdb %1
 
 set OUTDIR=%CD%
 pushd %1
