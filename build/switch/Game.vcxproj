@@ -58,13 +58,13 @@
     <ApplicationDataDir>$(SolutionDir)..\..\assets</ApplicationDataDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">
-    <TargetName>Game</TargetName>
+    <TargetName>Game.$(Platform)</TargetName>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <CppLanguageStandard>Gnu++17</CppLanguageStandard>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">
-    <TargetName>Game</TargetName>
+    <TargetName>Game.$(Platform)</TargetName>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
     <CppLanguageStandard>Gnu++17</CppLanguageStandard>
@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableSpecificWarnings>unused-private-field</DisableSpecificWarnings>
@@ -90,8 +90,7 @@
       <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">
@@ -103,7 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>unused-private-field</DisableSpecificWarnings>
     </ClCompile>
@@ -118,13 +117,13 @@
       <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\components.h" />
     <ClInclude Include="..\..\include\backend.h" />
+    <ClInclude Include="..\..\include\discord.h" />
     <ClInclude Include="..\..\include\fs.h" />
     <ClInclude Include="..\..\include\game.h" />
     <ClInclude Include="..\..\include\image.h" />
@@ -139,6 +138,7 @@
     <ClCompile Include="..\..\deps\src\flecs.c" />
     <ClCompile Include="..\..\deps\src\metrohash128.cpp" />
     <ClCompile Include="..\..\deps\src\metrohash64.cpp" />
+    <ClCompile Include="..\..\src\discord.cpp" />
     <ClCompile Include="..\..\src\fs.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />

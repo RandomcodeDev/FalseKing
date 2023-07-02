@@ -86,6 +86,12 @@
     <AppInstallerUri>\\Users\bramb\source\repos\FalseKing</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>Game.$(PlatformTarget)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>Game.$(PlatformTarget)</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Link>
       <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -140,16 +146,16 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;4804;26495;28204;4996</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>
       </CompileAsWinRT>
@@ -163,19 +169,22 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(IntermediateOutputPath);</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /FS %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;4804;26495;28204;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;4804;26495;28204;4996</DisableSpecificWarnings>
       <PreprocessorDefinitions>USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAsWinRT>
       </CompileAsWinRT>
@@ -189,6 +198,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Image Include="UwpAssets\LockScreenLogo.scale-200.png" />
@@ -205,10 +217,25 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\deps\src\discord\achievement_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\activity_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\application_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\core.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\image_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\lobby_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\network_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\overlay_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\relationship_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\storage_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\store_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\types.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\user_manager.cpp" />
+    <ClCompile Include="..\..\deps\src\discord\voice_manager.cpp" />
     <ClCompile Include="..\..\deps\src\flecs.c" />
     <ClCompile Include="..\..\deps\src\metrohash128.cpp" />
     <ClCompile Include="..\..\deps\src\metrohash64.cpp" />
     <ClCompile Include="..\..\src\components.cpp" />
+    <ClCompile Include="..\..\src\discord.cpp" />
     <ClCompile Include="..\..\src\fs.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
@@ -261,6 +288,9 @@
     <CopyFileToFolders Include="..\..\assets\sprites.qoi">
       <DeploymentContent>true</DeploymentContent>
     </CopyFileToFolders>
+    <None Include="..\..\deps\lib\$(Platform)\discord_game_sdk.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="Game_TemporaryKey.pfx" />
     <None Include="..\..\scripts\copyfiles.bat" />
     <None Include="..\..\README.md" />
@@ -272,6 +302,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\backend.h" />
     <ClInclude Include="..\..\include\components.h" />
+    <ClInclude Include="..\..\include\discord.h" />
     <ClInclude Include="..\..\include\fs.h" />
     <ClInclude Include="..\..\include\game.h" />
     <ClInclude Include="..\..\include\image.h" />

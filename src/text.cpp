@@ -4,7 +4,13 @@ static Image* s_font;
 std::unordered_map<wchar_t, glm::u8vec2> s_characterPositions;
 static bool s_initialized;
 
-// FUCK UNICODE ARRRGGHH
+// FUCK UNICODE FUCK EXCEPTIONS IN TOML PARSERS ARRRGGHH
+
+template <typename... Args> [[noreturn]] void toml::failwith(Args&&... args)
+{
+    std::stringstream ss;
+    Quit(format(ss, std::forward<Args>(args)...));
+}
 
 void Text::Initialize()
 {

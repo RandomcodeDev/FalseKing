@@ -1,5 +1,10 @@
 // SDL backend
 
+#ifndef _WIN32
+#include <sys/utsname.h>
+#include <unistd.h>
+#endif
+
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_main.h"
 
@@ -29,6 +34,7 @@ class SdlBackend : protected Backend
     {
         return m_mapping;
     }
+    const std::string& DescribeSystem() const;
 
   private:
     SDL_Window* m_window;
@@ -114,7 +120,7 @@ extern "C" int main(int argc, char* argv[])
 [[noreturn]] void Quit(const std::string& message, int32_t exitCode)
 {
     std::string title = fmt::format("Error {0}/0x{0:X}", exitCode);
-    SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), NULL);
+    SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), nullptr);
     SDL_TriggerBreakpoint();
     exit(exitCode);
 }
@@ -149,7 +155,7 @@ SdlBackend::SdlBackend()
     SDL_GetWindowSize(m_window, &m_windowInfo.width, &m_windowInfo.height);
     m_windowInfo.focused = true;
 
-    //SDL_SetRelativeMouseMode(SDL_TRUE);
+    // SDL_SetRelativeMouseMode(SDL_TRUE);
 
     SPDLOG_INFO("Enumerating gamepads");
     int32_t gamepadCount = 0;
@@ -275,7 +281,7 @@ bool SdlBackend::Update(InputState& input)
             input.leftStick.x = 0.0f;
         }
 
-        // There are 4 mappings that aren't bit flags
+        // There are 4 mappings that aren't bit flags, they're handled above
         for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
         {
             bool down = keys[m_mapping.values[i]];
@@ -472,4 +478,242 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 void SdlBackend::EndRender()
 {
     SDL_RenderPresent(m_renderer);
+}
+
+const std::string& SdlBackend::DescribeSystem() const
+{
+    static std::string Description;
+
+    // This shouldn't ever change between runs
+    if (Description.length() > 0)
+    {
+        return Description;
+    }
+
+#ifdef _WIN32
+    // All versions
+    HKEY CurrentVersionHandle;
+    CHAR EditionId[32] = {};
+    CHAR InstallationType[32] = {};
+    CHAR ProductName[32] = {};
+    DWORD Size;
+
+    // Windows 10 and above
+    DWORD CurrentMajorVersionNumber;
+    DWORD CurrentMinorVersionNumber;
+    CHAR CurrentBuildNumber[8] = {};
+    DWORD UBR;
+    CHAR DisplayVersion[8] = {};
+    CHAR BuildLabEx[64] = {};
+
+    // Windows 8 and below
+    CHAR CurrentVersion[4] = {};
+    CHAR VersionName[32] = {};
+
+    PCSTR Name = nullptr;
+
+    RegOpenKeyExA(HKEY_LOCAL_MACHINE,
+                  "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0,
+                  KEY_QUERY_VALUE, &CurrentVersionHandle);
+
+    Size = sizeof(EditionId);
+    RegQueryValueExA(CurrentVersionHandle, "EditionID", nullptr, nullptr,
+                     (LPBYTE)EditionId, &Size);
+
+    Size = sizeof(InstallationType);
+    RegQueryValueExA(CurrentVersionHandle, "InstallationType", nullptr, nullptr,
+                     (LPBYTE)InstallationType, &Size);
+
+    Size = sizeof(ProductName);
+    RegQueryValueExA(CurrentVersionHandle, "ProductName", nullptr, nullptr,
+                     (LPBYTE)ProductName, &Size);
+
+    Size = sizeof(INT);
+    if (RegQueryValueExA(CurrentVersionHandle, "CurrentMajorVersionNumber",
+                         nullptr, nullptr, (LPBYTE)&CurrentMajorVersionNumber,
+                         &Size) == ERROR_SUCCESS)
+    {
+        Size = sizeof(INT);
+        RegQueryValueExA(CurrentVersionHandle, "CurrentMinorVersionNumber",
+                         nullptr, nullptr, (LPBYTE)&CurrentMinorVersionNumber,
+                         &Size);
+
+        Size = sizeof(CurrentBuildNumber);
+        RegQueryValueExA(CurrentVersionHandle, "CurrentBuildNumber", nullptr,
+                         nullptr, (LPBYTE)CurrentBuildNumber, &Size);
+
+        Size = sizeof(INT);
+        RegQueryValueExA(CurrentVersionHandle, "UBR", nullptr, nullptr,
+                         (LPBYTE)&UBR, &Size);
+
+        Size = sizeof(BuildLabEx);
+        RegQueryValueExA(CurrentVersionHandle, "BuildLabEx", nullptr, nullptr,
+                         (LPBYTE)&BuildLabEx, &Size);
+
+        Size = sizeof(DisplayVersion);
+        RegQueryValueExA(CurrentVersionHandle, "DisplayVersion", nullptr,
+                         nullptr, (LPBYTE)DisplayVersion, &Size);
+
+        Description = fmt::format(
+#ifdef _DEBUG
+            "Windows {} {}.{}.{}.{} {} (build lab {})",
+#else
+            "Windows {} {}.{}.{}.{} {}",
+#endif
+            (strncmp(InstallationType, "Client",
+                     ARRAY_SIZE(InstallationType)) == 0)
+                ? "Desktop"
+                : InstallationType,
+            CurrentMajorVersionNumber, CurrentMinorVersionNumber,
+            CurrentBuildNumber, UBR, EditionId
+#ifdef _DEBUG
+            ,
+            BuildLabEx, ProductName, DisplayVersion
+#endif
+        );
+    }
+    else
+    {
+        Size = sizeof(CurrentVersion);
+        RegQueryValueExA(CurrentVersionHandle, "CurrentVersion", nullptr,
+                         nullptr, (LPBYTE)CurrentVersion, &Size);
+
+        if (strncmp(InstallationType, "Client", ARRAY_SIZE(InstallationType)) ==
+            0)
+        {
+            switch (CurrentVersion[0])
+            {
+            case '5':
+                if (CurrentVersion[2] == '0')
+                {
+                    Name = "2000";
+                }
+                else
+                {
+                    Name = "XP";
+                }
+                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
+                break;
+            case '6':
+                switch (CurrentVersion[2])
+                {
+                case '0':
+                    Name = "Vista";
+                    break;
+                case '1':
+                    Name = "7";
+                    break;
+                case '2':
+                    Name = "8";
+                    break;
+                case '3':
+                    Name = "8.1";
+                    break;
+                }
+                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
+                break;
+            default:
+                strncpy(VersionName, CurrentVersion, ARRAY_SIZE(VersionName));
+                break;
+            }
+        }
+        else
+        {
+            switch (CurrentVersion[0])
+            {
+            case '5':
+                if (CurrentVersion[2] == '0')
+                {
+                    Name = "2000";
+                }
+                else
+                {
+                    Name = "Server 2003";
+                }
+                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
+                break;
+            case '6':
+                switch (CurrentVersion[2])
+                {
+                case '0':
+                    Name = "Server 2008";
+                    break;
+                case '1':
+                    Name = "Server 2008 R2";
+                    break;
+                case '2':
+                    Name = "Server 2012";
+                    break;
+                case '3':
+                    Name = "Server 2012 R2";
+                    break;
+                }
+                strncpy(VersionName, Name, ARRAY_SIZE(VersionName));
+                break;
+            default:
+                strncpy(VersionName, CurrentVersion, ARRAY_SIZE(VersionName));
+                break;
+            }
+        }
+        Description = fmt::format("Windows {} {} (identifies as \"{}\")",
+                                  VersionName, EditionId, ProductName);
+    }
+#else
+    std::ifstream osRelease("/etc/os-release", std::ios::ate);
+    std::string osReleaseContent;
+    struct utsname utsName = {};
+
+    uname(&utsName);
+    osReleaseContent.resize(osRelease.tellg());
+    osRelease.seekg(std::ios::beg);
+    osRelease.read(osReleaseContent.data(), osReleaseContent.size());
+    if (osReleaseContent.length())
+    {
+        osRelease.close();
+        size_t nameOff = osReleaseContent.find("PRETTY_NAME=\"");
+        std::string name;
+        size_t nameEndOff;
+        if (nameOff == SIZE_MAX)
+        {
+            name = "Unknown";
+        }
+        else
+        {
+            nameOff += 13; // PRETTY_NAME="
+            nameEndOff = std::string_view(osReleaseContent.data() + nameOff,
+                                          osReleaseContent.size() - nameOff)
+                             .find('\"');
+            name.assign(osReleaseContent.data(), nameOff, nameEndOff);
+        }
+
+        size_t buildIdOff =
+            std::string_view(osReleaseContent.data() + nameEndOff + 1,
+                             osReleaseContent.size() - nameEndOff - 1)
+                .find("BUILD_ID=");
+        std::string buildId;
+        if (buildIdOff == SIZE_MAX)
+        {
+            buildId = "unknown";
+        }
+        else
+        {
+            buildIdOff += 9; // BUILD_ID=
+            size_t buildIdEndOff =
+                std::string_view(osReleaseContent.data() + buildIdOff,
+                                 osReleaseContent.size() - buildIdOff)
+                    .find('\n');
+            buildId.assign(osReleaseContent.data(), buildIdOff, buildIdEndOff);
+        }
+        Description = fmt::format("{} {}, kernel {} {} {}, host {}", name,
+                                  buildId, utsName.sysname, utsName.release,
+                                  utsName.machine, utsName.nodename);
+    }
+    else
+    {
+        Description =
+            fmt::format("%s %s %s, host %s", utsName.sysname, utsName.release,
+                        utsName.machine, utsName.nodename);
+    }
+#endif
+    return Description;
 }

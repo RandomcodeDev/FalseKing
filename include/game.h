@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <cerrno>
 #include <chrono>
-#include <cinttypes>
 #include <codecvt>
+#include <cstdint>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -14,6 +14,8 @@
 #include <thread>
 
 #ifndef TOOL
+#include "discord/discord.h"
+
 #include "flecs.h"
 
 #include "glm/vec2.hpp"
@@ -56,6 +58,15 @@ using precise_clock = chrono::high_resolution_clock;
 // Constants
 
 constexpr const char* GAME_NAME = "False King";
+constexpr uint8_t GAME_MAJOR_VERSION = 0;
+constexpr uint8_t GAME_MINOR_VERSION = 0;
+constexpr uint8_t GAME_PATCH_VERSION = 0;
+
+// clang-format: off
+constexpr const char* GAME_COMMIT = 
+#include "commit.txt"
+;
+// clang-format: on
 
 // Game screen size
 constexpr uint32_t GAME_WIDTH = 256;

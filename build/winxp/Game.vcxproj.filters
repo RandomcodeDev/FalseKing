@@ -16,6 +16,9 @@
     <Filter Include="Source Files\External">
       <UniqueIdentifier>{33232988-bcf5-4e7c-b7d2-1e49d87f2d19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\External\Discord">
+      <UniqueIdentifier>{ba6d8900-b390-42f9-8209-399c8baa87aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\backend.h">
@@ -46,6 +49,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\systems.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\discord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -85,6 +91,51 @@
     </ClCompile>
     <ClCompile Include="..\..\deps\src\metrohash128.cpp">
       <Filter>Source Files\External</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\achievement_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\activity_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\application_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\core.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\image_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\lobby_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\network_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\overlay_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\relationship_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\storage_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\store_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\types.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\user_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\voice_manager.cpp">
+      <Filter>Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\discord.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

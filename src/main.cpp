@@ -1,5 +1,6 @@
 ﻿#include "backend.h"
 #include "components.h"
+#include "discord.h"
 #include "fs.h"
 #include "game.h"
 #include "image.h"
@@ -21,7 +22,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     spdlog::set_level(spdlog::level::info);
 #endif
 
-    SPDLOG_INFO("Initializing game");
+    SPDLOG_INFO("Initializing game on {}", g_backend->DescribeSystem());
 
     std::vector<std::string> paths;
     for (const auto& path : backendPaths)
@@ -30,6 +31,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     }
     Filesystem::Initialize(paths);
     Text::Initialize();
+    Discord::Initialize();
 
     Image sprites("sprites.qoi");
 
@@ -93,8 +95,11 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         world.progress(floatDelta);
 
         Text::DrawString(
-            fmt::format("FPS: {:0.3}\nFrame delta: {}", fps, delta),
+            fmt::format("FPS: {:0.3}\nFrame delta: {}\nSystem: {}\nDiscord: {}",
+                        fps, delta, g_backend->DescribeSystem(),
+                        Discord::Connected() ? "connected" : "not connected"),
             glm::uvec2(0), 0.3f, glm::u8vec3(0, 255, 0));
+        Discord::Update(chrono::duration_cast<chrono::seconds>(now - start), delta);
 
         g_backend->EndRender();
 
@@ -113,6 +118,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     SPDLOG_INFO("Shutting down game");
 
     world.quit();
+    Discord::Shutdown();
     Text::Shutdown();
 
     SPDLOG_INFO("Game shut down");

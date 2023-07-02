@@ -3,6 +3,7 @@
 #include <nn/hid.h>
 #include <nn/nn_Log.h>
 #include <nn/oe.h>
+#include <nn/oe/oe_DebugApis.h>
 #include <nn/vi.h>
 
 #include <nv/nv_MemoryManagement.h>
@@ -55,6 +56,7 @@ class SwitchBackend : protected Backend
     {
         return m_mapping;
     }
+    const std::string& DescribeSystem() const;
 
     static const inline char* ROM_MOUNT = "rom";
 
@@ -263,4 +265,10 @@ void SwitchBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 
 void SwitchBackend::EndRender()
 {
+}
+
+const std::string& SwitchBackend::DescribeSystem() const
+{
+    nn::oe::FirmwareVersionForDebug version;
+    return fmt::format("Horizon OS {}", version.string);
 }

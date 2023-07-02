@@ -23,12 +23,17 @@ FreeBSD)
 esac
 
 PWD=$(pwd)
-BUILDDIR=$ROOT/build/unix/$ARCH/$CONF
+BUILDDIR=$ROOT/build/unix/$ARCH/$CONF/Game.$ARCH
 
 echo Building $CONF for $ARCH in $BUILDDIR
 mkdir -p $BUILDDIR
+$ROOT/scripts/commit.sh $BUILDDIR
 cd $BUILDDIR
 bmake -j$(nproc) -f $ROOT/build/unix/Game.mak ARCH=$ARCH CONFIG=$CONF ROOT=$ROOT DLIBEXT=$DLIBEXT SLIBEXT=$SLIBEXT CC=clang++ CXX=clang++ LDFLAGS=-fuse-ld=lld $3 $4 $5 $6 $7
+if [ $? -ne 0 ]; then
+    cd $PWD
+    exit 1
+fi
 $ROOT/scripts/copyfiles.sh $BUILDDIR $ARCH $CONF || true
 cd $PWD
 echo Done

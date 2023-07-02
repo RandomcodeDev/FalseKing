@@ -30,7 +30,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Game.App">
+      EntryPoint="Game.$(PlatformTarget).App">
       <uap:VisualElements
         DisplayName="False King"
         Square150x150Logo="UwpAssets\Square150x150Logo.png"

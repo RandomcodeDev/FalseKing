@@ -75,6 +75,9 @@ class Backend
 
     // Get the key mapping
     virtual KeyMapping& GetKeyMapping() = 0;
+
+    // Get a string describing the system
+    virtual const std::string& DescribeSystem() const = 0;
 };
 
 #if __NX__

@@ -20,6 +20,9 @@
     <Filter Include="Content\Deploy Files">
       <UniqueIdentifier>{5cfe1bc4-adab-44f6-a06e-f3459485434f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content\Source Files\External\Discord">
+      <UniqueIdentifier>{9f549589-03e2-4464-914c-aaa3fac2da65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="UwpAssets\Wide310x150Logo.scale-200.png">
@@ -84,32 +87,58 @@
     <ClCompile Include="..\..\src\systems.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\achievement_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\activity_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\application_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\core.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\image_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\lobby_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\network_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\overlay_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\relationship_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\storage_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\store_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\types.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\user_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\src\discord\voice_manager.cpp">
+      <Filter>Content\Source Files\External\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\discord.cpp">
+      <Filter>Content\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="UwpAssets\BlankCursor.cur" />
     <None Include="..\..\README.md" />
     <None Include="..\..\scripts\copyfiles.bat" />
-    <None Include="..\..\deps\%24%28Platform%29\%24%28Configuration%29">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysX_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCommon_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\x64\Debug\PhysXCooking_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\x64\Debug\PhysXFoundation_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\x64\Debug\PhysXGpu_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
-    <None Include="..\..\deps\lib\x64\Debug\PVDRuntime_64.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </None>
+    <None Include="Game_TemporaryKey.pfx" />
+    <None Include="..\..\deps\lib\%24%28Platform%29\discord_game_sdk.dll" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UwpAssets\Resources.rc" />
@@ -145,10 +174,21 @@
     <ClInclude Include="..\..\include\systems.h">
       <Filter>Content\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\discord.h">
+      <Filter>Content\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\libzstd.dll">
-      <Filter>Content\Deploy Files</Filter>
-    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysX_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXGpu_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXFoundation_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCooking_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCommon_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PVDRuntime_64.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\SDL3.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\libzstd.dll" />
+    <CopyFileToFolders Include="..\..\assets\font.qoi" />
+    <CopyFileToFolders Include="..\..\assets\font.toml" />
+    <CopyFileToFolders Include="..\..\assets\sprites.qoi" />
   </ItemGroup>
 </Project>
