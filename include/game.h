@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <atomic>
 #include <cerrno>
 #include <chrono>
 #include <codecvt>
@@ -62,11 +63,7 @@ constexpr uint8_t GAME_MAJOR_VERSION = 0;
 constexpr uint8_t GAME_MINOR_VERSION = 0;
 constexpr uint8_t GAME_PATCH_VERSION = 0;
 
-// clang-format: off
-constexpr const char* GAME_COMMIT = 
-#include "commit.txt"
-;
-// clang-format: on
+extern const char* GAME_COMMIT;
 
 // Game screen size
 constexpr uint32_t GAME_WIDTH = 256;
@@ -74,6 +71,10 @@ constexpr uint32_t GAME_HEIGHT = 168;
 
 // Frame smoothing
 constexpr float FRAME_SMOOTHING = 0.9f;
+
+// Debug font settings
+constexpr float DEBUG_TEXT_SCALE = 0.3f;
+constexpr glm::u8vec3 DEBUG_TEXT_COLOR = glm::u8vec3(0, 255, 0);
 
 // Get the size of an array
 template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])

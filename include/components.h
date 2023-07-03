@@ -32,6 +32,7 @@ struct Health
 struct MovementSpeed
 {
     float walk;
+    float crouch;
     float run;
 };
 } // namespace Components

@@ -65,7 +65,7 @@ class InputState
     {
     }
 
-    std::string GetStateDescription() const
+    std::string DescribeState() const
     {
         return fmt::format(
             "left={:.03}, {:.03}\tright={:.03}, {:.03}\ttriggers={:.03}, "

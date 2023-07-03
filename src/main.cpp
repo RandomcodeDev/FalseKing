@@ -12,6 +12,10 @@
 
 Backend* g_backend;
 
+const char* GAME_COMMIT = {
+#include "commit.txt"
+};
+
 int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 {
     g_backend = backend;
@@ -53,25 +57,27 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     controllerDesc.height = 1.0f;
     controllerDesc.material = material;
 
-    flecs::entity player = world.entity("Player")
-                               .set(PhysicsController(physics, controllerDesc))
-                               .set(Sprite(sprites, 0, 0))
-                               .set(Components::MovementSpeed{0.5f, 0.75f})
-                               .set(Components::Health{100.0f, 100.0f})
-                               .add<Tags::Player>()
-                               .add<Tags::LocalPlayer>();
+    flecs::entity player =
+        world.entity("Player")
+            .set(PhysicsController(physics, controllerDesc))
+            .set(Sprite(sprites, 0, 0))
+            .set(Components::MovementSpeed{0.5f, 0.35f, 0.75f})
+            .set(Components::Health{100.0f, 100.0f})
+            .add<Tags::Player>()
+            .add<Tags::LocalPlayer>();
 
     bool run = true;
     chrono::time_point<precise_clock> start = precise_clock::now();
     chrono::time_point<precise_clock> now;
-    chrono::time_point<precise_clock> last;
+    chrono::time_point<precise_clock> last = start;
     float fps = 0.0f;
+    float physicsAccumulator = 0.0f;
     while (run)
     {
         now = precise_clock::now();
         chrono::milliseconds delta =
             chrono::duration_cast<chrono::milliseconds>(now - last);
-        float floatDelta =
+        float deltaSeconds =
             (float)delta.count() / chrono::milliseconds::period::den;
         if (delta.count() > 0)
         {
@@ -87,12 +93,19 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         // Respect deadzones
         input.AdjustSticks();
 
+        physicsAccumulator += deltaSeconds;
+        while (physicsAccumulator >= PhysicsState::TIME_STEP)
+        {
+            physics.Update();
+            physicsAccumulator -= PhysicsState::TIME_STEP;
+        }
+
         if (!g_backend->BeginRender())
         {
             continue;
         }
 
-        world.progress(floatDelta);
+        world.progress(deltaSeconds);
 
         Text::DrawString(
             fmt::format(
@@ -100,22 +113,13 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
                 fps, delta, g_backend->DescribeSystem(),
                 Discord::Available() ? "available" : "not available",
                 Discord::Connected() ? "connected" : "not connected"),
-            glm::uvec2(0), 0.3f, glm::u8vec3(0, 255, 0));
+            glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
         Discord::Update(chrono::duration_cast<chrono::seconds>(now - start),
                         delta);
 
         g_backend->EndRender();
 
-        physics.Update(floatDelta);
-
         last = now;
-        const float ratio = 1.0f / 60.0f;
-        while (chrono::duration_cast<chrono::duration<float, std::milli>>(now -
-                                                                          last)
-                   .count() <= ratio * 1000.0f)
-        {
-            now = precise_clock::now();
-        }
     }
 
     SPDLOG_INFO("Shutting down game");

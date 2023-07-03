@@ -20,13 +20,17 @@ void Systems::PlayerInput(flecs::iter& iter)
     flecs::entity player = iter.entity(0);
     auto controller = player.get_mut<PhysicsController>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
-    float x = input->GetLeftStickDirection().x * (input->GetLeftStickPressed()
-                  ? movementSpeed->run
-                  : movementSpeed->walk);
-    float z = input->GetLeftStickDirection().y * (input->GetLeftStickPressed()
-                  ? movementSpeed->run
-                  : movementSpeed->walk);
-    controller->GetController().move(PxVec3(x, 0, z),
-                                    0.0001f, iter.delta_time() * 1000.0f,
-                                    PxControllerFilters());
+    float x = input->GetLeftStickDirection().x *
+              (input->GetLeftStickPressed() ? movementSpeed->run
+                                            : movementSpeed->walk) *
+              (input->GetRightStickPressed() ? movementSpeed->crouch
+                                             : movementSpeed->walk);
+    float z = input->GetLeftStickDirection().y *
+              (input->GetLeftStickPressed() ? movementSpeed->run
+                                            : movementSpeed->walk) *
+              (input->GetRightStickPressed() ? movementSpeed->crouch
+                                             : movementSpeed->walk);
+    controller->GetController().move(PxVec3(x, 0, z), 0.0001f,
+                                     PhysicsState::TIME_STEP * 1000.0f,
+                                     PxControllerFilters());
 }

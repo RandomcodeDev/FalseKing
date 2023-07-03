@@ -7,6 +7,7 @@ class PhysicsState
 {
   public:
     static constexpr float GRAVITY = 9.8f;
+    static constexpr float TIME_STEP = 1 / 60.0f;
 
     // Initialize physics stuff
     PhysicsState();
@@ -15,7 +16,7 @@ class PhysicsState
     ~PhysicsState();
 
     // Update state
-    void Update(float delta);
+    void Update();
 
     // Get physics
     PxPhysics& GetPhysics()

@@ -55,12 +55,8 @@ PhysicsState::~PhysicsState()
     SPDLOG_INFO("Physics shut down");
 }
 
-void PhysicsState::Update(float delta)
+void PhysicsState::Update()
 {
-    if (delta < 0.001f)
-    {
-        return;
-    }
-    m_scene->simulate(delta);
+    m_scene->simulate(TIME_STEP);
     m_scene->fetchResults(true);
 }

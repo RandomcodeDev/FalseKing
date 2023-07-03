@@ -115,7 +115,10 @@ void Text::DrawString(const std::string& text,
         default: {
             if (c >= ' ')
             {
-                g_backend->DrawImage(*s_font, x * xSize, y * ySize, scale, scale,
+                uint32_t targetX = position.x + x * xSize;
+                uint32_t targetY = position.y + y * ySize;
+                g_backend->DrawImage(*s_font, targetX,
+                                     targetY, scale, scale,
                                    s_characterPositions[c].x * CHARACTER_SIZE,
                                    s_characterPositions[c].y * CHARACTER_SIZE,
                                    CHARACTER_SIZE, CHARACTER_SIZE, color);
