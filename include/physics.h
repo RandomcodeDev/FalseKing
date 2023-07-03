@@ -16,7 +16,7 @@ class PhysicsState
     ~PhysicsState();
 
     // Update state
-    void Update();
+    void Update(float delta);
 
     // Get physics
     PxPhysics& GetPhysics()
@@ -43,6 +43,8 @@ class PhysicsState
     PxScene* m_scene;
     PxControllerManager* m_controllerManager;
 };
+
+void PhysicsUpdate(flecs::iter& iter);
 
 // Physics controller
 struct PhysicsController

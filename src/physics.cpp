@@ -1,4 +1,5 @@
 #include "physics.h"
+#include "systems.h"
 
 class ErrorCallback : public PxErrorCallback
 {
@@ -55,8 +56,14 @@ PhysicsState::~PhysicsState()
     SPDLOG_INFO("Physics shut down");
 }
 
-void PhysicsState::Update()
+void PhysicsState::Update(float delta)
 {
-    m_scene->simulate(TIME_STEP);
+    m_scene->simulate(delta);
     m_scene->fetchResults(true);
+}
+
+void PhysicsUpdate(flecs::iter& iter)
+{
+    Systems::Context* context = iter.ctx<Systems::Context>();
+    context->physics->Update(iter.delta_system_time());
 }

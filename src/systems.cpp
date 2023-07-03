@@ -1,25 +1,52 @@
 #include "systems.h"
+#include "backend.h"
+#include "discord.h"
+#include "text.h"
 
-void Systems::Register(flecs::world& world, InputState* input)
+void Systems::Register(flecs::world& world, Context* context)
 {
-    // systems.h
-    world.system<const Tags::LocalPlayer>()
-        .ctx(input)
+    // physics.h
+    world.system("PhysicsUpdate")
+        .ctx(context)
         .kind(flecs::OnUpdate)
+        .multi_threaded()
+        .interval(PhysicsState::TIME_STEP)
+        .iter(PhysicsUpdate);
+
+    // systems.h
+    world.system<const Tags::LocalPlayer>("PlayerInput")
+        .ctx(context)
+        .kind(flecs::OnUpdate)
+        .interval(PhysicsState::TIME_STEP)
         .iter(PlayerInput);
+    world.system("BeginRender")
+        .ctx(context)
+        .kind(flecs::PreUpdate)
+        .iter(BeginRender);
+    world.system("EndRender")
+        .ctx(context)
+        .kind(flecs::PostUpdate)
+        .iter(EndRender);
+    world.system("DebugInfo")
+        .ctx(context)
+        .kind(flecs::PreUpdate)
+        .iter(DebugInfo);
 
     // sprite.h
-    world.system<PhysicsController, const Sprite>()
+    world.system<PhysicsController, const Sprite>("DrawControlled")
         .kind(flecs::OnUpdate)
         .iter(DrawControlled);
 }
 
 void Systems::PlayerInput(flecs::iter& iter)
 {
-    InputState* input = iter.ctx<InputState>();
+    Context* context = iter.ctx<Context>();
+    InputState* input = context->input;
+
     flecs::entity player = iter.entity(0);
     auto controller = player.get_mut<PhysicsController>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
+
     float x = input->GetLeftStickDirection().x *
               (input->GetLeftStickPressed() ? movementSpeed->run
                                             : movementSpeed->walk) *
@@ -30,7 +57,31 @@ void Systems::PlayerInput(flecs::iter& iter)
                                             : movementSpeed->walk) *
               (input->GetRightStickPressed() ? movementSpeed->crouch
                                              : movementSpeed->walk);
+
     controller->GetController().move(PxVec3(x, 0, z), 0.0001f,
-                                     PhysicsState::TIME_STEP * 1000.0f,
+                                     iter.delta_system_time() * 1000.0f,
                                      PxControllerFilters());
+}
+
+void Systems::BeginRender(flecs::iter& iter)
+{
+    g_backend->BeginRender();
+}
+
+void Systems::EndRender(flecs::iter& iter)
+{
+    g_backend->EndRender();
+}
+
+void Systems::DebugInfo(flecs::iter& iter)
+{
+    Context* context = iter.ctx<Context>();
+    float fps = 1.0f / iter.delta_time();
+    Text::DrawString(
+        fmt::format("FPS: {:0.3f} {} ms\nFrames rendered: {}\nSystem: {}\nDiscord: {}, {}",
+                    fps, 1000.0f * iter.delta_time(),
+                    g_backend->GetFrameCount(), g_backend->DescribeSystem(),
+                    Discord::Available() ? "available" : "not available",
+                    Discord::Connected() ? "connected" : "not connected"),
+        glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
 }

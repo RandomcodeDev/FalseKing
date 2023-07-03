@@ -86,6 +86,9 @@ class Backend
 
     // Get a symbol from a library
     virtual Symbol GetSymbol(void* dll, const std::string& path) const = 0;
+
+    // Get the number of frames rendered
+    virtual uint64_t GetFrameCount() const = 0;
 };
 
 #if __NX__

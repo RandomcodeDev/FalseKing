@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <atomic>
 #include <cerrno>
 #include <chrono>
 #include <codecvt>
@@ -12,7 +11,6 @@
 #include <locale>
 #include <sstream>
 #include <string>
-#include <thread>
 
 #ifndef TOOL
 #include "discord/discord.h"
@@ -22,12 +20,12 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
-#endif
-
-#include "metrohash.h"
 
 #include "PxPhysicsAPI.h"
 #include "characterkinematic/PxController.h"
+#endif
+
+#include "metrohash.h"
 using namespace physx;
 
 #define QOI_NO_STDIO
@@ -68,9 +66,6 @@ extern const char* GAME_COMMIT;
 // Game screen size
 constexpr uint32_t GAME_WIDTH = 256;
 constexpr uint32_t GAME_HEIGHT = 168;
-
-// Frame smoothing
-constexpr float FRAME_SMOOTHING = 0.9f;
 
 // Debug font settings
 constexpr float DEBUG_TEXT_SCALE = 0.3f;

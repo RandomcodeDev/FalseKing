@@ -18,6 +18,10 @@ const char* GAME_COMMIT = {
 
 int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 {
+    chrono::time_point<precise_clock> start = precise_clock::now();
+    chrono::time_point<precise_clock> now;
+    chrono::time_point<precise_clock> last = start;
+
     g_backend = backend;
 
 #ifdef _DEBUG
@@ -43,8 +47,12 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     PhysicsState physics;
 
     flecs::world world;
+    //world.set_target_fps(60);
+
     Components::Register(world);
-    Systems::Register(world, &input);
+
+    Systems::Context context{&input, &physics, start};
+    Systems::Register(world, &context);
 
     SPDLOG_INFO("Game initialized");
 
@@ -61,29 +69,15 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         world.entity("Player")
             .set(PhysicsController(physics, controllerDesc))
             .set(Sprite(sprites, 0, 0))
-            .set(Components::MovementSpeed{0.5f, 0.35f, 0.75f})
+            .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})
             .add<Tags::Player>()
             .add<Tags::LocalPlayer>();
 
     bool run = true;
-    chrono::time_point<precise_clock> start = precise_clock::now();
-    chrono::time_point<precise_clock> now;
-    chrono::time_point<precise_clock> last = start;
-    float fps = 0.0f;
-    float physicsAccumulator = 0.0f;
     while (run)
     {
         now = precise_clock::now();
-        chrono::milliseconds delta =
-            chrono::duration_cast<chrono::milliseconds>(now - last);
-        float deltaSeconds =
-            (float)delta.count() / chrono::milliseconds::period::den;
-        if (delta.count() > 0)
-        {
-            fps = (fps * FRAME_SMOOTHING) +
-                  ((1000.0f / delta.count()) * (1.0f - FRAME_SMOOTHING));
-        }
 
         if (!g_backend->Update(input))
         {
@@ -93,31 +87,10 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         // Respect deadzones
         input.AdjustSticks();
 
-        physicsAccumulator += deltaSeconds;
-        while (physicsAccumulator >= PhysicsState::TIME_STEP)
-        {
-            physics.Update();
-            physicsAccumulator -= PhysicsState::TIME_STEP;
-        }
-
-        if (!g_backend->BeginRender())
-        {
-            continue;
-        }
-
-        world.progress(deltaSeconds);
-
-        Text::DrawString(
-            fmt::format(
-                "FPS: {:0.3}\nFrame delta: {}\nSystem: {}\nDiscord: {}, {}",
-                fps, delta, g_backend->DescribeSystem(),
-                Discord::Available() ? "available" : "not available",
-                Discord::Connected() ? "connected" : "not connected"),
-            glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
-        Discord::Update(chrono::duration_cast<chrono::seconds>(now - start),
-                        delta);
-
-        g_backend->EndRender();
+        world.progress();
+        Discord::Update(
+            chrono::duration_cast<chrono::seconds>(now - start),
+            chrono::duration_cast<chrono::milliseconds>(now - last));
 
         last = now;
     }

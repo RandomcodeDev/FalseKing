@@ -51,6 +51,10 @@ class SdlBackend : protected Backend
     {
         return (Symbol)SDL_LoadFunction(dll, symbol.c_str());
     }
+    uint64_t GetFrameCount() const
+    {
+        return m_frames;
+    }
 
   private:
     SDL_Window* m_window;
@@ -60,6 +64,7 @@ class SdlBackend : protected Backend
     KeyMapping m_mapping;
     SDL_Gamepad* m_gamepad;
     SDL_JoystickID m_gamepadId;
+    uint64_t m_frames;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
@@ -202,6 +207,8 @@ SdlBackend::SdlBackend()
     {
         SPDLOG_INFO("No gamepads");
     }
+
+    m_frames = 0;
 }
 
 SdlBackend::~SdlBackend()
@@ -494,6 +501,7 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 void SdlBackend::EndRender()
 {
     SDL_RenderPresent(m_renderer);
+    m_frames++;
 }
 
 const std::string& SdlBackend::DescribeSystem() const
