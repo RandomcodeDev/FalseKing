@@ -78,6 +78,8 @@ jobs:
         run: scripts/build.sh ${{matrix.target}} ${{matrix.config}}
       
       - name: Install the Apple certificate and provisioning profile
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        if: matrix.os == 'macOS-13'
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
