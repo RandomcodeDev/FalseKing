@@ -1,6 +1,8 @@
 // SDL backend
 
-#ifndef _WIN32
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#else
 #include <sys/utsname.h>
 #include <unistd.h>
 #endif
@@ -609,8 +611,52 @@ const std::string& SdlBackend::DescribeSystem() const
         Description = fmt::format("Windows {} {} {} (build lab {})",
                                   ProductName, EditionId, CSDVersion, BuildLab);
     }
+#elif defined __APPLE__
+    std::string osVersion;
+    osVersion.resize(32);
+    size_t osVersionSize = osVersion.size() - 1;
+    int32_t osVersionNames[] = {CTL_KERN, KERN_OSRELEASE};
+    
+    if (sysctl(osVersionNames, 2, osVersion.data(), &osVersionSize, nullptr, 0) == -1)
+    {
+        Description = fmt::format("macOS <unknown version: {}>", strerror(errno));
+    }
+    else
+    {
+        osVersion.resize(osVersionSize - 1);
+        
+        uint16_t major;
+        uint16_t minor;
+        
+        std::unordered_map<uint16_t, std::string> versionNames;
+        versionNames[0x0E00] = "Sonoma";
+        versionNames[0x0D00] = "Ventura";
+        versionNames[0x0C00] = "Monterey";
+        versionNames[0x0B00] = "Big Sur";
+        versionNames[0x0A0F] = "Catalina";
+        versionNames[0x0A0E] = "Mojave";
+        versionNames[0x0A0D] = "High Sierra";
+        
+        std::istringstream versionStream(osVersion);
+        versionStream >> major;
+        versionStream.get();
+        versionStream >> minor;
+        
+        if (major >= 20)
+        {
+            major -= 9;
+            minor -= 1;
+            Description = fmt::format("macOS {}.{} {}", major, minor, versionNames[major << 8]);
+        }
+        else
+        {
+            major -= 4;
+            minor += 1;
+            Description = fmt::format("macOS 10.{}.{} {}", major, minor, versionNames[0x0A00 | major]);
+        }
+    }
 #else
-    std::ifstream osRelease("/etc/os-release", std::ios::ate);
+    std::fstream osRelease("/etc/os-release", std::ios::ate);
     std::string osReleaseContent;
     struct utsname utsName = {};
 
