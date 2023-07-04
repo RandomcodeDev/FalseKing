@@ -125,6 +125,11 @@ extern "C" int main(int argc, char* argv[])
     spdlog::default_logger().get()->sinks().push_back(
         std::make_shared<spdlog::sinks::msvc_sink_st>());
 #endif
+    
+    spdlog::default_logger().get()->sinks().push_back(
+        std::make_shared<spdlog::sinks::basic_file_sink_st>(fmt::format(
+            "{}FalseKing-{:%Y-%m-%d_%H-%M-%S}.log", SDL_GetPrefPath("", GAME_NAME),
+            chrono::system_clock::now())));
 
     SPDLOG_INFO("Creating backend");
     Backend* backend = (Backend*)new SdlBackend();

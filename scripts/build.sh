@@ -23,7 +23,7 @@ FreeBSD)
 esac
 
 PWD=$(pwd)
-BUILDDIR=$ROOT/build/unix/$ARCH/$CONF/Game.$ARCH
+BUILDDIR=$ROOT/build/unix/$ARCH/$CONF
 
 echo Building $CONF for $ARCH in $BUILDDIR
 mkdir -p $BUILDDIR
