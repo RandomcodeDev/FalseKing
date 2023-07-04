@@ -8,7 +8,7 @@ mkdir -p "$1"
 $ROOT/scripts/copyfiles.sh "$1" "$2" "$3"
 cp "$ROOT/build/unix/$2/$3/Game.$2" "$1"
 OUTDIR=$(pwd)
-pushd "$1"
+cd "$1"
 7z a -tzip "$OUTDIR/$4.zip" *
-popd
+cd "$OUTDIR"
 rm -r "$1"
