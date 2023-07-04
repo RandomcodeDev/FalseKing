@@ -34,9 +34,8 @@ SRCS=${ROOT}/src/components.cpp \
            ${ROOT}/deps/src/discord/user_manager.cpp \
            ${ROOT}/deps/src/discord/voice_manager.cpp
 .endif
-WARNS?=-Wall -Wextra
 CSTD=-std=c17
-CFLAGS+=-xc -DUSE_SDL=1 -I${ROOT}/include -I${ROOT}/deps/include -I${.CURDIR}
+CFLAGS+=-xc -DUSE_SDL=1 -I${ROOT}/include -I${ROOT}/deps/include -I${.CURDIR} -Wall -Wextra
 CXXFLAGS+=-xc++ -std=c++17
 
 .if "${CONFIG}" == "Debug"

@@ -63,7 +63,7 @@ class SdlBackend : protected Backend
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     WindowInfo m_windowInfo;
-    int32_t m_windowId;
+    uint32_t m_windowId;
     KeyMapping m_mapping;
     SDL_Gamepad* m_gamepad;
     SDL_JoystickID m_gamepadId;
@@ -665,20 +665,20 @@ const std::string& SdlBackend::DescribeSystem() const
         }
     }
 #else
-    std::fstream osRelease("/etc/os-release", std::ios::ate);
-    std::string osReleaseContent;
     struct utsname utsName = {};
-
     uname(&utsName);
-    osReleaseContent.resize(osRelease.tellg());
-    osRelease.seekg(std::ios::beg);
-    osRelease.read(osReleaseContent.data(), osReleaseContent.size());
-    if (osReleaseContent.length())
+    
+    std::fstream osRelease("/etc/os-release", std::ios::ate);
+    if (osRelease.good())
     {
+    	std::string osReleaseContent;
+	osReleaseContent.resize(osRelease.tellg());
+	osRelease.seekg(std::ios::beg);
+	osRelease.read(osReleaseContent.data(), osReleaseContent.size());
         osRelease.close();
         size_t nameOff = osReleaseContent.find("PRETTY_NAME=\"");
         std::string name;
-        size_t nameEndOff;
+        size_t nameEndOff = 0;
         if (nameOff == SIZE_MAX)
         {
             name = "Unknown";

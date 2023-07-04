@@ -9,8 +9,8 @@ for /f "usebackq tokens=2" %%x in (`git log`) do (
 )
 
 :done1
-if not exist %1\commit.txt goto :done2
-for /f "usebackq tokens=1" %%x in (`type %1\commit.txt`) do (
+if not exist "%1\commit.txt" goto :done2
+for /f "usebackq tokens=1" %%x in (`type "%1\commit.txt"`) do (
     set LAST=%%x
     goto :done2
 )
@@ -18,6 +18,6 @@ for /f "usebackq tokens=1" %%x in (`type %1\commit.txt`) do (
 :done2
 if "%COMMIT%" NEQ "%LAST%" (
     echo Updating commit hash (%COMMIT% vs %LAST%^)
-    echo %COMMIT% > %1\commit.txt
+    echo %COMMIT% > "%1\commit.txt"
 )
 

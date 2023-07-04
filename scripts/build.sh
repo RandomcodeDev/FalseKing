@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-ROOT=$(realpath $(dirname $0)/..)
+ROOT="$(realpath $(dirname $0)/..)"
 
 ARCH=$1
 if [ ! $ARCH ]; then
@@ -22,8 +22,8 @@ FreeBSD)
     SLIBEXT=-freebsd.a
 esac
 
-PWD=$(pwd)
-BUILDDIR=$ROOT/build/unix/$ARCH/$CONF
+PWD="$(pwd)"
+BUILDDIR="$ROOT/build/unix/$ARCH/$CONF"
 
 echo Building $CONF for $ARCH in $BUILDDIR
 mkdir -p $BUILDDIR

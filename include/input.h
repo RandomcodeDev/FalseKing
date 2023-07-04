@@ -102,17 +102,17 @@ class InputState
         return rightStick;
     }
 
-    const float GetLeftTrigger() const
+    float GetLeftTrigger() const
     {
         return leftTrigger;
     }
 
-    const float GetRightTrigger() const
+    float GetRightTrigger() const
     {
         return rightTrigger;
     }
 
-    const float GetScrollAmount() const
+    float GetScrollAmount() const
     {
         return scrollAmount;
     }
@@ -122,72 +122,72 @@ class InputState
         scrollAmount = 0.0f;
     }
 
-    const bool GetStart() const
+    bool GetStart() const
     {
         return state & START;
     }
 
-    const bool GetSelect() const
+    bool GetSelect() const
     {
         return state & SELECT;
     }
 
-    const bool GetDpadUp() const
+    bool GetDpadUp() const
     {
         return state & DPAD_UP;
     }
 
-    const bool GetDpadDown() const
+    bool GetDpadDown() const
     {
         return state & DPAD_DOWN;
     }
 
-    const bool GetDpadLeft() const
+    bool GetDpadLeft() const
     {
         return state & DPAD_LEFT;
     }
 
-    const bool GetDpadRight() const
+    bool GetDpadRight() const
     {
         return state & DPAD_RIGHT;
     }
 
-    const bool GetA() const
+    bool GetA() const
     {
         return state & A;
     }
 
-    const bool GetB() const
+    bool GetB() const
     {
         return state & B;
     }
 
-    const bool GetX() const
+    bool GetX() const
     {
         return state & X;
     }
 
-    const bool GetY() const
+    bool GetY() const
     {
         return state & Y;
     }
 
-    const bool GetLeftShoulder() const
+    bool GetLeftShoulder() const
     {
         return state & LEFT_SHOULDER;
     }
 
-    const bool GetRightShoulder() const
+    bool GetRightShoulder() const
     {
         return state & RIGHT_SHOULDER;
     }
 
-    const bool GetLeftStickPressed() const
+    bool GetLeftStickPressed() const
     {
         return state & LEFT_STICK;
     }
 
-    const bool GetRightStickPressed() const
+    bool GetRightStickPressed() const
     {
         return state & RIGHT_STICK;
     }
