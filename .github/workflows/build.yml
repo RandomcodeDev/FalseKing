@@ -140,7 +140,7 @@ jobs:
         if: matrix.os == 'macOS-13'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          path: build/darwin/build/${{matrix.config}}/False King.app
+          path: build/darwin/build/${{matrix.config}}
       - name: Upload a Build Artifact (Make)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'ubuntu-latest'
