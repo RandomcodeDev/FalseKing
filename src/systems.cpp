@@ -21,15 +21,15 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(PlayerInput);
     world.system("BeginRender")
         .ctx(context)
-        .kind(flecs::PreUpdate)
+        .kind(flecs::PreFrame)
         .iter(BeginRender);
     world.system("EndRender")
         .ctx(context)
-        .kind(flecs::PostUpdate)
+        .kind(flecs::PostFrame)
         .iter(EndRender);
     world.system("DebugInfo")
         .ctx(context)
-        .kind(flecs::PreUpdate)
+        .kind(flecs::PostUpdate)
         .iter(DebugInfo);
 
     // sprite.h
@@ -78,9 +78,9 @@ void Systems::DebugInfo(flecs::iter& iter)
     Context* context = iter.ctx<Context>();
     float fps = 1.0f / iter.delta_time();
     Text::DrawString(
-        fmt::format("FPS: {:0.3f} {} ms\nFrames rendered: {}\nSystem: {}\nDiscord: {}, {}",
+        fmt::format("FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\nTotal runtime: {:%T}\nSystem: {}\nDiscord: {}, {}",
                     fps, 1000.0f * iter.delta_time(),
-                    g_backend->GetFrameCount(), g_backend->DescribeSystem(),
+                    g_backend->GetFrameCount(), precise_clock::now() - context->startTime, g_backend->DescribeSystem(),
                     Discord::Available() ? "available" : "not available",
                     Discord::Connected() ? "connected" : "not connected"),
         glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);

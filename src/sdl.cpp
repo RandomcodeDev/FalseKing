@@ -130,6 +130,9 @@ extern "C" int main(int argc, char* argv[])
 
     std::vector<std::string> paths;
     std::string baseDir = SDL_GetBasePath();
+#ifdef __APPLE__
+    baseDir += "Contents/Resources/";
+#endif
 #ifndef __WINRT__
     baseDir += "assets";
 #endif

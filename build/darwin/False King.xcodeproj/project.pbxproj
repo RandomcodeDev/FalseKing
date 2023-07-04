@@ -22,6 +22,8 @@
 		D449ACED2A51FBD40055EA8E /* types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D449ACDF2A51FBD40055EA8E /* types.cpp */; };
 		D449ACEE2A51FBD40055EA8E /* overlay_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D449ACE02A51FBD40055EA8E /* overlay_manager.cpp */; };
 		D449ACEF2A51FBD40055EA8E /* activity_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D449ACE12A51FBD40055EA8E /* activity_manager.cpp */; };
+		D45020C12A53CB5400D39BD8 /* discord_game_sdk.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */; };
+		D45020C22A53CB5400D39BD8 /* libzstd-darwin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */; };
 		D48F678A2A508A560042F1FB /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D48F67812A508A560042F1FB /* sprite.cpp */; };
 		D48F678B2A508A560042F1FB /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D48F67822A508A560042F1FB /* text.cpp */; };
 		D48F678C2A508A560042F1FB /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D48F67832A508A560042F1FB /* physics.cpp */; };
@@ -55,6 +57,9 @@
 		D449ACE02A51FBD40055EA8E /* overlay_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = overlay_manager.cpp; path = ../../../deps/src/discord/overlay_manager.cpp; sourceTree = "<group>"; };
 		D449ACE12A51FBD40055EA8E /* activity_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = activity_manager.cpp; path = ../../../deps/src/discord/activity_manager.cpp; sourceTree = "<group>"; };
 		D45020BD2A53B77E00D39BD8 /* False King.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "False King.entitlements"; sourceTree = "<group>"; };
+		D45020BE2A53C92500D39BD8 /* False-King-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "False-King-Info.plist"; sourceTree = "<group>"; };
+		D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = discord_game_sdk.dylib; path = ../../deps/lib/Universal/discord_game_sdk.dylib; sourceTree = "<group>"; };
+		D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libzstd-darwin.a"; path = "../../deps/lib/Universal/libzstd-darwin.a"; sourceTree = "<group>"; };
 		D48F67462A507F000042F1FB /* False King.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "False King.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48F67742A5089F50042F1FB /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = input.h; path = ../../include/input.h; sourceTree = "<group>"; };
 		D48F67752A5089F50042F1FB /* components.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = components.h; path = ../../include/components.h; sourceTree = "<group>"; };
@@ -90,6 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D45020C12A53CB5400D39BD8 /* discord_game_sdk.dylib in Frameworks */,
+				D45020C22A53CB5400D39BD8 /* libzstd-darwin.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +127,7 @@
 		D48F673D2A507F000042F1FB = {
 			isa = PBXGroup;
 			children = (
+				D45020BE2A53C92500D39BD8 /* False-King-Info.plist */,
 				D45020BD2A53B77E00D39BD8 /* False King.entitlements */,
 				D48F67A32A5092DF0042F1FB /* assets */,
 				D48F677F2A508A120042F1FB /* Header Files */,
@@ -188,6 +196,8 @@
 			isa = PBXGroup;
 			children = (
 				D48F67A12A508D750042F1FB /* libzstd-darwin.a */,
+				D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */,
+				D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */,
 				D48F679F2A508D020042F1FB /* SDL3.framework */,
 				D48F679D2A508CF60042F1FB /* deps */,
 				D48F679B2A508CDC0042F1FB /* Debug */,
@@ -206,7 +216,7 @@
 				D48F67422A507F000042F1FB /* Sources */,
 				D48F67432A507F000042F1FB /* Frameworks */,
 				D48F67442A507F000042F1FB /* Resources */,
-				D48F67A72A50964D0042F1FB /* ShellScript */,
+				D48F67A72A50964D0042F1FB /* Copy Frameworks and Libraries */,
 			);
 			buildRules = (
 			);
@@ -280,7 +290,7 @@
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p /tmp/FalseKing\n$SRCROOT/../../scripts/commit.sh /tmp/FalseKing\n";
 		};
-		D48F67A72A50964D0042F1FB /* ShellScript */ = {
+		D48F67A72A50964D0042F1FB /* Copy Frameworks and Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -290,13 +300,14 @@
 			);
 			inputPaths = (
 			);
+			name = "Copy Frameworks and Libraries";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "FRAMEWORKS_PATH=$SRCROOT/../../deps/Frameworks/$CONFIGURATION\n\nBUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\n\nmkdir -p \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp -r $(find $FRAMEWORKS_PATH -type d | grep -i '.*\\.framework$') \"$BUILD_APP_DIR/Contents/Frameworks\"\n";
+			shellScript = "FRAMEWORKS_PATH=$SRCROOT/../../deps/Frameworks/$CONFIGURATION\nLIB_PATH=$SRCROOT/../../deps/lib/Universal\n\nBUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\n\nmkdir -p \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp -r $(find $FRAMEWORKS_PATH -type d | grep -i '.*\\.framework$') \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp $LIB_PATH/*.dylib $LIB_PATH/$CONFIGURATION/*.dylib \"$BUILD_APP_DIR/Contents/Frameworks\" || true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -472,6 +483,9 @@
 					../../deps/include,
 					/tmp/FalseKing,
 				);
+				INFOPLIST_FILE = "False-King-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -484,6 +498,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[arch=*]" = "@executable_path/";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=*]" = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"../../deps/lib/Universal/$(CONFIGURATION)",
@@ -492,6 +507,10 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-Wno-documentation-deprecated-sync",
+				);
 				OTHER_LDFLAGS = (
 					"-lPhysX-darwin",
 					"-lPhysXCommon-darwin",
@@ -536,6 +555,9 @@
 					../../deps/include,
 					/tmp/FalseKing,
 				);
+				INFOPLIST_FILE = "False-King-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -548,6 +570,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[arch=*]" = "@executable_path";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=*]" = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"../../deps/lib/Universal/$(CONFIGURATION)",
@@ -556,6 +579,10 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-Wno-documentation-deprecated-sync",
+				);
 				OTHER_LDFLAGS = (
 					"-lPhysX-darwin",
 					"-lPhysXCommon-darwin",
