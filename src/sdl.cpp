@@ -1,7 +1,7 @@
 // SDL backend
 
 #ifdef _WIN32
-#elif defined(__APPLE___
+#elif defined(__APPLE__)
 #include <sys/sysctl.h>
 #else
 #include <sys/utsname.h>
