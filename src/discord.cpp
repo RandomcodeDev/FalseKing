@@ -2,7 +2,7 @@
 #include "backend.h"
 
 #ifndef DISCORD_ENABLE
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
+#if _WIN32_WINNT == _WIN32_WINNT_WINXP || defined(__APPLE__) || defined(__linux__)
 #define DISCORD_ENABLE 1
 #else
 #define DISCORD_ENABLE 0
