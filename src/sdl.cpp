@@ -125,11 +125,11 @@ extern "C" int main(int argc, char* argv[])
     spdlog::default_logger().get()->sinks().push_back(
         std::make_shared<spdlog::sinks::msvc_sink_st>());
 #endif
-    
+
     spdlog::default_logger().get()->sinks().push_back(
         std::make_shared<spdlog::sinks::basic_file_sink_st>(fmt::format(
-            "{}FalseKing-{:%Y-%m-%d_%H-%M-%S}.log", SDL_GetPrefPath("", GAME_NAME),
-            chrono::system_clock::now())));
+            "{}FalseKing-{:%Y-%m-%d_%H-%M-%S}.log",
+            SDL_GetPrefPath("", GAME_NAME), chrono::system_clock::now())));
 
     SPDLOG_INFO("Creating backend");
     Backend* backend = (Backend*)new SdlBackend();
@@ -590,12 +590,14 @@ const std::string& SdlBackend::DescribeSystem() const
         RegQueryValueExA(CurrentVersionHandle, "DisplayVersion", nullptr,
                          nullptr, (LPBYTE)DisplayVersion, &Size);
 
+        std::string edition(EditionId, ARRAY_SIZE(EditionId));
         Description = fmt::format(
 #ifdef _DEBUG
-            "Windows {} {}.{}.{}.{} {} (build lab {})",
+            "{} {} {}.{}.{}.{} {} (build lab {})",
 #else
-            "Windows {} {}.{}.{}.{} {}",
+            "{} {} {}.{}.{}.{} {}",
 #endif
+            edition == "SystemOS" ? "Xbox System Software" : "Window",
             (strncmp(InstallationType, "Client",
                      ARRAY_SIZE(InstallationType)) == 0)
                 ? "Desktop"
@@ -625,18 +627,20 @@ const std::string& SdlBackend::DescribeSystem() const
     osVersion.resize(32);
     size_t osVersionSize = osVersion.size() - 1;
     int32_t osVersionNames[] = {CTL_KERN, KERN_OSRELEASE};
-    
-    if (sysctl(osVersionNames, 2, osVersion.data(), &osVersionSize, nullptr, 0) == -1)
+
+    if (sysctl(osVersionNames, 2, osVersion.data(), &osVersionSize, nullptr,
+               0) == -1)
     {
-        Description = fmt::format("macOS <unknown version: {}>", strerror(errno));
+        Description =
+            fmt::format("macOS <unknown version: {}>", strerror(errno));
     }
     else
     {
         osVersion.resize(osVersionSize - 1);
-        
+
         uint16_t major;
         uint16_t minor;
-        
+
         std::unordered_map<uint16_t, std::string> versionNames;
         versionNames[0x0E00] = "Sonoma";
         versionNames[0x0D00] = "Ventura";
@@ -645,36 +649,38 @@ const std::string& SdlBackend::DescribeSystem() const
         versionNames[0x0A0F] = "Catalina";
         versionNames[0x0A0E] = "Mojave";
         versionNames[0x0A0D] = "High Sierra";
-        
+
         std::istringstream versionStream(osVersion);
         versionStream >> major;
         versionStream.get();
         versionStream >> minor;
-        
+
         if (major >= 20)
         {
             major -= 9;
             minor -= 1;
-            Description = fmt::format("macOS {}.{} {}", major, minor, versionNames[major << 8]);
+            Description = fmt::format("macOS {}.{} {}", major, minor,
+                                      versionNames[major << 8]);
         }
         else
         {
             major -= 4;
             minor += 1;
-            Description = fmt::format("macOS 10.{}.{} {}", major, minor, versionNames[0x0A00 | major]);
+            Description = fmt::format("macOS 10.{}.{} {}", major, minor,
+                                      versionNames[0x0A00 | major]);
         }
     }
 #else
     struct utsname utsName = {};
     uname(&utsName);
-    
+
     std::fstream osRelease("/etc/os-release", std::ios::ate);
     if (osRelease.good())
     {
-    	std::string osReleaseContent;
-	osReleaseContent.resize(osRelease.tellg());
-	osRelease.seekg(std::ios::beg);
-	osRelease.read(osReleaseContent.data(), osReleaseContent.size());
+        std::string osReleaseContent;
+        osReleaseContent.resize(osRelease.tellg());
+        osRelease.seekg(std::ios::beg);
+        osRelease.read(osReleaseContent.data(), osReleaseContent.size());
         osRelease.close();
         size_t nameOff = osReleaseContent.find("PRETTY_NAME=\"");
         std::string name;
