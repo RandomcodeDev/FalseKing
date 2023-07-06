@@ -78,10 +78,14 @@ void Systems::DebugInfo(flecs::iter& iter)
     Context* context = iter.ctx<Context>();
     float fps = 1.0f / iter.delta_time();
     Text::DrawString(
-        fmt::format("FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\nTotal runtime: {:%T}\nSystem: {}\nDiscord: {}, {}",
-                    fps, 1000.0f * iter.delta_time(),
-                    g_backend->GetFrameCount(), precise_clock::now() - context->startTime, g_backend->DescribeSystem(),
-                    Discord::Available() ? "available" : "not available",
-                    Discord::Connected() ? "connected" : "not connected"),
+        fmt::format(
+            "FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\nTotal "
+            "runtime: {:%T}\nSystem: {}\nDiscord: {}, {}\n\n\n{}",
+            fps, 1000.0f * iter.delta_time(), g_backend->GetFrameCount(),
+            precise_clock::now() - context->startTime,
+            g_backend->DescribeSystem(),
+            Discord::Available() ? "available" : "not available",
+            Discord::Connected() ? "connected" : "not connected",
+            context->input->DescribeState()),
         glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
 }

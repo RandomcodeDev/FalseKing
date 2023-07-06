@@ -67,6 +67,7 @@ class SdlBackend : protected Backend
     KeyMapping m_mapping;
     SDL_Gamepad* m_gamepad;
     SDL_JoystickID m_gamepadId;
+    bool m_usingGamepad;
     uint64_t m_frames;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
@@ -279,50 +280,53 @@ bool SdlBackend::Update(InputState& input)
             return false;
         }
 
-        int32_t keyCount = 0;
-        SDL_GetKeyboardState(&keyCount);
-        bool* keys = new bool[keyCount];
-        keys = (bool*)SDL_GetKeyboardState(&keyCount);
+        if (!m_usingGamepad)
+        {
+            int32_t keyCount = 0;
+            SDL_GetKeyboardState(&keyCount);
+            bool* keys = new bool[keyCount];
+            keys = (bool*)SDL_GetKeyboardState(&keyCount);
 
-        bool w = keys[m_mapping.w];
-        bool s = keys[m_mapping.s];
-        bool a = keys[m_mapping.a];
-        bool d = keys[m_mapping.d];
+            bool w = keys[m_mapping.w];
+            bool s = keys[m_mapping.s];
+            bool a = keys[m_mapping.a];
+            bool d = keys[m_mapping.d];
 
-        if (w && !s)
-        {
-            input.leftStick.y = -1.0f;
-        }
-        else if (!w && s)
-        {
-            input.leftStick.y = 1.0f;
-        }
-        else
-        {
-            input.leftStick.y = 0.0f;
-        }
+            if (w && !s)
+            {
+                input.leftStick.y = -1.0f;
+            }
+            else if (!w && s)
+            {
+                input.leftStick.y = 1.0f;
+            }
+            else
+            {
+                input.leftStick.y = 0.0f;
+            }
 
-        if (a && !d)
-        {
-            input.leftStick.x = -1.0f;
-        }
-        else if (!a && d)
-        {
-            input.leftStick.x = 1.0f;
-        }
-        else
-        {
-            input.leftStick.x = 0.0f;
-        }
+            if (a && !d)
+            {
+                input.leftStick.x = -1.0f;
+            }
+            else if (!a && d)
+            {
+                input.leftStick.x = 1.0f;
+            }
+            else
+            {
+                input.leftStick.x = 0.0f;
+            }
 
-        // There are 4 mappings that aren't bit flags, they're handled above
-        for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
-        {
-            bool down = keys[m_mapping.values[i]];
-            // Mapping is in same order as bit flags for state
-            // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
-            uint32_t mapping = 1 << i;
-            input.state = (input.state & ~mapping) | (-down & mapping);
+            // There are 4 mappings that aren't bit flags, they're handled above
+            for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
+            {
+                bool down = keys[m_mapping.values[i]];
+                // Mapping is in same order as bit flags for state
+                // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
+                uint32_t mapping = 1 << i;
+                input.state = (input.state & ~mapping) | (-down & mapping);
+            }
         }
     }
 
@@ -365,6 +369,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
              event.type == SDL_EVENT_MOUSE_BUTTON_UP)
     {
+        m_usingGamepad = false;
         bool down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
         if (event.button.button == 1) // left click
         {
@@ -377,12 +382,14 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     }
     else if (event.type == SDL_EVENT_MOUSE_MOTION)
     {
+        m_usingGamepad = false;
         // this is a guess
         input.rightStick.x = event.motion.xrel / 5.0f;
         input.rightStick.y = event.motion.yrel / 5.0f;
     }
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
+        m_usingGamepad = false;
         uint16_t mask = event.wheel.y > 0 ? InputState::LEFT_SHOULDER
                                           : InputState::RIGHT_SHOULDER;
         input.state &= event.wheel.y > 0 ? ~InputState::LEFT_SHOULDER
@@ -393,6 +400,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
              event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
     {
+        m_usingGamepad = true;
         // Same as keyboard buttons
         bool down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
         if (event.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
@@ -421,6 +429,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     }
     else if (event.type == SDL_EVENT_GAMEPAD_AXIS_MOTION)
     {
+        m_usingGamepad = true;
         // TODO: make inversion optional (Y axes are backwards
         // from what's interpreted from the keyboard)
         float value = (float)event.gaxis.value / INT16_MAX;
