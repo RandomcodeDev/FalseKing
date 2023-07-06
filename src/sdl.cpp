@@ -590,14 +590,14 @@ const std::string& SdlBackend::DescribeSystem() const
         RegQueryValueExA(CurrentVersionHandle, "DisplayVersion", nullptr,
                          nullptr, (LPBYTE)DisplayVersion, &Size);
 
-        std::string edition(EditionId, ARRAY_SIZE(EditionId));
+        std::string edition(EditionId, std::min(strlen(EditionId), ARRAY_SIZE(EditionId)));
         Description = fmt::format(
 #ifdef _DEBUG
             "{} {} {}.{}.{}.{} {} (build lab {})",
 #else
             "{} {} {}.{}.{}.{} {}",
 #endif
-            edition == "SystemOS" ? "Xbox System Software" : "Window",
+            edition == "SystemOS" ? "Xbox System Software" : "Windows",
             (strncmp(InstallationType, "Client",
                      ARRAY_SIZE(InstallationType)) == 0)
                 ? "Desktop"

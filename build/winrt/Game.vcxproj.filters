@@ -138,7 +138,7 @@
     <None Include="..\..\README.md" />
     <None Include="..\..\scripts\copyfiles.bat" />
     <None Include="Game_TemporaryKey.pfx" />
-    <None Include="..\..\deps\lib\%24%28Platform%29\discord_game_sdk.dll" />
+    <None Include="..\..\deps\lib\$(Platform)\discord_game_sdk.dll" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UwpAssets\Resources.rc" />
@@ -179,16 +179,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysX_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXGpu_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXFoundation_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCooking_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PhysXCommon_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\PVDRuntime_64.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\%24%28Configuration%29\SDL3.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\%24%28Platform%29\libzstd.dll" />
     <CopyFileToFolders Include="..\..\assets\font.qoi" />
     <CopyFileToFolders Include="..\..\assets\font.toml" />
     <CopyFileToFolders Include="..\..\assets\sprites.qoi" />
+    <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\$(Configuration)\SDL3.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\libzstd.dll" />
   </ItemGroup>
 </Project>

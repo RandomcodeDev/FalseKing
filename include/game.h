@@ -21,6 +21,8 @@
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
 
+#define PX_STATIC 1
+#define PX_PHYSX_STATIC_LIB 1
 #include "PxPhysicsAPI.h"
 #include "characterkinematic/PxController.h"
 #endif
