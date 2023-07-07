@@ -42,10 +42,10 @@ using namespace physx;
 #define SPDLOG_NO_EXCEPTIONS
 #include "spdlog/fmt/chrono.h"
 #include "spdlog/fmt/fmt.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/sink.h"
 #include "spdlog/sinks/base_sink.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/sinks/sink.h"
+#include "spdlog/spdlog.h"
 #ifdef _WIN32
 #include "spdlog/sinks/msvc_sink.h"
 #endif

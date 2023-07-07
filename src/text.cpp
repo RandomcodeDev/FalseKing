@@ -39,8 +39,8 @@ void Text::Initialize()
     for (const auto& character : table)
     {
         const toml::Array& position = character.second.as<toml::Array>();
-        if (position.size() != 2 ||
-            !position.at(0).is<int32_t>() || !position.at(1).is<int32_t>())
+        if (position.size() != 2 || !position.at(0).is<int32_t>() ||
+            !position.at(1).is<int32_t>())
         {
             Quit(fmt::format("Invalid character definition \"{}\", expected "
                              "array of 2 integers",
@@ -68,9 +68,9 @@ void Text::Shutdown()
     delete s_font;
 }
 
-void Text::DrawString(const std::string& text,
-                      glm::uvec2 position, float scale, glm::u8vec3 color,
-                      glm::uvec2 box, bool cutOff, glm::uvec2 padding)
+void Text::DrawString(const std::string& text, glm::uvec2 position, float scale,
+                      glm::u8vec3 color, glm::uvec2 box, bool cutOff,
+                      glm::uvec2 padding)
 {
     if (!s_initialized)
     {
@@ -117,11 +117,10 @@ void Text::DrawString(const std::string& text,
             {
                 uint32_t targetX = position.x + x * xSize;
                 uint32_t targetY = position.y + y * ySize;
-                g_backend->DrawImage(*s_font, targetX,
-                                     targetY, scale, scale,
-                                   s_characterPositions[c].x * CHARACTER_SIZE,
-                                   s_characterPositions[c].y * CHARACTER_SIZE,
-                                   CHARACTER_SIZE, CHARACTER_SIZE, color);
+                g_backend->DrawImage(*s_font, targetX, targetY, scale, scale,
+                                     s_characterPositions[c].x * CHARACTER_SIZE,
+                                     s_characterPositions[c].y * CHARACTER_SIZE,
+                                     CHARACTER_SIZE, CHARACTER_SIZE, color);
                 x++;
             }
             break;

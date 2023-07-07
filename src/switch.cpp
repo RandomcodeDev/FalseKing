@@ -90,9 +90,11 @@ class SwitchBackend : protected Backend
     void ShutdownGraphics();
 
     // Allocation functions
-    static void* GraphicsAllocate(size_t size, size_t alignment, void* userData);
+    static void* GraphicsAllocate(size_t size, size_t alignment,
+                                  void* userData);
     static void GraphicsFree(void* memory, void* userData);
-    static void* GraphicsReallocate(void* oldMemory, size_t newSize, void* userData);
+    static void* GraphicsReallocate(void* oldMemory, size_t newSize,
+                                    void* userData);
 };
 
 extern "C" int nnMain()
@@ -193,8 +195,8 @@ void SwitchBackend::InitializeGraphics()
     nn::gfx::InitializeNvn8();
     nv::SetGraphicsAllocator(GraphicsAllocate, GraphicsFree, GraphicsReallocate,
                              nullptr);
-    nv::SetGraphicsDevtoolsAllocator(GraphicsAllocate, GraphicsFree, GraphicsReallocate,
-                             nullptr);
+    nv::SetGraphicsDevtoolsAllocator(GraphicsAllocate, GraphicsFree,
+                                     GraphicsReallocate, nullptr);
     nv::InitializeGraphics(s_graphicsFirmwareMemory,
                            sizeof(s_graphicsFirmwareMemory));
 
@@ -229,7 +231,7 @@ void SwitchBackend::CreateDevice()
 }
 
 void* SwitchBackend::GraphicsAllocate(size_t size, size_t alignment,
-    void* userData)
+                                      void* userData)
 {
     SPDLOG_TRACE("{}-byte graphics allocation aligned to {}", size, alignment);
     return aligned_alloc(size, alignment);
@@ -241,7 +243,8 @@ void SwitchBackend::GraphicsFree(void* memory, void* userData)
     free(memory);
 }
 
-void* SwitchBackend::GraphicsReallocate(void* oldMemory, size_t newSize, void* userData)
+void* SwitchBackend::GraphicsReallocate(void* oldMemory, size_t newSize,
+                                        void* userData)
 {
     SPDLOG_TRACE("Reallocate graphics allocation 0x{} to {} bytes", oldMemory,
                  newSize);

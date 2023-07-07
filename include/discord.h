@@ -6,7 +6,8 @@ namespace Discord
 {
 constexpr uint64_t APP_ID = 1124873777105346621;
 constexpr chrono::milliseconds API_COOLDOWN = chrono::milliseconds(16);
-constexpr chrono::milliseconds ACTIVITY_COOLDOWN = chrono::milliseconds(4000); // 5/20 seconds
+constexpr chrono::milliseconds ACTIVITY_COOLDOWN =
+    chrono::milliseconds(4000); // 5/20 seconds
 
 // Initialize the Discord SDK
 void Initialize();
@@ -22,4 +23,4 @@ bool Available();
 
 // Whether Discord is connected
 bool Connected();
-}
+} // namespace Discord

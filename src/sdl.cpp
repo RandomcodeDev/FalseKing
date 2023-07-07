@@ -181,10 +181,12 @@ SdlBackend::SdlBackend()
     }
 
     m_renderer = SDL_CreateRenderer(m_window,
-#if _WIN32_WINNT == _WIN32_WINNT_WINXP
-                                    "opengl",
-#elif _WIN32 && !defined(__WINRT__)
+#if defined(__APPLE__)
+                                    "metal",
+#elif defined(_WIN32) && !defined(__WINRT__)
                                     "direct3d12",
+#elif _WIN32_WINNT == _WIN32_WINNT_WINXP
+                                    "opengl",
 #else
                                     nullptr,
 #endif
@@ -261,8 +263,7 @@ void SdlBackend::SetupImage(Image& image)
                           SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
-        QUIT("Failed to create texture for image: {}",
-                         SDL_GetError());
+        QUIT("Failed to create texture for image: {}", SDL_GetError());
     }
 
     SDL_SetTextureScaleMode((SDL_Texture*)image.backendData,
@@ -274,8 +275,7 @@ void SdlBackend::SetupImage(Image& image)
                           image.GetPixels(),
                           image.GetChannels() * imageWidth) < 0)
     {
-        QUIT("Failed to copy pixels to texture for image: {}",
-                         SDL_GetError());
+        QUIT("Failed to copy pixels to texture for image: {}", SDL_GetError());
     }
 }
 

@@ -2,7 +2,7 @@
 #include "backend.h"
 
 #ifndef DISCORD_ENABLE
-#if (defined(_WIN32) && !defined(WINAPI_FAMILY_WINRT)) ||      \
+#if (defined(_WIN32) && !defined(WINAPI_FAMILY_WINRT)) ||                      \
     defined(__APPLE__) || defined(__linux__)
 #define DISCORD_ENABLE 1
 #else
@@ -136,7 +136,7 @@ static const char* GetCoolString()
     discord::User user;
     core->UserManager().GetCurrentUser(&user);
     discord::UserId id = user.GetId();
-    
+
     switch (id)
     {
     case 532320702611587112:
