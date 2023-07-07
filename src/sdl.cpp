@@ -58,6 +58,10 @@ class SdlBackend : protected Backend
     {
         return m_frames;
     }
+    const std::string& DescribeBackend() const
+    {
+        return m_description;
+    }
 
   private:
     SDL_Window* m_window;
@@ -69,6 +73,7 @@ class SdlBackend : protected Backend
     SDL_JoystickID m_gamepadId;
     bool m_usingGamepad;
     uint64_t m_frames;
+    std::string m_description;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
 
@@ -111,7 +116,7 @@ class SdlBackend : protected Backend
     static constexpr float SCROLLING_SENSITIVITY = 20.0f;
 };
 
-extern "C" int main(int argc, char* argv[])
+extern "C" int SDL_main(int argc, char* argv[])
 {
 #ifdef _WIN32
 #ifdef _DEBUG
@@ -175,7 +180,15 @@ SdlBackend::SdlBackend()
         QUIT("Failed to create window: {}", SDL_GetError());
     }
 
-    m_renderer = SDL_CreateRenderer(m_window, nullptr, 0);
+    m_renderer = SDL_CreateRenderer(m_window,
+#if _WIN32_WINNT == _WIN32_WINNT_WINXP
+                                    "opengl",
+#elif _WIN32 && !defined(__WINRT__)
+                                    "direct3d12",
+#else
+                                    nullptr,
+#endif
+                                    0);
     if (!m_renderer)
     {
         QUIT("Failed to create renderer: {}", SDL_GetError());
@@ -220,6 +233,14 @@ SdlBackend::SdlBackend()
         SPDLOG_INFO("No gamepads");
     }
 
+    SDL_version version;
+    SDL_GetVersion(&version);
+    SDL_RendererInfo rendererInfo;
+    SDL_GetRendererInfo(m_renderer, &rendererInfo);
+    m_description = fmt::format("SDL v{}.{}.{} video {} render {}",
+                                version.major, version.minor, version.patch,
+                                SDL_GetCurrentVideoDriver(), rendererInfo.name);
+
     m_frames = 0;
 }
 
@@ -240,9 +261,8 @@ void SdlBackend::SetupImage(Image& image)
                           SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
-        Quit(fmt::format("Failed to create texture for image: {}",
-                         SDL_GetError()),
-             1);
+        QUIT("Failed to create texture for image: {}",
+                         SDL_GetError());
     }
 
     SDL_SetTextureScaleMode((SDL_Texture*)image.backendData,
@@ -254,9 +274,8 @@ void SdlBackend::SetupImage(Image& image)
                           image.GetPixels(),
                           image.GetChannels() * imageWidth) < 0)
     {
-        Quit(fmt::format("Failed to copy pixels to texture for image: {}",
-                         SDL_GetError()),
-             1);
+        QUIT("Failed to copy pixels to texture for image: {}",
+                         SDL_GetError());
     }
 }
 
@@ -599,7 +618,8 @@ const std::string& SdlBackend::DescribeSystem() const
         RegQueryValueExA(CurrentVersionHandle, "DisplayVersion", nullptr,
                          nullptr, (LPBYTE)DisplayVersion, &Size);
 
-        std::string edition(EditionId, std::min(strlen(EditionId), ARRAY_SIZE(EditionId)));
+        std::string edition(EditionId,
+                            std::min(strlen(EditionId), ARRAY_SIZE(EditionId)));
         Description = fmt::format(
 #ifdef _DEBUG
             "{} {} {}.{}.{}.{} {} (build lab {})",

@@ -19,6 +19,9 @@
     <Filter Include="Source Files\External\Discord">
       <UniqueIdentifier>{ba6d8900-b390-42f9-8209-399c8baa87aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{8b660799-1523-4d3d-b5f3-120a2a1d0aed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\backend.h">
@@ -52,6 +55,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\discord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -148,5 +154,30 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="GdkAssets\Logo44x44.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="GdkAssets\Logo100x100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="GdkAssets\Logo150x150.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="GdkAssets\Logo480x480.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="logo.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FalseKing.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGameConfig.mgc" />
   </ItemGroup>
 </Project>

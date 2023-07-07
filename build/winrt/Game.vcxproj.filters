@@ -23,6 +23,9 @@
     <Filter Include="Content\Source Files\External\Discord">
       <UniqueIdentifier>{9f549589-03e2-4464-914c-aaa3fac2da65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UwpAssets">
+      <UniqueIdentifier>{07169925-2771-4f2d-b292-6e4113a8f565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="UwpAssets\Wide310x150Logo.scale-200.png">
@@ -43,8 +46,155 @@
     <Image Include="UwpAssets\Square150x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="UwpAssets\StoreLogo.png">
-      <Filter>Assets</Filter>
+    <Image Include="UwpAssets\SmallTile.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SmallTile.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SmallTile.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SmallTile.scale-200.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SmallTile.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square150x150Logo.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square150x150Logo.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square150x150Logo.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square150x150Logo.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Wide310x150Logo.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Wide310x150Logo.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Wide310x150Logo.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Wide310x150Logo.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\LargeTile.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\LargeTile.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\LargeTile.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\LargeTile.scale-200.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\LargeTile.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-16.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-24.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-32.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-48.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-256.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-16.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-32.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-48.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-256.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-16.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-24.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-32.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-48.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-256.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SplashScreen.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SplashScreen.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SplashScreen.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\SplashScreen.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\StoreLogo.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\StoreLogo.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\StoreLogo.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\StoreLogo.scale-200.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\StoreLogo.scale-400.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\BadgeLogo.scale-100.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\BadgeLogo.scale-125.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\BadgeLogo.scale-150.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\BadgeLogo.scale-200.png">
+      <Filter>UwpAssets</Filter>
+    </Image>
+    <Image Include="UwpAssets\BadgeLogo.scale-400.png">
+      <Filter>UwpAssets</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -182,7 +332,7 @@
     <CopyFileToFolders Include="..\..\assets\font.qoi" />
     <CopyFileToFolders Include="..\..\assets\font.toml" />
     <CopyFileToFolders Include="..\..\assets\sprites.qoi" />
-    <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\$(Configuration)\SDL3.dll" />
+    <CopyFileToFolders Include="..\..\deps\lib\x64\Debug\SDL3-winrt.dll" />
     <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\libzstd.dll" />
   </ItemGroup>
 </Project>

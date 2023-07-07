@@ -176,7 +176,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3-winrt.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib %(AdditionalOptions)/verbose:lib</AdditionalOptions>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -211,7 +211,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3-winrt.lib;libzstd.dll.a;d2d1.lib;d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib %(AdditionalOptions)/verbose:lib</AdditionalOptions>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -245,13 +245,62 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Image Include="UwpAssets\BadgeLogo.scale-100.png" />
+    <Image Include="UwpAssets\BadgeLogo.scale-125.png" />
+    <Image Include="UwpAssets\BadgeLogo.scale-150.png" />
+    <Image Include="UwpAssets\BadgeLogo.scale-200.png" />
+    <Image Include="UwpAssets\BadgeLogo.scale-400.png" />
+    <Image Include="UwpAssets\LargeTile.scale-100.png" />
+    <Image Include="UwpAssets\LargeTile.scale-125.png" />
+    <Image Include="UwpAssets\LargeTile.scale-150.png" />
+    <Image Include="UwpAssets\LargeTile.scale-200.png" />
+    <Image Include="UwpAssets\LargeTile.scale-400.png" />
     <Image Include="UwpAssets\LockScreenLogo.scale-200.png" />
+    <Image Include="UwpAssets\SmallTile.scale-100.png" />
+    <Image Include="UwpAssets\SmallTile.scale-125.png" />
+    <Image Include="UwpAssets\SmallTile.scale-150.png" />
+    <Image Include="UwpAssets\SmallTile.scale-200.png" />
+    <Image Include="UwpAssets\SmallTile.scale-400.png" />
+    <Image Include="UwpAssets\SplashScreen.scale-100.png" />
+    <Image Include="UwpAssets\SplashScreen.scale-125.png" />
+    <Image Include="UwpAssets\SplashScreen.scale-150.png" />
     <Image Include="UwpAssets\SplashScreen.scale-200.png" />
+    <Image Include="UwpAssets\SplashScreen.scale-400.png" />
+    <Image Include="UwpAssets\Square150x150Logo.scale-100.png" />
+    <Image Include="UwpAssets\Square150x150Logo.scale-125.png" />
+    <Image Include="UwpAssets\Square150x150Logo.scale-150.png" />
     <Image Include="UwpAssets\Square150x150Logo.scale-200.png" />
+    <Image Include="UwpAssets\Square150x150Logo.scale-400.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Image Include="UwpAssets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Image Include="UwpAssets\Square44x44Logo.scale-100.png" />
+    <Image Include="UwpAssets\Square44x44Logo.scale-125.png" />
+    <Image Include="UwpAssets\Square44x44Logo.scale-150.png" />
     <Image Include="UwpAssets\Square44x44Logo.scale-200.png" />
+    <Image Include="UwpAssets\Square44x44Logo.scale-400.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-16.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-24.png" />
     <Image Include="UwpAssets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="UwpAssets\StoreLogo.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-256.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-32.png" />
+    <Image Include="UwpAssets\Square44x44Logo.targetsize-48.png" />
+    <Image Include="UwpAssets\StoreLogo.scale-100.png" />
+    <Image Include="UwpAssets\StoreLogo.scale-125.png" />
+    <Image Include="UwpAssets\StoreLogo.scale-150.png" />
+    <Image Include="UwpAssets\StoreLogo.scale-200.png" />
+    <Image Include="UwpAssets\StoreLogo.scale-400.png" />
+    <Image Include="UwpAssets\Wide310x150Logo.scale-100.png" />
+    <Image Include="UwpAssets\Wide310x150Logo.scale-125.png" />
+    <Image Include="UwpAssets\Wide310x150Logo.scale-150.png" />
     <Image Include="UwpAssets\Wide310x150Logo.scale-200.png" />
+    <Image Include="UwpAssets\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -297,7 +346,7 @@
     <ClCompile Include="..\..\src\text.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\$(Configuration)\SDL3.dll">
+    <CopyFileToFolders Include="..\..\deps\lib\x64\Debug\SDL3-winrt.dll">
       <DeploymentContent>true</DeploymentContent>
     </CopyFileToFolders>
     <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\libzstd.dll">

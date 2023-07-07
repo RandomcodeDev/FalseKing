@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game.vcxproj", "{09
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Gaming.Desktop.x64 = Debug|Gaming.Desktop.x64
 		Debug|x86 = Debug|x86
+		Release|Gaming.Desktop.x64 = Release|Gaming.Desktop.x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Debug|Gaming.Desktop.x64.ActiveCfg = Debug|Gaming.Desktop.x64
+		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Debug|Gaming.Desktop.x64.Build.0 = Debug|Gaming.Desktop.x64
 		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Debug|x86.ActiveCfg = Debug|Win32
 		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Debug|x86.Build.0 = Debug|Win32
+		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Release|Gaming.Desktop.x64.ActiveCfg = Release|Gaming.Desktop.x64
+		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Release|Gaming.Desktop.x64.Build.0 = Release|Gaming.Desktop.x64
 		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Release|x86.ActiveCfg = Release|Win32
 		{096CA96B-61C6-40B1-87F1-58CAB2595CAD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection

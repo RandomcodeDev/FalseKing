@@ -20,8 +20,8 @@ C++ syntax is used to represent things that could be done with function pointer 
 - On Unix-like platforms (macOS, Linux, etc), run `chmod +x scripts/*.sh` in order for the build process to work
 
 ## Platform-specific instructions
+- [Windows (Windows XP or later)](build/windows/BUILD.md)
 - [UWP/Xbox](build/winrt/BUILD.md)
-- [Windows legacy (Windows XP/7/etc)](build/winxp/BUILD.md)
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
 - [Nintendo Switch](build/switch/BUILD.md)

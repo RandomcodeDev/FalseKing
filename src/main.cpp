@@ -30,7 +30,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     spdlog::set_level(spdlog::level::info);
 #endif
 
-    SPDLOG_INFO("Initializing game on {}", g_backend->DescribeSystem());
+    SPDLOG_INFO("Initializing game");
 
     std::vector<std::string> paths;
     for (const auto& path : backendPaths)
@@ -47,14 +47,15 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     PhysicsState physics;
 
     flecs::world world;
-    //world.set_target_fps(60);
+    // world.set_target_fps(60);
 
     Components::Register(world);
 
     Systems::Context context{&input, &physics, start};
     Systems::Register(world, &context);
 
-    SPDLOG_INFO("Game initialized");
+    SPDLOG_INFO("Game initialized with backend {} on system {}",
+                g_backend->DescribeBackend(), g_backend->DescribeSystem());
 
     PxMaterial* material =
         physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);

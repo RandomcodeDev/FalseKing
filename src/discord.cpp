@@ -174,7 +174,7 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
         "{} {}.{}.{}\nCommit {:.7}\nRunning {} build\n{}", GAME_NAME,
         GAME_MAJOR_VERSION, GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT,
 #if _WIN32_WINNT == _WIN32_WINNT_WINXP
-        "Windows Legacy",
+        "Windows",
 #elif defined(_WIN32)
         "Universal Windows",
 #elif defined(__APPLE__)

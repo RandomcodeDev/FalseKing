@@ -89,6 +89,9 @@ class Backend
 
     // Get the number of frames rendered
     virtual uint64_t GetFrameCount() const = 0;
+
+    // Get information about the backend
+    virtual const std::string& DescribeBackend() const = 0;
 };
 
 #if __NX__
