@@ -116,7 +116,7 @@ class SdlBackend : protected Backend
     static constexpr float SCROLLING_SENSITIVITY = 20.0f;
 };
 
-extern "C" int SDL_main(int argc, char* argv[])
+extern "C" int main(int argc, char* argv[])
 {
 #ifdef _WIN32
 #ifdef _DEBUG
