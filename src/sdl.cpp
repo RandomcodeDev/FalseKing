@@ -494,7 +494,7 @@ bool SdlBackend::BeginRender()
     SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH,
                        (float)m_windowInfo.height / GAME_HEIGHT);
 
-    SDL_SetRenderDrawColor(m_renderer, 128, 128, 128, 255);
+    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
     return true;
 }
