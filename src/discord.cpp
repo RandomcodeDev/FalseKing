@@ -1,9 +1,16 @@
 #include "discord.h"
 #include "backend.h"
 
+#if __has_include(<winapifamily.h>)
+#define WINRT                                                                  \
+    (!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) &&                     \
+     WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP))
+#else
+#define WINRT 0
+#endif
+
 #ifndef DISCORD_ENABLE
-#if (defined(_WIN32) && !defined(WINAPI_FAMILY_WINRT)) ||                      \
-    defined(__APPLE__) || defined(__linux__)
+#if (defined(_WIN32) && !WINRT) || defined(__APPLE__) || defined(__linux__)
 #define DISCORD_ENABLE 1
 #else
 #define DISCORD_ENABLE 0

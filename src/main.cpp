@@ -62,8 +62,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     PxCapsuleControllerDesc controllerDesc;
     controllerDesc.setToDefault();
-    controllerDesc.radius = Sprite::TILE_SIZE / 2;
-    controllerDesc.height = 1.0f;
+    controllerDesc.radius = 5;
+    controllerDesc.height = 16;
     controllerDesc.material = material;
 
     flecs::entity player =

@@ -183,10 +183,10 @@ SdlBackend::SdlBackend()
     m_renderer = SDL_CreateRenderer(m_window,
 #if defined(__APPLE__)
                                     "metal",
-#elif defined(_WIN32) && !defined(__WINRT__)
-                                    "direct3d12",
 #elif _WIN32_WINNT == _WIN32_WINNT_WINXP
                                     "opengl",
+#elif defined(_WIN32) && !defined(__WINRT__)
+                                    "direct3d12",
 #else
                                     nullptr,
 #endif

@@ -27,7 +27,7 @@ PhysicsState::PhysicsState()
     }
 
     m_physics =
-        PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, PxTolerancesScale());
+        PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, PxTolerancesScale(16, 1));
     if (!m_physics)
     {
         Quit("PxCreatePhysics failed");
