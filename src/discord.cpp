@@ -1,7 +1,7 @@
 #include "discord.h"
 #include "backend.h"
 
-#if __has_include(<winapifamily.h>)
+#if defined(_WIN32) && __has_include(<winapifamily.h>)
 #define WINRT                                                                  \
     (!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) &&                     \
      WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP))
@@ -179,12 +179,16 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
         fmt::format("Playing {} for {:%T}", GetCoolString(), runtime);
     activity.SetState(state.c_str());
     std::string details = fmt::format(
-        "{} {}.{}.{}\nCommit {:.7}\nRunning {} build\n{}", GAME_NAME,
-        GAME_MAJOR_VERSION, GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT,
-#if _WIN32_WINNT == _WIN32_WINNT_WINXP
-        "Windows",
-#elif defined(_WIN32)
+        "{} {} build on {}",
+#ifdef _DEBUG
+        "Debug",
+#elif defined(NDEBUG)
+        "Release",
+#endif
+#if defined(_WIN32) && WINRT
         "Universal Windows",
+#elif defined(_WIN32)
+        "Windows",
 #elif defined(__APPLE__)
         "macOS",
 #elif defined(__linux__)
@@ -195,6 +199,7 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
         g_backend->DescribeSystem());
     activity.SetDetails(details.c_str());
     activity.SetType(discord::ActivityType::Playing);
+    activity.GetAssets().SetLargeImage("logo");
 
     requestCooldown -= delta;
     activityCooldown -= delta;
