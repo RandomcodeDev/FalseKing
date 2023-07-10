@@ -82,6 +82,7 @@ class Backend
     // Load a library
     virtual void* LoadLibrary(const std::string& path) const = 0;
 
+    // A dummy function pointer, should be cast to the right signature
     typedef void* (*Symbol)(...);
 
     // Get a symbol from a library
