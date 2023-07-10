@@ -85,9 +85,11 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);</AdditionalLibraryDirectories>
       <AdditionalDependencies>libPhysX_static_64-switch.a;libPhysXCharacterKinematic_static_64-switch.a;libPhysXCommon_static_64-switch.a;libPhysXExtensions_static_64-switch.a;libPhysXFoundation_static_64-switch.a;libPhysXPvdSDK_static_64-switch.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AuthoringUserCommand>--program "$(OutDir)$(TargetName).nspd\program0.ncd\code" "$(ApplicationDataDir)" --utf8 %(Link.NRODirectoryOption)</AuthoringUserCommand>
+      <FinalizeMetaSource>$(SolutionDir)Application.nmeta</FinalizeMetaSource>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
+      <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_0100694203488000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>
@@ -112,9 +114,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);</AdditionalLibraryDirectories>
       <AdditionalDependencies>libPhysX_static_64-switch.a;libPhysXCharacterKinematic_static_64-switch.a;libPhysXCommon_static_64-switch.a;libPhysXExtensions_static_64-switch.a;libPhysXFoundation_static_64-switch.a;libPhysXPvdSDK_static_64-switch.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AuthoringUserCommand>--program "$(OutDir)$(TargetName).nspd\program0.ncd\code" "$(ApplicationDataDir)" --utf8 %(Link.NRODirectoryOption)</AuthoringUserCommand>
+      <FinalizeMetaSource>$(SolutionDir)Application.nmeta</FinalizeMetaSource>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_01004b9000490000$(TargetExt)</Command>
+      <Command>$(SolutionDir)repacknsp.bat $(TargetPath) $(TargetDir)$(TargetName)_0100694203488000$(TargetExt)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>$(SolutionDir)..\..\scripts\commit.bat $(OutDir)</Command>

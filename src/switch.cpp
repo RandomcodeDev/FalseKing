@@ -68,6 +68,14 @@ class SwitchBackend : protected Backend
     {
         return nullptr;
     }
+    uint64_t GetFrameCount() const
+    {
+        return m_frameCount;
+    }
+    const std::string& DescribeBackend() const
+    {
+        return m_description;
+    }
 
     static const inline char* ROM_MOUNT = "rom";
 
@@ -79,6 +87,8 @@ class SwitchBackend : protected Backend
     nn::vi::Display* m_display;
     nn::vi::Layer* m_layer;
     nn::gfx::Device m_device;
+    uint64_t m_frameCount;
+    std::string m_description;
 
     // Graphics memory stuff
 
@@ -167,6 +177,9 @@ SwitchBackend::SwitchBackend() : m_mapping{}
 
     m_windowInfo.handle = m_layer;
 
+    m_description =
+        fmt::format("Switch backend with RomFS mounted at {}", ROM_MOUNT);
+
     InitializeGraphics();
 
     SPDLOG_INFO("Switch backend initialized");
@@ -192,7 +205,7 @@ void SwitchBackend::InitializeGraphics()
 {
     SPDLOG_INFO("Initializing graphics");
 
-    nn::gfx::InitializeNvn8();
+    nn::gfx::Initialize();
     nv::SetGraphicsAllocator(GraphicsAllocate, GraphicsFree, GraphicsReallocate,
                              nullptr);
     nv::SetGraphicsDevtoolsAllocator(GraphicsAllocate, GraphicsFree,
@@ -211,7 +224,7 @@ void SwitchBackend::ShutdownGraphics()
 
     m_device.Finalize();
 
-    nn::gfx::FinalizeNvn8();
+    nn::gfx::Finalize();
 
     SPDLOG_INFO("Graphics shut down");
 }
@@ -228,6 +241,8 @@ void SwitchBackend::CreateDevice()
     info.SetDebugMode(nn::gfx::DebugMode_Full);
 #endif
     m_device.Initialize(info);
+
+    SPDLOG_INFO("Created device");
 }
 
 void* SwitchBackend::GraphicsAllocate(size_t size, size_t alignment,
@@ -279,10 +294,16 @@ void SwitchBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 
 void SwitchBackend::EndRender()
 {
+    m_frameCount++;
 }
 
 const std::string& SwitchBackend::DescribeSystem() const
 {
     nn::oe::FirmwareVersionForDebug version;
-    return fmt::format("Horizon OS {}", version.string);
+    static std::string description;
+    if (description.empty())
+    {
+        description = fmt::format("Horizon OS {}", version.string);
+    }
+    return description;
 }

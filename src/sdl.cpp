@@ -259,7 +259,7 @@ void SdlBackend::SetupImage(Image& image)
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
     image.backendData =
-        SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ABGR8888,
+        SDL_CreateTexture(m_renderer, image.GetChannels() == 4 ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR888,
                           SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
