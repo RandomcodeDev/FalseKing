@@ -1,6 +1,8 @@
 // SDL backend
 
 #ifdef _WIN32
+#include <windows.h>
+#undef LoadLibrary
 #elif defined(__APPLE__)
 #include <sys/sysctl.h>
 #else
@@ -38,6 +40,7 @@ class SdlBackend : protected Backend
         return m_mapping;
     }
     const std::string& DescribeSystem() const;
+
     void* LoadLibrary(const std::string& path) const
     {
         std::string fullPath = path +
@@ -76,6 +79,7 @@ class SdlBackend : protected Backend
     std::string m_description;
 
     bool HandleEvent(const SDL_Event& event, InputState& input);
+    void EnumerateGamepads();
 
     static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
                                                      SDL_SCANCODE_TAB,
@@ -205,35 +209,7 @@ SdlBackend::SdlBackend()
 
     // SDL_SetRelativeMouseMode(SDL_TRUE);
 
-    SPDLOG_INFO("Enumerating gamepads");
-    int32_t gamepadCount = 0;
-    SDL_JoystickID* gamepads = SDL_GetGamepads(&gamepadCount);
-    if (gamepadCount > 0)
-    {
-        for (int32_t i = 0; i < gamepadCount; i++)
-        {
-            SDL_Gamepad* gamepad = SDL_OpenGamepad(gamepads[i]);
-            if (!gamepad)
-            {
-                continue;
-            }
-
-            SPDLOG_INFO("Gamepad {} player {}: {}", gamepads[i],
-                        SDL_GetGamepadPlayerIndex(gamepad),
-                        SDL_GetGamepadName(gamepad));
-            if (gamepadCount == 1 || SDL_GetGamepadPlayerIndex(gamepad) == 1)
-            {
-                m_gamepad = gamepad;
-                m_gamepadId = gamepads[i];
-            }
-        }
-
-        SDL_free(gamepads);
-    }
-    else
-    {
-        SPDLOG_INFO("No gamepads");
-    }
+    EnumerateGamepads();
 
     SDL_version version;
     SDL_GetVersion(&version);
@@ -306,10 +282,10 @@ bool SdlBackend::Update(InputState& input)
             bool* keys = new bool[keyCount];
             keys = (bool*)SDL_GetKeyboardState(&keyCount);
 
-            bool w = keys[m_mapping.w];
-            bool s = keys[m_mapping.s];
-            bool a = keys[m_mapping.a];
-            bool d = keys[m_mapping.d];
+            bool w = keys[m_mapping.leftUp];
+            bool s = keys[m_mapping.leftDown];
+            bool a = keys[m_mapping.leftLeft];
+            bool d = keys[m_mapping.leftRight];
 
             if (w && !s)
             {
@@ -416,6 +392,19 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
     }
+    else if (event.type == SDL_EVENT_GAMEPAD_ADDED)
+    {
+        SPDLOG_INFO("Gamepad added");
+        EnumerateGamepads();
+    }
+    else if (event.type == SDL_EVENT_GAMEPAD_REMOVED)
+    {
+        if (m_gamepadId == event.gdevice.which)
+        {
+            SPDLOG_INFO("Gamepad removed");
+            EnumerateGamepads();
+        }
+    }
     else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
              event.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
     {
@@ -481,6 +470,40 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     }
 
     return true;
+}
+
+void SdlBackend::EnumerateGamepads()
+{
+
+    SPDLOG_INFO("Enumerating gamepads");
+    int32_t gamepadCount = 0;
+    SDL_JoystickID* gamepads = SDL_GetGamepads(&gamepadCount);
+    if (gamepadCount > 0)
+    {
+        for (int32_t i = 0; i < gamepadCount; i++)
+        {
+            SDL_Gamepad* gamepad = SDL_OpenGamepad(gamepads[i]);
+            if (!gamepad)
+            {
+                continue;
+            }
+
+            SPDLOG_INFO("Gamepad {} player {}: {}", gamepads[i],
+                        SDL_GetGamepadPlayerIndex(gamepad),
+                        SDL_GetGamepadName(gamepad));
+            if (gamepadCount == 1 || SDL_GetGamepadPlayerIndex(gamepad) == 1)
+            {
+                m_gamepad = gamepad;
+                m_gamepadId = gamepads[i];
+            }
+        }
+
+        SDL_free(gamepads);
+    }
+    else
+    {
+        SPDLOG_INFO("No gamepads");
+    }
 }
 
 bool SdlBackend::BeginRender()

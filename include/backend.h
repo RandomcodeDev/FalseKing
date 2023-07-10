@@ -11,28 +11,28 @@ struct WindowInfo
     bool focused;
 };
 
-// Maps backend keycodes to inputs
+// Map of backend keycodes to controller inputs
 union KeyMapping {
     struct
     {
-        uint32_t esc;        // Start
-        uint32_t tab;        // Select
-        uint32_t q;          // Up
-        uint32_t c;          // Down
-        uint32_t x;          // Left
-        uint32_t v;          // Right
-        uint32_t space;      // A
-        uint32_t f;          // B
-        uint32_t e;          // X
-        uint32_t r;          // Y
-        uint32_t scrollUp;   // Left shoulder
-        uint32_t scrollDown; // Right shoulder
-        uint32_t control;    // Left stick
-        uint32_t shift;      // Right stick
-        uint32_t w;
-        uint32_t s;
+        uint32_t start;
+        uint32_t select;
+        uint32_t up;
+        uint32_t down;
+        uint32_t left;
+        uint32_t right;
         uint32_t a;
-        uint32_t d;
+        uint32_t b;
+        uint32_t x;
+        uint32_t y;
+        uint32_t leftShoulder;
+        uint32_t rightShoulder;
+        uint32_t leftPress;
+        uint32_t rightPress;
+        uint32_t leftUp;
+        uint32_t leftDown;
+        uint32_t leftLeft;
+        uint32_t leftRight;
     };
     uint32_t values[18];
 };
