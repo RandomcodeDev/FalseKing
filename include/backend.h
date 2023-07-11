@@ -40,6 +40,10 @@ union KeyMapping {
 // Forward declarations
 class Image;
 struct Sprite;
+namespace Input
+{
+class State;
+}
 
 // Abstraction of the platform
 class Backend
@@ -52,7 +56,7 @@ class Backend
     virtual void CleanupImage(Image& image) = 0;
 
     // Process events
-    virtual bool Update(class InputState& input) = 0;
+    virtual bool Update(class Input::State& input) = 0;
 
     // Prepare for rendering
     virtual bool BeginRender() = 0;

@@ -43,8 +43,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     Image sprites("sprites.qoi");
 
-    InputState input;
-    PhysicsState physics;
+    Input::State input;
+    Physics::State physics;
 
     flecs::world world;
     // world.set_target_fps(60);
@@ -68,7 +68,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     flecs::entity player =
         world.entity("Player")
-            .set(PhysicsController(physics, controllerDesc))
+            .set(Physics::Controller(physics, controllerDesc))
             .set(Sprite(sprites, 0, 0))
             .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})

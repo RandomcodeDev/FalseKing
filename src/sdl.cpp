@@ -25,7 +25,7 @@ class SdlBackend : protected Backend
     ~SdlBackend();
     void SetupImage(Image& image);
     void CleanupImage(Image& image);
-    bool Update(class InputState& input);
+    bool Update(class Input::State& input);
     bool BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
@@ -78,7 +78,7 @@ class SdlBackend : protected Backend
     uint64_t m_frames;
     std::string m_description;
 
-    bool HandleEvent(const SDL_Event& event, InputState& input);
+    bool HandleEvent(const SDL_Event& event, Input::State& input);
     void EnumerateGamepads();
 
     static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
@@ -264,7 +264,7 @@ void SdlBackend::CleanupImage(Image& image)
     image.backendData = nullptr;
 }
 
-bool SdlBackend::Update(InputState& input)
+bool SdlBackend::Update(Input::State& input)
 {
     SDL_Event event{};
 
@@ -328,7 +328,7 @@ bool SdlBackend::Update(InputState& input)
     return true;
 }
 
-bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
+bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
 {
     if ((event.type >= SDL_EVENT_WINDOW_FIRST &&
          event.type <= SDL_EVENT_WINDOW_LAST) &&
@@ -385,10 +385,10 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
         m_usingGamepad = false;
-        uint16_t mask = event.wheel.y > 0 ? InputState::LEFT_SHOULDER
-                                          : InputState::RIGHT_SHOULDER;
-        input.state &= event.wheel.y > 0 ? ~InputState::LEFT_SHOULDER
-                                         : ~InputState::RIGHT_SHOULDER;
+        uint16_t mask = event.wheel.y > 0 ? Input::LEFT_SHOULDER
+                                          : Input::RIGHT_SHOULDER;
+        input.state &= event.wheel.y > 0 ? ~Input::LEFT_SHOULDER
+                                         : ~Input::RIGHT_SHOULDER;
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
     }
@@ -413,14 +413,14 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, InputState& input)
         bool down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
         if (event.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
         {
-            input.state = (input.state & ~InputState::RIGHT_SHOULDER) |
-                          (-down & InputState::RIGHT_SHOULDER);
+            input.state = (input.state & ~Input::RIGHT_SHOULDER) |
+                          (-down & Input::RIGHT_SHOULDER);
             input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else if (event.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)
         {
-            input.state = (input.state & ~InputState::LEFT_SHOULDER) |
-                          (-down & InputState::LEFT_SHOULDER);
+            input.state = (input.state & ~Input::LEFT_SHOULDER) |
+                          (-down & Input::LEFT_SHOULDER);
             input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else

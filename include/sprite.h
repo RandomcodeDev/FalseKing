@@ -28,11 +28,18 @@ struct Sprite
            uint32_t height);
 };
 
-struct PhysicsController;
+namespace Physics
+{
+struct Body;
+struct Controller;
+}; // namespace Physics
 
 namespace Systems
 {
+// Draw a sprite with a body
+void DrawBody(flecs::iter& iter, Physics::Body* body, const Sprite* sprite);
+
 // Draw a sprite with a physics controller
-void DrawControlled(flecs::iter& iter, PhysicsController* controller,
+void DrawControlled(flecs::iter& iter, Physics::Controller* controller,
                     const Sprite* sprite);
 } // namespace Systems

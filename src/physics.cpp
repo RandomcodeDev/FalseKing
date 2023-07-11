@@ -1,21 +1,23 @@
 #include "physics.h"
 #include "systems.h"
 
+namespace Physics
+{
+
 class ErrorCallback : public PxErrorCallback
 {
   public:
     virtual void reportError(PxErrorCode::Enum code, const char* message,
                              const char* file, int line)
     {
-        Quit(fmt::format("PhysX error at {}:{}: {}", file, line, message),
-             code);
+        QUIT_CODE(code, "PhysX error at {}:{}: {}", file, line, message);
     }
 };
 
 static ErrorCallback g_physxErrorCallback;
 static PxDefaultAllocator g_physxAllocator;
 
-PhysicsState::PhysicsState()
+State::State()
 {
     SPDLOG_INFO("Initializing physics");
 
@@ -26,8 +28,8 @@ PhysicsState::PhysicsState()
         Quit("PxCreateFoundation failed");
     }
 
-    m_physics =
-        PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, PxTolerancesScale(16, 1));
+    m_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation,
+                                PxTolerancesScale(16, 1));
     if (!m_physics)
     {
         Quit("PxCreatePhysics failed");
@@ -46,7 +48,7 @@ PhysicsState::PhysicsState()
     SPDLOG_INFO("Physics initialized");
 }
 
-PhysicsState::~PhysicsState()
+State::~State()
 {
     SPDLOG_INFO("Shutting down physics");
     m_controllerManager->release();
@@ -56,14 +58,16 @@ PhysicsState::~PhysicsState()
     SPDLOG_INFO("Physics shut down");
 }
 
-void PhysicsState::Update(float delta)
+void State::Update(float delta)
 {
     m_scene->simulate(delta);
     m_scene->fetchResults(true);
 }
 
-void PhysicsUpdate(flecs::iter& iter)
+void Update(flecs::iter& iter)
 {
     Systems::Context* context = iter.ctx<Systems::Context>();
     context->physics->Update(iter.delta_system_time());
 }
+
+} // namespace Physics

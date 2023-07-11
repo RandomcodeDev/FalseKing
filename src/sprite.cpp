@@ -22,10 +22,21 @@ void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
     }
 }
 
-void Systems::DrawControlled(flecs::iter& iter, PhysicsController* controller,
+// TODO: replace with camera system
+
+void Systems::DrawBody(flecs::iter& iter, Physics::Body* body,
+                       const Sprite* sprite)
+{
+    uint32_t x = (uint32_t)body->GetTransform().p.x;
+    uint32_t y =
+        (uint32_t)(body->GetTransform().p.z - body->GetTransform().p.y);
+
+    g_backend->DrawSprite(*sprite, x, y);
+}
+
+void Systems::DrawControlled(flecs::iter& iter, Physics::Controller* controller,
                              const Sprite* sprite)
 {
-    // TODO: replace with camera system
     uint32_t x = (uint32_t)controller->GetTransform().p.x;
     uint32_t y = (uint32_t)(controller->GetTransform().p.z -
                             controller->GetTransform().p.y);

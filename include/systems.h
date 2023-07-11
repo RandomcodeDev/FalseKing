@@ -11,8 +11,8 @@ namespace Systems
 // Information systems can use
 struct Context
 {
-    InputState* input;
-    PhysicsState* physics;
+    Input::State* input;
+    Physics::State* physics;
     precise_clock::time_point startTime;
 };
 

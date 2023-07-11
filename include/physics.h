@@ -2,18 +2,20 @@
 
 #include "game.h"
 
+namespace Physics
+{
+static constexpr float GRAVITY = 9.8f;
+static constexpr float TIME_STEP = 1 / 60.0f;
+
 // Stores physics stuff
-class PhysicsState
+class State
 {
   public:
-    static constexpr float GRAVITY = 9.8f;
-    static constexpr float TIME_STEP = 1 / 60.0f;
-
     // Initialize physics stuff
-    PhysicsState();
+    State();
 
     // Shut down
-    ~PhysicsState();
+    ~State();
 
     // Update state
     void Update(float delta);
@@ -44,13 +46,48 @@ class PhysicsState
     PxControllerManager* m_controllerManager;
 };
 
-void PhysicsUpdate(flecs::iter& iter);
+void Update(flecs::iter& iter);
+
+// For systems that just need basic information like transform
+struct Base
+{
+    virtual PxTransform& GetTransform()
+    {
+        return PxTransform();
+    }
+};
+
+// Physics body
+struct Body : Base
+{
+    Body() = default;
+    Body(State& physics, const PxTransform& transform, PxShape& shape)
+    {
+        m_body = physics.GetPhysics().createRigidDynamic(transform);
+        m_body->attachShape(shape);
+        shape.release();
+        physics.GetScene().addActor(*m_body);
+    }
+
+    PxRigidDynamic& GetBody()
+    {
+        return *m_body;
+    }
+
+    PxTransform& GetTransform()
+    {
+        return m_body->getGlobalPose();
+    }
+
+  private:
+    PxRigidDynamic* m_body;
+};
 
 // Physics controller
-struct PhysicsController
+struct Controller : Base
 {
-    PhysicsController() = default;
-    PhysicsController(PhysicsState& physics, const PxControllerDesc& desc)
+    Controller() = default;
+    Controller(State& physics, const PxControllerDesc& desc)
     {
         m_controller = physics.GetControllerManager().createController(desc);
     };
@@ -60,7 +97,7 @@ struct PhysicsController
         return *m_controller;
     }
 
-    PxTransform GetTransform()
+    PxTransform& GetTransform()
     {
         return GetController().getActor()->getGlobalPose();
     }
@@ -68,3 +105,5 @@ struct PhysicsController
   private:
     PxController* m_controller;
 };
+
+} // namespace Physics

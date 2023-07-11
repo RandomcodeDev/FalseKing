@@ -1,6 +1,6 @@
-#include "systems.h"
 #include "backend.h"
 #include "discord.h"
+#include "systems.h"
 #include "text.h"
 
 void Systems::Register(flecs::world& world, Context* context)
@@ -10,14 +10,14 @@ void Systems::Register(flecs::world& world, Context* context)
         .ctx(context)
         .kind(flecs::OnUpdate)
         .multi_threaded()
-        .interval(PhysicsState::TIME_STEP)
-        .iter(PhysicsUpdate);
+        .interval(Physics::TIME_STEP)
+        .iter(Physics::Update);
 
     // systems.h
     world.system<const Tags::LocalPlayer>("PlayerInput")
         .ctx(context)
         .kind(flecs::OnUpdate)
-        .interval(PhysicsState::TIME_STEP)
+        .interval(Physics::TIME_STEP)
         .iter(PlayerInput);
     world.system("BeginRender")
         .ctx(context)
@@ -33,7 +33,7 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(DebugInfo);
 
     // sprite.h
-    world.system<PhysicsController, const Sprite>("DrawControlled")
+    world.system<Physics::Controller, const Sprite>("DrawControlled")
         .kind(flecs::OnUpdate)
         .iter(DrawControlled);
 }
@@ -41,10 +41,10 @@ void Systems::Register(flecs::world& world, Context* context)
 void Systems::PlayerInput(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
-    InputState* input = context->input;
+    Input::State* input = context->input;
 
     flecs::entity player = iter.entity(0);
-    auto controller = player.get_mut<PhysicsController>();
+    auto controller = player.get_mut<Physics::Controller>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
 
     float x = input->GetLeftStickDirection().x *

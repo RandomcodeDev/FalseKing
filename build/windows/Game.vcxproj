@@ -226,6 +226,7 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClInclude Include="..\..\include\image.h" />
     <ClInclude Include="..\..\include\input.h" />
     <ClInclude Include="..\..\include\physics.h" />
+    <ClInclude Include="..\..\include\projectile.h" />
     <ClInclude Include="..\..\include\sprite.h" />
     <ClInclude Include="..\..\include\text.h" />
     <ClInclude Include="..\..\include\systems.h" />
@@ -255,6 +256,7 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\physics.cpp" />
+    <ClCompile Include="..\..\src\projectile.cpp" />
     <ClCompile Include="..\..\src\sdl.cpp" />
     <ClCompile Include="..\..\src\sprite.cpp" />
     <ClCompile Include="..\..\src\systems.cpp" />
