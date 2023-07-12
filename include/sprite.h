@@ -30,16 +30,13 @@ struct Sprite
 
 namespace Physics
 {
-struct Body;
-struct Controller;
+struct Base;
 }; // namespace Physics
 
 namespace Systems
 {
-// Draw a sprite with a body
-void DrawBody(flecs::iter& iter, Physics::Body* body, const Sprite* sprite);
 
-// Draw a sprite with a physics controller
-void DrawControlled(flecs::iter& iter, Physics::Controller* controller,
+// Draw a sprite with a physics thing
+void DrawPhysical(flecs::iter& iter, Physics::Base* object,
                     const Sprite* sprite);
 } // namespace Systems

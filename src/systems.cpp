@@ -33,9 +33,15 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(DebugInfo);
 
     // sprite.h
-    world.system<Physics::Controller, const Sprite>("DrawControlled")
+    world.system<Physics::Base, const Sprite>("DrawPhysical")
         .kind(flecs::OnUpdate)
-        .iter(DrawControlled);
+        .iter(DrawPhysical);
+    world.system<Physics::Body, const Sprite>("DrawBody")
+        .kind(flecs::OnUpdate)
+        .iter(DrawPhysical);
+    world.system<Physics::Controller, const Sprite>("DrawController")
+        .kind(flecs::OnUpdate)
+        .iter(DrawPhysical);
 }
 
 void Systems::PlayerInput(flecs::iter& iter)

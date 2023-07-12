@@ -47,6 +47,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     Physics::State physics;
 
     flecs::world world;
+    world.set<flecs::Rest>({});
+    world.import <flecs::monitor>();
     // world.set_target_fps(60);
 
     Components::Register(world);

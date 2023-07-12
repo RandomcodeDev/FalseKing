@@ -24,22 +24,12 @@ void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
 
 // TODO: replace with camera system
 
-void Systems::DrawBody(flecs::iter& iter, Physics::Body* body,
-                       const Sprite* sprite)
-{
-    uint32_t x = (uint32_t)body->GetTransform().p.x;
-    uint32_t y =
-        (uint32_t)(body->GetTransform().p.z - body->GetTransform().p.y);
-
-    g_backend->DrawSprite(*sprite, x, y);
-}
-
-void Systems::DrawControlled(flecs::iter& iter, Physics::Controller* controller,
+void Systems::DrawPhysical(flecs::iter& iter, Physics::Base* object,
                              const Sprite* sprite)
 {
-    uint32_t x = (uint32_t)controller->GetTransform().p.x;
-    uint32_t y = (uint32_t)(controller->GetTransform().p.z -
-                            controller->GetTransform().p.y);
+    uint32_t x = (uint32_t)object->GetTransform().p.x;
+    uint32_t y =
+        (uint32_t)(object->GetTransform().p.z - object->GetTransform().p.y);
 
     g_backend->DrawSprite(*sprite, x, y);
 }
