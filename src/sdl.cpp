@@ -187,9 +187,9 @@ SdlBackend::SdlBackend()
     m_renderer = SDL_CreateRenderer(m_window,
 #if defined(__APPLE__)
                                     "metal",
-#elif _WIN32_WINNT == _WIN32_WINNT_WINXP
-                                    "opengl",
-#elif defined(_WIN32) && !defined(__WINRT__)
+#elif _WIN32_WINNT == _WIN32_WNINT_WINXP
+                                    "software",
+#elif defined(_GAMING_DESKTOP)
                                     "direct3d12",
 #else
                                     nullptr,

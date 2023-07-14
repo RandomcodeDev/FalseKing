@@ -20,11 +20,11 @@ I use C++ syntax to represent things that could be done with function pointer ta
 - Have `7z` available in your path (install 7-zip/p7zip)
 - Run `scripts\pulldeps.bat` or `scripts/pulldeps.sh` depending on your platform
 - On Unix-like platforms (macOS, Linux, etc), run `chmod +x scripts/*.sh` in order for the build process to work
-- Clone recursively to get legally dubious platform support (currently Switch)
+- Cloning submodules is only to get legally dubious platform support (currently Switch)
 
 ## Platform-specific instructions
 - [Windows (Windows XP or later)](build/windows/BUILD.md)
 - [UWP/Xbox](build/winrt/BUILD.md)
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
-- [Nintendo Switch](build/switch/BUILD.md)
+- [Nintendo Switch](build/switch/BUILD.md) (submodule)

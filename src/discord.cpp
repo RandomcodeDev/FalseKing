@@ -70,7 +70,7 @@ void Discord::Initialize()
     SPDLOG_INFO("Connecting to Discord");
 
     discord::Result result =
-        discord::Core::Create(APP_ID, DiscordCreateFlags_Default, &core);
+        discord::Core::Create(APP_ID, DiscordCreateFlags_NoRequireDiscord, &core);
     if (result != discord::Result::Ok)
     {
         SPDLOG_ERROR("Couldn't connect to Discord: {}", (uint32_t)result);
@@ -78,35 +78,35 @@ void Discord::Initialize()
         return;
     }
 
-    levelMap[discord::LogLevel::Debug] = spdlog::level::debug;
-    levelMap[discord::LogLevel::Error] = spdlog::level::err;
-    levelMap[discord::LogLevel::Info] = spdlog::level::info;
-    levelMap[discord::LogLevel::Warn] = spdlog::level::warn;
+    s_levelMap[discord::LogLevel::Debug] = spdlog::level::debug;
+    s_levelMap[discord::LogLevel::Error] = spdlog::level::err;
+    s_levelMap[discord::LogLevel::Info] = spdlog::level::info;
+    s_levelMap[discord::LogLevel::Warn] = spdlog::level::warn;
 
-    friends.push_back(526963318867492865);
-    friends.push_back(744607381991718913);
-    friends.push_back(887865846414868521);
-    friends.push_back(898953887988482068);
-    friends.push_back(570760243341033472);
-    friends.push_back(551486661079334912);
-    friends.push_back(802941540120789014);
-    friends.push_back(436582998171844608);
-    friends.push_back(344253142952574989);
-    friends.push_back(522809695392497664);
-    friends.push_back(621474796500418570);
-    friends.push_back(691017722934329394);
-    friends.push_back(515919551444025407);
-    friends.push_back(273987143523762176);
-    friends.push_back(733739521438646342);
-    friends.push_back(642135253615640598);
-    friends.push_back(464268944459563018);
-    friends.push_back(343862296751112192);
-    friends.push_back(664575599737569303);
+    s_friends.push_back(526963318867492865);
+    s_friends.push_back(744607381991718913);
+    s_friends.push_back(887865846414868521);
+    s_friends.push_back(898953887988482068);
+    s_friends.push_back(570760243341033472);
+    s_friends.push_back(551486661079334912);
+    s_friends.push_back(802941540120789014);
+    s_friends.push_back(436582998171844608);
+    s_friends.push_back(344253142952574989);
+    s_friends.push_back(522809695392497664);
+    s_friends.push_back(621474796500418570);
+    s_friends.push_back(691017722934329394);
+    s_friends.push_back(515919551444025407);
+    s_friends.push_back(273987143523762176);
+    s_friends.push_back(733739521438646342);
+    s_friends.push_back(642135253615640598);
+    s_friends.push_back(464268944459563018);
+    s_friends.push_back(343862296751112192);
+    s_friends.push_back(664575599737569303);
 
     core->SetLogHook(discord::LogLevel::Debug,
                      [](discord::LogLevel level, const char* message) {
                          SPDLOG_LOGGER_CALL(spdlog::default_logger_raw(),
-                                            levelMap[level], message);
+                                            s_levelMap[level], message);
                      });
     core->UserManager().OnCurrentUserUpdate.Connect([]() {
         discord::User user;
@@ -129,8 +129,8 @@ void Discord::Initialize()
 #if DISCORD_ENABLE
 static bool IsMyFriend(discord::UserId id)
 {
-    return std::find(friends.begin(), friends.end(), (uint64_t)id) !=
-           friends.end();
+    return std::find(s_friends.begin(), s_friends.end(), (uint64_t)id) !=
+           s_friends.end();
 }
 
 static const char* GetCoolString()
@@ -234,8 +234,8 @@ void Discord::Shutdown()
 
     SPDLOG_INFO("Disconnecting Discord");
     connected = false;
-    friends.clear();
-    levelMap.clear();
+    s_friends.clear();
+    s_levelMap.clear();
     delete core;
     SPDLOG_INFO("Discord disconnected");
 #endif

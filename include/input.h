@@ -33,11 +33,7 @@ static constexpr float RIGHT_STICK_MAX_Y = 1.0f;
 
 class State
 {
-  protected:
-    // Backends need to set these
-    friend class SdlBackend;
-    friend class SwitchBackend;
-
+  public:
     // Things that are usually analog on controller
     glm::vec2 leftStick;  // WASD/left stick
     glm::vec2 rightStick; // mouse/right stick
@@ -58,8 +54,6 @@ class State
         return std::clamp(value, -max, max);
     }
 
-    // A lot of getters
-  public:
     State()
         : leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0),
           scrollAmount(0), state(0)
@@ -92,6 +86,8 @@ class State
             Deadzone(rightStick.y, RIGHT_STICK_MIN_Y, RIGHT_STICK_MAX_Y);
         scrollAmount = Deadzone(scrollAmount, 0.0f, 1.0f);
     }
+
+    // A lot of getters
 
     const glm::vec2& GetLeftStickDirection() const
     {
