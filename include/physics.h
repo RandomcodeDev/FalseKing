@@ -51,7 +51,7 @@ void Update(flecs::iter& iter);
 // For systems that just need basic information like transform
 struct Base
 {
-    virtual PxTransform& GetTransform()
+    virtual PxTransform GetTransform()
     {
         return PxTransform();
     }
@@ -74,7 +74,7 @@ struct Body : Base
         return *m_body;
     }
 
-    PxTransform& GetTransform()
+    PxTransform GetTransform()
     {
         return m_body->getGlobalPose();
     }
@@ -97,7 +97,7 @@ struct Controller : Base
         return *m_controller;
     }
 
-    PxTransform& GetTransform()
+    PxTransform GetTransform()
     {
         return GetController().getActor()->getGlobalPose();
     }

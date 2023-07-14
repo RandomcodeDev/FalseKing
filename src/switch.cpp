@@ -1,5 +1,4 @@
 #include <nn/fs.h>
-#include <nn/gfx.h>
 #include <nn/hid.h>
 #include <nn/nn_Log.h>
 #include <nn/oe.h>
@@ -7,6 +6,11 @@
 #include <nn/vi.h>
 
 #include <nv/nv_MemoryManagement.h>
+
+#include <nvn/nvn.h>
+#include <nvn/nvn_Cpp.h>
+#include <nvn/nvn_CppFuncPtrImpl.h>
+#include <nvn/nvn_CppMethods.h>
 
 #include "backend.h"
 #include "fs.h"
@@ -42,7 +46,7 @@ class SwitchBackend : protected Backend
     ~SwitchBackend();
     void SetupImage(Image& image);
     void CleanupImage(Image& image);
-    bool Update(class InputState& input);
+    bool Update(class Input::State& input);
     bool BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
@@ -81,22 +85,27 @@ class SwitchBackend : protected Backend
 
   private:
     WindowInfo m_windowInfo;
+
     KeyMapping m_mapping; // unused
+
     void* m_fsRomCache;
     size_t m_fsRomCacheSize;
+
     nn::vi::Display* m_display;
     nn::vi::Layer* m_layer;
-    nn::gfx::Device m_device;
+
+    nvn::Device m_device;
+
     uint64_t m_frameCount;
+
     std::string m_description;
 
     // Graphics memory stuff
 
-    // Initialize graphics objects
+    // Initialize graphics stuff
     void InitializeGraphics();
-    void CreateDevice();
 
-    // Destroy graphics objects
+    // Clean up graphics stuff
     void ShutdownGraphics();
 
     // Allocation functions
@@ -105,6 +114,13 @@ class SwitchBackend : protected Backend
     static void GraphicsFree(void* memory, void* userData);
     static void* GraphicsReallocate(void* oldMemory, size_t newSize,
                                     void* userData);
+
+    // NVN debug callback
+    static void NVNAPIENTRY NvnDebug(nvn::DebugCallbackSource::Enum source,
+                                     nvn::DebugCallbackType::Enum type, int id,
+                                     nvn::DebugCallbackSeverity::Enum severity,
+                                     const char* message,
+                                     void* userParams) NN_NOEXCEPT;
 };
 
 extern "C" int nnMain()
@@ -177,9 +193,6 @@ SwitchBackend::SwitchBackend() : m_mapping{}
 
     m_windowInfo.handle = m_layer;
 
-    m_description =
-        fmt::format("Switch backend with RomFS mounted at {}", ROM_MOUNT);
-
     InitializeGraphics();
 
     SPDLOG_INFO("Switch backend initialized");
@@ -201,11 +214,19 @@ SwitchBackend::~SwitchBackend()
 
 static NN_ALIGNAS(0x1000) uint8_t s_graphicsFirmwareMemory[8 * 1024 * 1024];
 
+extern "C" nvn::GenericFuncPtrFunc NVNAPIENTRY
+nvnBootstrapLoader(const char* name) NN_NOEXCEPT;
+
+// Recompiling PhysX is annoying
+extern "C" int pthread_cancel(pthread_t unused)
+{
+    return 0;
+}
+
 void SwitchBackend::InitializeGraphics()
 {
     SPDLOG_INFO("Initializing graphics");
 
-    nn::gfx::Initialize();
     nv::SetGraphicsAllocator(GraphicsAllocate, GraphicsFree, GraphicsReallocate,
                              nullptr);
     nv::SetGraphicsDevtoolsAllocator(GraphicsAllocate, GraphicsFree,
@@ -213,7 +234,37 @@ void SwitchBackend::InitializeGraphics()
     nv::InitializeGraphics(s_graphicsFirmwareMemory,
                            sizeof(s_graphicsFirmwareMemory));
 
-    CreateDevice();
+    nn::vi::NativeWindowHandle windowHandle = nullptr;
+    nn::vi::GetNativeWindow(&windowHandle, m_layer);
+
+    SPDLOG_INFO("Loading NVN");
+    nvn::DeviceGetProcAddressFunc nvnDeviceGetProcAddr =
+        (nvn::DeviceGetProcAddressFunc)nvnBootstrapLoader(
+            "nvnDeviceGetProcAddress");
+    nvn::nvnLoadCPPProcs(nullptr, nvnDeviceGetProcAddr);
+    SPDLOG_INFO("NVN loaded");
+
+    SPDLOG_INFO("Creating device");
+    nvn::DeviceBuilder deviceBuilder;
+    deviceBuilder.SetDefaults();
+#ifdef _DEBUG
+    deviceBuilder.SetFlags(NVN_DEVICE_FLAG_DEBUG_ENABLE_LEVEL_2_BIT |
+                           NVN_DEVICE_FLAG_DEBUG_SKIP_CALLS_ON_ERROR_BIT);
+#endif
+
+    //if (!m_device.Initialize(&deviceBuilder))
+    //{
+        //QUIT("Failed to create NVN device");
+    //}
+    SPDLOG_INFO("Device created");
+
+#ifdef _DEBUG
+    SPDLOG_INFO("Setting debug callback");
+    m_device.InstallDebugCallback(NvnDebug, nullptr, true);
+#endif
+
+    SPDLOG_INFO("Loading remaining NVN functions");
+    nvn::nvnLoadCPPProcs(&m_device, nvnDeviceGetProcAddr);
 
     SPDLOG_INFO("Graphics initialized");
 }
@@ -222,27 +273,9 @@ void SwitchBackend::ShutdownGraphics()
 {
     SPDLOG_INFO("Shutting down graphics");
 
-    m_device.Finalize();
-
-    nn::gfx::Finalize();
+    nv::FinalizeGraphics();
 
     SPDLOG_INFO("Graphics shut down");
-}
-
-void SwitchBackend::CreateDevice()
-{
-    SPDLOG_INFO("Creating device");
-
-    nn::gfx::DeviceInfo info;
-    info.SetDefault();
-    info.SetApiVersion(nn::gfx::ApiMajorVersion, nn::gfx::ApiMinorVersion);
-#ifdef _DEBUG
-    SPDLOG_INFO("Enabling debugging features for device");
-    info.SetDebugMode(nn::gfx::DebugMode_Full);
-#endif
-    m_device.Initialize(info);
-
-    SPDLOG_INFO("Created device");
 }
 
 void* SwitchBackend::GraphicsAllocate(size_t size, size_t alignment,
@@ -266,6 +299,29 @@ void* SwitchBackend::GraphicsReallocate(void* oldMemory, size_t newSize,
     return realloc(oldMemory, newSize);
 }
 
+static std::unordered_map<nvn::DebugCallbackSeverity::Enum,
+                          spdlog::level::level_enum>
+    s_levelMap;
+
+void NVNAPIENTRY SwitchBackend::NvnDebug(
+    nvn::DebugCallbackSource::Enum source, nvn::DebugCallbackType::Enum type,
+    int id, nvn::DebugCallbackSeverity::Enum severity, const char* message,
+    void* userParam) NN_NOEXCEPT
+{
+    if (s_levelMap.empty())
+    {
+        s_levelMap[nvn::DebugCallbackSeverity::NOTIFICATION] =
+            spdlog::level::info;
+        s_levelMap[nvn::DebugCallbackSeverity::LOW] = spdlog::level::warn;
+        s_levelMap[nvn::DebugCallbackSeverity::MEDIUM] = spdlog::level::err;
+        s_levelMap[nvn::DebugCallbackSeverity::HIGH] = spdlog::level::critical;
+    }
+
+    SPDLOG_LOGGER_CALL(spdlog::default_logger_raw(), s_levelMap[severity],
+                       "NVN {} message from {} ID {}: {}", type, source, id,
+                       message);
+}
+
 void SwitchBackend::SetupImage(Image& image)
 {
 }
@@ -274,7 +330,7 @@ void SwitchBackend::CleanupImage(Image& image)
 {
 }
 
-bool SwitchBackend::Update(InputState& input)
+bool SwitchBackend::Update(Input::State& input)
 {
 
     return true;
@@ -282,7 +338,7 @@ bool SwitchBackend::Update(InputState& input)
 
 bool SwitchBackend::BeginRender()
 {
-    return false;
+    return true;
 }
 
 void SwitchBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
@@ -299,10 +355,11 @@ void SwitchBackend::EndRender()
 
 const std::string& SwitchBackend::DescribeSystem() const
 {
-    nn::oe::FirmwareVersionForDebug version;
     static std::string description;
     if (description.empty())
     {
+        nn::oe::FirmwareVersionForDebug version;
+        nn::oe::GetFirmwareVersionForDebug(&version);
         description = fmt::format("Horizon OS {}", version.string);
     }
     return description;

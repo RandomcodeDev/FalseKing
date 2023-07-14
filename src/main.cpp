@@ -48,8 +48,10 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     flecs::world world;
 #ifdef _DEBUG
+#ifdef FLECS_REST
     world.set<flecs::Rest>({});
-    world.import <flecs::monitor>();
+#endif
+    world.import<flecs::monitor>();
 #endif
     // world.set_target_fps(60);
 

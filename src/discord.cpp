@@ -24,33 +24,33 @@ static chrono::milliseconds requestCooldown;
 static chrono::milliseconds activityCooldown;
 
 static std::unordered_map<discord::LogLevel, spdlog::level::level_enum>
-    levelMap;
-static std::vector<uint64_t> friends;
+    s_levelMap;
+static std::vector<uint64_t> s_friends;
 
-static void* discordSdkDll;
+static void* s_discordSdkDll;
 typedef enum EDiscordResult(DISCORD_API* DiscordCreatePtr)(
     DiscordVersion version, struct DiscordCreateParams* params,
     struct IDiscordCore** result);
-static DiscordCreatePtr DiscordCreate_loaded;
+static DiscordCreatePtr s_DiscordCreate;
 
 extern "C" enum EDiscordResult DISCORD_API
 DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
               struct IDiscordCore** result)
 {
-    if (!discordSdkDll)
+    if (!s_discordSdkDll)
     {
         SPDLOG_INFO("Loading Discord SDK");
-        discordSdkDll = g_backend->LoadLibrary("discord_game_sdk");
-        if (!discordSdkDll)
+        s_discordSdkDll = g_backend->LoadLibrary("discord_game_sdk");
+        if (!s_discordSdkDll)
         {
             SPDLOG_ERROR("Failed to load Discord SDK");
             available = false;
             return DiscordResult_InvalidVersion;
         }
 
-        DiscordCreate_loaded = (DiscordCreatePtr)g_backend->GetSymbol(
-            discordSdkDll, "DiscordCreate");
-        if (!DiscordCreate_loaded)
+        s_DiscordCreate = (DiscordCreatePtr)g_backend->GetSymbol(
+            s_discordSdkDll, "DiscordCreate");
+        if (!s_DiscordCreate)
         {
             SPDLOG_ERROR("Failed to get symbol DiscordCreate");
             available = false;
@@ -61,7 +61,7 @@ DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
         SPDLOG_INFO("Discord SDK loaded");
     }
 
-    return DiscordCreate_loaded(version, params, result);
+    return s_DiscordCreate(version, params, result);
 }
 
 void Discord::Initialize()
