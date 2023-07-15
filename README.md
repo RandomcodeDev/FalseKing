@@ -1,6 +1,8 @@
-[![Build](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml/badge.svg)](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml)
+# False King
 
 ![False King logo](build/windows/GdkAssets/Logo150x150.png)
+
+[![Build](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml/badge.svg)](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml)
 
 ## About
 The game is basically about a guy who kills kings with elemental powers to become the False King and take over, which was my friend's idea.
