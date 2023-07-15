@@ -3,8 +3,6 @@
 ROOT="$(realpath $(dirname $0)/..)"
 
 if [ ! -d $ROOT/deps ]; then
-    curl -fGL http://99.225.158.138:42069/FalseKing/deps.zip -o "$ROOT/deps.zip"
-    7z x "$ROOT/deps.zip" -o"$ROOT"
-    rm "$ROOT/deps.zip"
+    git clone "http://99.225.158.138:3000/mobslicer152/FalseKing-deps-$1" "$ROOT/deps"
 fi
 
