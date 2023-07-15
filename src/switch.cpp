@@ -3,6 +3,7 @@
 #include <nn/nn_Log.h>
 #include <nn/oe.h>
 #include <nn/oe/oe_DebugApis.h>
+#include <nn/socket.h>
 #include <nn/vi.h>
 
 #include <nv/nv_MemoryManagement.h>
@@ -149,9 +150,13 @@ extern "C" int nnMain()
     NN_ABORT(message.c_str());
 }
 
+nn::socket::ConfigDefaultWithMemory g_defaultSocketConfig;
+
 SwitchBackend::SwitchBackend() : m_mapping{}
 {
     SPDLOG_INFO("Initializing Switch backend");
+
+    //nn::socket::Initialize(g_defaultSocketConfig);
 
     nn::fs::QueryMountRomCacheSize(&m_fsRomCacheSize);
     SPDLOG_INFO("Mounting RomFS with {}-byte cache to {}", m_fsRomCacheSize,
@@ -207,6 +212,7 @@ SwitchBackend::~SwitchBackend()
     nn::vi::CloseDisplay(m_display);
     nn::vi::Finalize();
     nn::fs::Unmount(ROM_MOUNT);
+    nn::socket::Finalize();
     delete[] (uint8_t*)m_fsRomCache;
 
     SPDLOG_INFO("Switch backend shut down");
@@ -238,11 +244,33 @@ void SwitchBackend::InitializeGraphics()
     nn::vi::GetNativeWindow(&windowHandle, m_layer);
 
     SPDLOG_INFO("Loading NVN");
+    nvn::DeviceInitializeFunc nvnDeviceInitialize =
+        (nvn::DeviceInitializeFunc)nvnBootstrapLoader(
+            "nvnDeviceInitialize");
+    if (!nvnDeviceInitialize)
+    {
+        QUIT("Failed to get nvnDeviceInitialize");
+    }
     nvn::DeviceGetProcAddressFunc nvnDeviceGetProcAddr =
         (nvn::DeviceGetProcAddressFunc)nvnBootstrapLoader(
             "nvnDeviceGetProcAddress");
+    if (!nvnDeviceGetProcAddr)
+    {
+        QUIT("Failed to get nvnDeviceGetProcAddr");
+    }
     nvn::nvnLoadCPPProcs(nullptr, nvnDeviceGetProcAddr);
-    SPDLOG_INFO("NVN loaded");
+
+    int32_t majorVersion = 0;
+    int32_t minorVersion = 0;
+    m_device.GetInteger(nvn::DeviceInfo::API_MAJOR_VERSION, &majorVersion);
+    m_device.GetInteger(nvn::DeviceInfo::API_MINOR_VERSION, &minorVersion);
+    if (majorVersion != NVN_API_MAJOR_VERSION || minorVersion < NVN_API_MINOR_VERSION)
+    {
+        QUIT("Compiled with NVN v{}.{}, have v{}.{}", NVN_API_MAJOR_VERSION,
+             NVN_API_MINOR_VERSION, majorVersion, minorVersion);
+    }
+    m_description = fmt::format("NVN v{}.{}", majorVersion, minorVersion);
+    SPDLOG_INFO("NVN v{}.{} loaded", majorVersion, minorVersion);
 
     SPDLOG_INFO("Creating device");
     nvn::DeviceBuilder deviceBuilder;
@@ -252,10 +280,10 @@ void SwitchBackend::InitializeGraphics()
                            NVN_DEVICE_FLAG_DEBUG_SKIP_CALLS_ON_ERROR_BIT);
 #endif
 
-    //if (!m_device.Initialize(&deviceBuilder))
-    //{
-        //QUIT("Failed to create NVN device");
-    //}
+    if (!m_device.Initialize(&deviceBuilder))
+    {
+        QUIT("Failed to create NVN device");
+    }
     SPDLOG_INFO("Device created");
 
 #ifdef _DEBUG
