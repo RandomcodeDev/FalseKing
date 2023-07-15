@@ -14,6 +14,8 @@ if "%2" == "Gaming.Desktop.x64" (
 	copy "%~dp0..\build\windows\%2\%3\MicrosoftGameConfig.mgc" "%1"
 	copy "%~dp0..\build\windows\%2\%3\"*.dll "%1"
 	xcopy /e/i/y "%~dp0..\build\windows\GdkAssets" "%1\GdkAssets"
+    xcopy /e/i/y "%~dp0..\deps\licenses" "%1\licenses"
+    copy "%~dp0..\LICENSE.txt" "%1\licenses\falseking.txt"
 )
 
 set "OUTDIR=%CD%"
