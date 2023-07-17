@@ -14,7 +14,7 @@ should evolve as the vision of the game evolves.
 ### Note on the use of the word element
 
 Depending on context, this either refers to the components of the game's
-design/gameplay/etc or the in-game elements such as fire, water, air, and
+design/gameplay/etc or the in-game elements likely to be fire, water, air, and
 earth.
 
 ## Table of Contents
@@ -30,6 +30,7 @@ earth.
   - [Availability](#availability)
   - [Gameplay](#gameplay)
   - [Objectives](#objectives)
+  - [Level design](#level-design)
   - [Graphics](#graphics)
   - [Audio](#audio)
   - [Player input](#player-input)
@@ -48,7 +49,7 @@ roleplaying, puzzles, and also feature a 3D world rendered in 2D.
 
 The general idea of the story is that the player is on a quest to become the
 king of the land, requiring them to defeat the rulers of different regions
-which are themed after different elements such as fire, water, air, and earth.
+which are themed after different elements likely to be fire, water, air, and earth.
 The morality of the characters will not be a large part of the story, but may
 be hinted at for flavour (i.e. who's the good guy isn't relevant to the story).
 
@@ -60,7 +61,7 @@ possibly featuring areas only accessible after the player has visited other
 regions. Players will unlock each element when they enter a region the first
 time, but only be allowed to leave after defeating the boss for that region
 that first time. There will likely also be various NPCs the player can interact
-with, allowing for an NPC area in the area where the player starts.
+with, allowing for an NPC area where the player starts.
 
 ## Availability
 
@@ -68,8 +69,9 @@ The game will (should approval from the necessary parties be obtained) be
 available on Steam, as well as all major console platforms at the time of
 release. Mobile devices (phones/tablets) might be supported at some point. The
 target price is around 11 Canadian dollars, though a free version for PC may
-exist, player enjoyment is a somewhat higher priority than money (within
-reason).
+exist, as player enjoyment is a higher priority than money (within reason). The
+game will be available in English, with French, Russian, and simplified Chinese
+translations being possibilities.
 
 ## Gameplay
 
@@ -80,7 +82,8 @@ player will be able to select between the different elements and use three
 styles of attack, basic, special, and ranged. Combo moves between different
 elements will be investigated. The current ECS-based design lends itself well
 to this. Various movement features will also exist, such as jumping and
-dashing.
+dashing. Bosses will have various moves that depend on what phase of the fight
+they're in.
 
 ## Objectives
 
@@ -89,6 +92,16 @@ defeating the final boss in the hidden final region. The objective in each
 region will be to learn how to effectively use the power gained and then defeat
 its boss. Once the player has become the False King, they will unlock some sort
 of new game plus mode which introduces altered mechanics.
+
+## Level design
+
+The level design will be similar to that of Hyper Light Drifter. There will be
+open areas with the occasional structure in them, indoor somewhat cramped
+dungeon areas with traps, and areas with puzzles, and some large
+structures/places that combine the various elements. There will also
+potentially be areas that have enemies, which close when the player enters them
+until the enemies are defeated. Boss rooms will be similar, additionally
+featuring traps.
 
 ## Graphics
 
@@ -146,8 +159,8 @@ and other things.
   be kept in a private repository on the Gitea server.
 - Due to very simple formats, assets can largely be developed with any image
   editor and text editor, as well as some form of audio editor
-- Instead of having scripting, the game's content will use Flecs's module
-  feature to allow content to be developed the same way as the rest of the game
+- Instead of having scripting, everything will simply be implemented in C++.
+  Some form of extension system may be introduced.
 
 ## Target platforms
 
@@ -168,10 +181,11 @@ for each platform is currently working.
 
 ## Rough timeline
 
-| Goal                | Completion estimate |
-|---------------------|---------------------|
-| Core game mechanics | Late 2023           |
-| Content development | Mid 2024            |
-| Polishing           | Late 2024           |
-| Testing             | Early 2025          |
-| Release             | Early 2025          |
+| Goal                     | Completion estimate |
+|--------------------------|---------------------|
+| Core game mechanics      | Late 2023           |
+| Content development      | Mid 2024            |
+| Polishing                | Late 2024           |
+| Testing                  | Early 2025          |
+| Release                  | Early 2025          |
+| Additional localizations | When possible       |
