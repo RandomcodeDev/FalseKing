@@ -1,5 +1,5 @@
 ## Requirements
-- Visual Studio 2017 with Windows XP toolchain
+- Visual Studio 2017 with Windows XP toolchain and/or Visual Studio 2022 with the Microsoft GDK
 - A modern computer to build on
 
 ## Instructions
