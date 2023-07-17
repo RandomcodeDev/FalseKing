@@ -7,4 +7,4 @@
 
 ## Notes
 - Because why the hell shouldn't it support Windows XP if I can have C++17 and PhysX 5?
-- `scripts/distrib.bat` allows for a convenient tar file to be created
+- `scripts/distrib.bat` allows for a convenient zip file to be created
