@@ -137,7 +137,9 @@ and other things.
 - TOML will be used for configuration files and metadata, such as font
   definitions
 - Fonts are comprised of a QOI spritesheet of 8x8 characters, mapped to Unicode
-  with a TOML file
+  with a TOML file. However, to support Chinese and potentially other
+  languages, traditional TrueType rendering or at least variable character
+  dimensions should be implemented.
 - Levels will likely consist of image(s) and some form of definition
 - Non-changing game assets such as sprites, levels, audio, etc will be stored
   in some form of archive to allow more convenient and efficient storage
