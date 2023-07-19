@@ -1,7 +1,7 @@
 #include "text.h"
 
 static Image* s_font;
-std::unordered_map<wchar_t, glm::u8vec2> s_characterPositions;
+static std::unordered_map<wchar_t, glm::u8vec2> s_characterPositions;
 static bool s_initialized;
 
 // FUCK UNICODE FUCK EXCEPTIONS IN TOML PARSERS ARRRGGHH

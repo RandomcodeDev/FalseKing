@@ -7,6 +7,7 @@
 #include "input.h"
 #include "physics.h"
 #include "sprite.h"
+#include "sprites.h"
 #include "systems.h"
 #include "text.h"
 
@@ -41,7 +42,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     Text::Initialize();
     Discord::Initialize();
 
-    Image sprites("sprites.qoi");
+    Sprites::Load();
 
     Input::State input;
     Physics::State physics;
@@ -55,9 +56,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 #endif
     // world.set_target_fps(60);
 
-    Components::Register(world);
-
     Systems::Context context{&input, &physics, start};
+    Components::Register(world);
     Systems::Register(world, &context);
 
     SPDLOG_INFO("Game initialized with backend {} on system {}",
@@ -75,10 +75,9 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     flecs::entity player =
         world.entity("Player")
             .set(Physics::Controller(physics, controllerDesc))
-            .set(Sprite(sprites, 0, 0))
+            .set(Sprites::Player::player)
             .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})
-            .add<Tags::Player>()
             .add<Tags::LocalPlayer>();
 
     bool run = true;
@@ -89,6 +88,18 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         if (!g_backend->Update(input))
         {
             break;
+        }
+
+        if (!g_backend->GetWindowInformation().focused)
+        {
+            world.set_target_fps(10);
+        }
+        else
+        {
+            if (world.get_target_fps() == 10)
+            {
+                world.set_target_fps(0);
+            }
         }
 
         // Respect deadzones
@@ -105,6 +116,9 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     SPDLOG_INFO("Shutting down game");
 
     world.quit();
+
+    Sprites::Unload();
+
     Discord::Shutdown();
     Text::Shutdown();
 

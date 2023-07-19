@@ -1,6 +1,7 @@
+#include "systems.h"
 #include "backend.h"
 #include "discord.h"
-#include "systems.h"
+#include "sprites.h"
 #include "text.h"
 
 void Systems::Register(flecs::world& world, Context* context)
@@ -52,6 +53,17 @@ void Systems::PlayerInput(flecs::iter& iter)
     flecs::entity player = iter.entity(0);
     auto controller = player.get_mut<Physics::Controller>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
+
+    if (input->GetRightTrigger())
+    {
+        iter.world()
+            .entity()
+            .set(Physics::Body(*context->physics, controller->GetTransform(), *shape))
+            .set(Sprites::Player::fireMelee)
+            .set(Components::Element{Components::Element::Enum::Fire})
+            .add<Tags::Projectile>()
+            .child_of(player);
+    }
 
     float x = input->GetLeftStickDirection().x *
               (input->GetLeftStickPressed() ? movementSpeed->run

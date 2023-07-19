@@ -35,7 +35,6 @@ struct Base;
 
 namespace Systems
 {
-
 // Draw a sprite with a physics thing
 void DrawPhysical(flecs::iter& iter, Physics::Base* object,
                     const Sprite* sprite);

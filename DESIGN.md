@@ -149,6 +149,9 @@ and other things.
 - Static linking is used to reduce the number of files necessary to work with,
   making distribution somewhat simpler and possibly allow for link time
   optimization
+- Due to the fact that the game uses low resolution pixel art, it will very
+  likely be orders of magnitude smaller than a typical AAA game even with no storage
+  optimization
 
 ## Development
 

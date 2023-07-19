@@ -60,7 +60,7 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\projectile.h">
+    <ClInclude Include="..\..\include\sprites.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -146,7 +146,7 @@
     <ClCompile Include="..\..\src\discord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\projectile.cpp">
+    <ClCompile Include="..\..\src\sprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -154,9 +154,7 @@
     <None Include="..\..\.clang-format" />
     <None Include="..\..\.gitignore" />
     <None Include="..\..\README.md" />
-    <None Include="..\..\scripts\copyfiles.bat">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="..\..\scripts\copyfiles.bat" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\LICENSE.txt" />

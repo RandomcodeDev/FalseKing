@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "input.h"
+#include "physics.h"
 
 namespace Tags
 {
@@ -12,6 +13,11 @@ struct Player
 
 // Is the player on the local instance
 struct LocalPlayer
+{
+};
+
+// Is a projectile
+struct Projectile
 {
 };
 } // namespace Tags
@@ -34,5 +40,19 @@ struct MovementSpeed
     float walk;
     float crouch;
     float run;
+};
+
+// Element
+struct Element
+{
+    enum class Enum
+    {
+        None,
+        Fire,
+        Water,
+        Air,
+        Earth,
+        Ultimate
+    } value;
 };
 } // namespace Components

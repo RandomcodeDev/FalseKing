@@ -26,7 +26,7 @@ class SdlBackend : protected Backend
     void SetupImage(Image& image);
     void CleanupImage(Image& image);
     bool Update(class Input::State& input);
-    bool BeginRender();
+    void BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
                    uint32_t srcWidth, uint32_t srcHeight, glm::u8vec3 color);
@@ -340,7 +340,6 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
             SPDLOG_INFO("Window focused");
             m_windowInfo.focused = true;
             break;
-            ;
         }
         case SDL_EVENT_WINDOW_FOCUS_LOST: {
             SPDLOG_INFO("Window unfocused");
@@ -506,20 +505,15 @@ void SdlBackend::EnumerateGamepads()
     }
 }
 
-bool SdlBackend::BeginRender()
+void SdlBackend::BeginRender()
 {
-    if (!m_windowInfo.focused)
-    {
-        return false;
-    }
-
     // Scale everything to be the right size
     SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH,
                        (float)m_windowInfo.height / GAME_HEIGHT);
 
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
-    return true;
+    return;
 }
 
 void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
@@ -616,14 +610,14 @@ const std::string& SdlBackend::DescribeSystem() const
                          nullptr, nullptr, (LPBYTE)&CurrentMajorVersionNumber,
                          &Size) == ERROR_SUCCESS)
     {
-        Size = sizeof(InstallationType);
-        RegQueryValueExA(CurrentVersionHandle, "InstallationType", nullptr,
-                         nullptr, (LPBYTE)InstallationType, &Size);
-
         Size = sizeof(INT);
         RegQueryValueExA(CurrentVersionHandle, "CurrentMinorVersionNumber",
                          nullptr, nullptr, (LPBYTE)&CurrentMinorVersionNumber,
                          &Size);
+
+        Size = sizeof(InstallationType);
+        RegQueryValueExA(CurrentVersionHandle, "InstallationType", nullptr,
+                         nullptr, (LPBYTE)InstallationType, &Size);
 
         Size = sizeof(CurrentBuildNumber);
         RegQueryValueExA(CurrentVersionHandle, "CurrentBuildNumber", nullptr,
@@ -645,7 +639,7 @@ const std::string& SdlBackend::DescribeSystem() const
                             std::min(strlen(EditionId), ARRAY_SIZE(EditionId)));
         Description = fmt::format(
 #ifdef _DEBUG
-            "{} {} {}.{}.{}.{} {} (build lab {})",
+            "{} {} {}.{}.{} {}",
 #else
             "{} {} {}.{}.{}.{} {}",
 #endif
@@ -655,10 +649,10 @@ const std::string& SdlBackend::DescribeSystem() const
                 ? "Desktop"
                 : InstallationType,
             CurrentMajorVersionNumber, CurrentMinorVersionNumber,
-            CurrentBuildNumber, UBR, EditionId
 #ifdef _DEBUG
-            ,
-            BuildLabEx, ProductName, DisplayVersion
+            BuildLabEx, edition
+#else
+            CurrentBuildNumber, UBR, edition
 #endif
         );
     }
@@ -775,7 +769,7 @@ const std::string& SdlBackend::DescribeSystem() const
     else
     {
         Description =
-            fmt::format("%s %s %s, host %s", utsName.sysname, utsName.release,
+            fmt::format("{} {} {}, host {}", utsName.sysname, utsName.release,
                         utsName.machine, utsName.nodename);
     }
 #endif

@@ -59,7 +59,7 @@ class Backend
     virtual bool Update(class Input::State& input) = 0;
 
     // Prepare for rendering
-    virtual bool BeginRender() = 0;
+    virtual void BeginRender() = 0;
 
     // Draw an image
     virtual void DrawImage(const Image& image, uint32_t x, uint32_t y,
