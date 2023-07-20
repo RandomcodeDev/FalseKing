@@ -5,17 +5,14 @@
 [![Build](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml/badge.svg)](https://github.com/MobSlicer152/FalseKing/actions/workflows/build.yml)
 
 ## About
-The game is basically about a guy who kills kings with elemental powers to become the False King and take over, which was my friend's idea.
+The game is basically about a guy who kills kings with elemental powers to
+become the False King and take over, which was my friend's idea.
 
-## Things likely to be in game
-- 2D graphics with 3D space (so I can just implement drawing textures and pretty much nothing else, and still have it work)
-- Maybe random generation, but only enough that it's fun, plus maybe more as NG+ or something, I find some games overdo the randomness
-- Skill tree
-- Elements: fire, air, water, earth
-- Dashing
-- Multiple types of attack: normal, special, ranged
+I use C++ syntax for organization and to more conveniently represent things
+that would be done with function pointer tables and preprocessor macros in C,
+more so than for OOP (the game uses an ECS).
 
-I use C++ syntax to represent things that could be done with function pointer tables and preprocessor macros in C, more so than for OOP (game uses ECS).
+See [DESIGN.md]() for an overview of the game's design and plan.
 
 ## General build information
 - Have `curl` (always available on supported Windows, may need to install on others)
