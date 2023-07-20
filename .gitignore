@@ -366,5 +366,6 @@ FodyWeavers.xsd
 .DS_Store
 ._*
 build/darwin/build/
-deps/
+deps
+deps-*/
 *.zip

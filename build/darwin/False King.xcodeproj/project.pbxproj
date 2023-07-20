@@ -42,24 +42,24 @@
 /* Begin PBXFileReference section */
 		D449ACD02A51FB9E0055EA8E /* discord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = discord.cpp; path = ../../src/discord.cpp; sourceTree = "<group>"; };
 		D449ACD22A51FBB20055EA8E /* discord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = discord.h; path = ../../include/discord.h; sourceTree = "<group>"; };
-		D449ACD42A51FBD40055EA8E /* core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = core.cpp; path = ../../../deps/src/discord/core.cpp; sourceTree = "<group>"; };
-		D449ACD52A51FBD40055EA8E /* voice_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = voice_manager.cpp; path = ../../../deps/src/discord/voice_manager.cpp; sourceTree = "<group>"; };
-		D449ACD62A51FBD40055EA8E /* application_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application_manager.cpp; path = ../../../deps/src/discord/application_manager.cpp; sourceTree = "<group>"; };
-		D449ACD72A51FBD40055EA8E /* relationship_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = relationship_manager.cpp; path = ../../../deps/src/discord/relationship_manager.cpp; sourceTree = "<group>"; };
-		D449ACD82A51FBD40055EA8E /* lobby_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lobby_manager.cpp; path = ../../../deps/src/discord/lobby_manager.cpp; sourceTree = "<group>"; };
-		D449ACD92A51FBD40055EA8E /* network_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = network_manager.cpp; path = ../../../deps/src/discord/network_manager.cpp; sourceTree = "<group>"; };
-		D449ACDA2A51FBD40055EA8E /* user_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = user_manager.cpp; path = ../../../deps/src/discord/user_manager.cpp; sourceTree = "<group>"; };
-		D449ACDB2A51FBD40055EA8E /* image_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = image_manager.cpp; path = ../../../deps/src/discord/image_manager.cpp; sourceTree = "<group>"; };
-		D449ACDC2A51FBD40055EA8E /* store_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = store_manager.cpp; path = ../../../deps/src/discord/store_manager.cpp; sourceTree = "<group>"; };
-		D449ACDD2A51FBD40055EA8E /* storage_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = storage_manager.cpp; path = ../../../deps/src/discord/storage_manager.cpp; sourceTree = "<group>"; };
-		D449ACDE2A51FBD40055EA8E /* achievement_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = achievement_manager.cpp; path = ../../../deps/src/discord/achievement_manager.cpp; sourceTree = "<group>"; };
-		D449ACDF2A51FBD40055EA8E /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = ../../../deps/src/discord/types.cpp; sourceTree = "<group>"; };
-		D449ACE02A51FBD40055EA8E /* overlay_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = overlay_manager.cpp; path = ../../../deps/src/discord/overlay_manager.cpp; sourceTree = "<group>"; };
-		D449ACE12A51FBD40055EA8E /* activity_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = activity_manager.cpp; path = ../../../deps/src/discord/activity_manager.cpp; sourceTree = "<group>"; };
+		D449ACD42A51FBD40055EA8E /* core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = core.cpp; path = ../../../deps-public/src/discord/core.cpp; sourceTree = "<group>"; };
+		D449ACD52A51FBD40055EA8E /* voice_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = voice_manager.cpp; path = ../../../deps-public/src/discord/voice_manager.cpp; sourceTree = "<group>"; };
+		D449ACD62A51FBD40055EA8E /* application_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application_manager.cpp; path = ../../../deps-public/src/discord/application_manager.cpp; sourceTree = "<group>"; };
+		D449ACD72A51FBD40055EA8E /* relationship_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = relationship_manager.cpp; path = ../../../deps-public/src/discord/relationship_manager.cpp; sourceTree = "<group>"; };
+		D449ACD82A51FBD40055EA8E /* lobby_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lobby_manager.cpp; path = ../../../deps-public/src/discord/lobby_manager.cpp; sourceTree = "<group>"; };
+		D449ACD92A51FBD40055EA8E /* network_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = network_manager.cpp; path = ../../../deps-public/src/discord/network_manager.cpp; sourceTree = "<group>"; };
+		D449ACDA2A51FBD40055EA8E /* user_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = user_manager.cpp; path = ../../../deps-public/src/discord/user_manager.cpp; sourceTree = "<group>"; };
+		D449ACDB2A51FBD40055EA8E /* image_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = image_manager.cpp; path = ../../../deps-public/src/discord/image_manager.cpp; sourceTree = "<group>"; };
+		D449ACDC2A51FBD40055EA8E /* store_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = store_manager.cpp; path = ../../../deps-public/src/discord/store_manager.cpp; sourceTree = "<group>"; };
+		D449ACDD2A51FBD40055EA8E /* storage_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = storage_manager.cpp; path = ../../../deps-public/src/discord/storage_manager.cpp; sourceTree = "<group>"; };
+		D449ACDE2A51FBD40055EA8E /* achievement_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = achievement_manager.cpp; path = ../../../deps-public/src/discord/achievement_manager.cpp; sourceTree = "<group>"; };
+		D449ACDF2A51FBD40055EA8E /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = types.cpp; path = ../../../deps-public/src/discord/types.cpp; sourceTree = "<group>"; };
+		D449ACE02A51FBD40055EA8E /* overlay_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = overlay_manager.cpp; path = ../../../deps-public/src/discord/overlay_manager.cpp; sourceTree = "<group>"; };
+		D449ACE12A51FBD40055EA8E /* activity_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = activity_manager.cpp; path = ../../../deps-public/src/discord/activity_manager.cpp; sourceTree = "<group>"; };
 		D45020BD2A53B77E00D39BD8 /* False King.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "False King.entitlements"; sourceTree = "<group>"; };
 		D45020BE2A53C92500D39BD8 /* False-King-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "False-King-Info.plist"; sourceTree = "<group>"; };
-		D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = discord_game_sdk.dylib; path = ../../deps/lib/Universal/discord_game_sdk.dylib; sourceTree = "<group>"; };
-		D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libzstd-darwin.a"; path = "../../deps/lib/Universal/libzstd-darwin.a"; sourceTree = "<group>"; };
+		D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = discord_game_sdk.dylib; path = ../../deps-public/lib/Universal/discord_game_sdk.dylib; sourceTree = "<group>"; };
+		D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libzstd-darwin.a"; path = "../../deps-public/lib/Universal/libzstd-darwin.a"; sourceTree = "<group>"; };
 		D48F67462A507F000042F1FB /* False King.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "False King.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48F67742A5089F50042F1FB /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = input.h; path = ../../include/input.h; sourceTree = "<group>"; };
 		D48F67752A5089F50042F1FB /* components.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = components.h; path = ../../include/components.h; sourceTree = "<group>"; };
@@ -80,13 +80,13 @@
 		D48F67872A508A560042F1FB /* sdl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdl.cpp; path = ../../src/sdl.cpp; sourceTree = "<group>"; };
 		D48F67882A508A560042F1FB /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = image.cpp; path = ../../src/image.cpp; sourceTree = "<group>"; };
 		D48F67892A508A560042F1FB /* fs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fs.cpp; path = ../../src/fs.cpp; sourceTree = "<group>"; };
-		D48F67942A508A730042F1FB /* flecs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = flecs.c; path = ../../../deps/src/flecs.c; sourceTree = "<group>"; };
-		D48F67952A508A730042F1FB /* metrohash64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = metrohash64.cpp; path = ../../../deps/src/metrohash64.cpp; sourceTree = "<group>"; };
-		D48F67962A508A730042F1FB /* metrohash128.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = metrohash128.cpp; path = ../../../deps/src/metrohash128.cpp; sourceTree = "<group>"; };
-		D48F679B2A508CDC0042F1FB /* Debug */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Debug; path = ../../deps/Frameworks/Debug; sourceTree = "<group>"; };
-		D48F679D2A508CF60042F1FB /* deps */ = {isa = PBXFileReference; lastKnownFileType = folder; name = deps; path = ../../deps; sourceTree = "<group>"; };
-		D48F679F2A508D020042F1FB /* SDL3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL3.framework; path = ../../deps/Frameworks/Debug/SDL3.framework; sourceTree = "<group>"; };
-		D48F67A12A508D750042F1FB /* libzstd-darwin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libzstd-darwin.a"; path = "../../deps/lib/x64/libzstd-darwin.a"; sourceTree = "<group>"; };
+		D48F67942A508A730042F1FB /* flecs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = flecs.c; path = ../../../deps-public/src/flecs.c; sourceTree = "<group>"; };
+		D48F67952A508A730042F1FB /* metrohash64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = metrohash64.cpp; path = ../../../deps-public/src/metrohash64.cpp; sourceTree = "<group>"; };
+		D48F67962A508A730042F1FB /* metrohash128.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = metrohash128.cpp; path = ../../../deps-public/src/metrohash128.cpp; sourceTree = "<group>"; };
+		D48F679B2A508CDC0042F1FB /* Debug */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Debug; path = ../../deps-public/Frameworks/Debug; sourceTree = "<group>"; };
+		D48F679D2A508CF60042F1FB /* deps-public */ = {isa = PBXFileReference; lastKnownFileType = folder; name = deps; path = ../../deps; sourceTree = "<group>"; };
+		D48F679F2A508D020042F1FB /* SDL3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL3.framework; path = ../../deps-public/Frameworks/Debug/SDL3.framework; sourceTree = "<group>"; };
+		D48F67A12A508D750042F1FB /* libzstd-darwin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libzstd-darwin.a"; path = "../../deps-public/lib/x64/libzstd-darwin.a"; sourceTree = "<group>"; };
 		D48F67A32A5092DF0042F1FB /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../assets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -199,7 +199,7 @@
 				D45020BF2A53CB5400D39BD8 /* discord_game_sdk.dylib */,
 				D45020C02A53CB5400D39BD8 /* libzstd-darwin.a */,
 				D48F679F2A508D020042F1FB /* SDL3.framework */,
-				D48F679D2A508CF60042F1FB /* deps */,
+				D48F679D2A508CF60042F1FB /* deps-public */,
 				D48F679B2A508CDC0042F1FB /* Debug */,
 			);
 			name = Frameworks;
@@ -307,7 +307,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "FRAMEWORKS_PATH=$SRCROOT/../../deps/Frameworks/$CONFIGURATION\nLIB_PATH=$SRCROOT/../../deps/lib/Universal\n\nBUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\n\nmkdir -p \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp -r $(find $FRAMEWORKS_PATH -type d | grep -i '.*\\.framework$') \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp $LIB_PATH/*.dylib $LIB_PATH/$CONFIGURATION/*.dylib \"$BUILD_APP_DIR/Contents/Frameworks\" || true\n";
+			shellScript = "FRAMEWORKS_PATH=$SRCROOT/../../deps-public/Frameworks/$CONFIGURATION\nLIB_PATH=$SRCROOT/../../deps/lib/Universal\n\nBUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\n\nmkdir -p \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp -r $(find $FRAMEWORKS_PATH -type d | grep -i '.*\\.framework$') \"$BUILD_APP_DIR/Contents/Frameworks\"\ncp $LIB_PATH/*.dylib $LIB_PATH/$CONFIGURATION/*.dylib \"$BUILD_APP_DIR/Contents/Frameworks\" || true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -474,14 +474,14 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = ../../deps/Frameworks/Debug;
+				FRAMEWORK_SEARCH_PATHS = ../../deps-public/Frameworks/Debug;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"USE_SDL=1",
 					"_DEBUG=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../deps/include,
+					../../deps-public/include,
 					/tmp/FalseKing,
 				);
 				INFOPLIST_FILE = "False-King-Info.plist";
@@ -502,8 +502,8 @@
 				"LD_RUNPATH_SEARCH_PATHS[arch=*]" = "@executable_path/";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=*]" = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"../../deps/lib/Universal/$(CONFIGURATION)",
-					../../deps/lib/Universal,
+					"../../deps-public/lib/Universal/$(CONFIGURATION)",
+					../../deps-public/lib/Universal,
 					../../include,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -548,14 +548,14 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = ../../deps/Frameworks/Release;
+				FRAMEWORK_SEARCH_PATHS = ../../deps-public/Frameworks/Release;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"USE_SDL=1",
 					"NDEBUG=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../deps/include,
+					../../deps-public/include,
 					/tmp/FalseKing,
 				);
 				INFOPLIST_FILE = "False-King-Info.plist";
@@ -576,8 +576,8 @@
 				"LD_RUNPATH_SEARCH_PATHS[arch=*]" = "@executable_path";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=*]" = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"../../deps/lib/Universal/$(CONFIGURATION)",
-					../../deps/lib/Universal,
+					"../../deps-public/lib/Universal/$(CONFIGURATION)",
+					../../deps-public/lib/Universal,
 					../../include,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.3;

@@ -15,27 +15,27 @@ SRCS=${ROOT}/src/components.cpp \
      ${ROOT}/src/sprite.cpp \
      ${ROOT}/src/systems.cpp \
      ${ROOT}/src/text.cpp \
-     ${ROOT}/deps/src/flecs.c \
-     ${ROOT}/deps/src/metrohash128.cpp \
-     ${ROOT}/deps/src/metrohash64.cpp
+     ${ROOT}/deps-public/src/flecs.c \
+     ${ROOT}/deps-public/src/metrohash128.cpp \
+     ${ROOT}/deps-public/src/metrohash64.cpp
 .if "${OS}" == "Linux"
-     SRCS+=${ROOT}/deps/src/discord/achievement_manager.cpp \
-           ${ROOT}/deps/src/discord/activity_manager.cpp \
-           ${ROOT}/deps/src/discord/application_manager.cpp \
-           ${ROOT}/deps/src/discord/core.cpp \
-           ${ROOT}/deps/src/discord/image_manager.cpp \
-           ${ROOT}/deps/src/discord/lobby_manager.cpp \
-           ${ROOT}/deps/src/discord/network_manager.cpp \
-           ${ROOT}/deps/src/discord/overlay_manager.cpp \
-           ${ROOT}/deps/src/discord/relationship_manager.cpp \
-           ${ROOT}/deps/src/discord/storage_manager.cpp \
-           ${ROOT}/deps/src/discord/store_manager.cpp \
-           ${ROOT}/deps/src/discord/types.cpp \
-           ${ROOT}/deps/src/discord/user_manager.cpp \
-           ${ROOT}/deps/src/discord/voice_manager.cpp
+     SRCS+=${ROOT}/deps-public/src/discord/achievement_manager.cpp \
+           ${ROOT}/deps-public/src/discord/activity_manager.cpp \
+           ${ROOT}/deps-public/src/discord/application_manager.cpp \
+           ${ROOT}/deps-public/src/discord/core.cpp \
+           ${ROOT}/deps-public/src/discord/image_manager.cpp \
+           ${ROOT}/deps-public/src/discord/lobby_manager.cpp \
+           ${ROOT}/deps-public/src/discord/network_manager.cpp \
+           ${ROOT}/deps-public/src/discord/overlay_manager.cpp \
+           ${ROOT}/deps-public/src/discord/relationship_manager.cpp \
+           ${ROOT}/deps-public/src/discord/storage_manager.cpp \
+           ${ROOT}/deps-public/src/discord/store_manager.cpp \
+           ${ROOT}/deps-public/src/discord/types.cpp \
+           ${ROOT}/deps-public/src/discord/user_manager.cpp \
+           ${ROOT}/deps-public/src/discord/voice_manager.cpp
 .endif
 CSTD=-std=c17
-CFLAGS+=-xc -DUSE_SDL=1 -I${ROOT}/include -I${ROOT}/deps/include -I${.CURDIR} -Wall -Wextra
+CFLAGS+=-xc -DUSE_SDL=1 -I${ROOT}/include -I${ROOT}/deps-public/include -I${.CURDIR} -Wall -Wextra
 CXXFLAGS+=-xc++ -std=c++17
 
 .if "${CONFIG}" == "Debug"
@@ -44,7 +44,7 @@ CXXFLAGS+=-xc++ -std=c++17
      CFLAGS+=-DNDEBUG=1
 .endif
 
-LIBDIR=${ROOT}/deps/lib
+LIBDIR=${ROOT}/deps-public/lib
 LDADD+=${LIBDIR}/${ARCH}/${CONFIG}/libPhysX_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCharacterKinematic_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCommon_static_64${SLIBEXT} \

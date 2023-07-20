@@ -100,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps-public\include;$(SolutionDir)..\..\deps-public\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=_WIN32_WINNT_WINXP;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableSpecificWarnings>4307;4804;</DisableSpecificWarnings>
@@ -108,7 +108,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps-public\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps-public\lib\$(Platform);</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -128,7 +128,7 @@ $(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" "$(Platform)" $(Configu
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps-public\include;$(SolutionDir)..\..\deps-public\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_GAMING_DESKTOP=1;_WIN32_WINNT=0x1000;_WINAPI_FAMILY=_WINAPI_FAMILY_DESKTOP_APP;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;_DEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <DisableSpecificWarnings>4307;4804;</DisableSpecificWarnings>
@@ -136,7 +136,7 @@ $(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" "$(Platform)" $(Configu
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps-public\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)..\..\deps-public\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3.lib;libzstd.dll.a;d3d12.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;discord_game_sdk.dll.lib;xgameruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -161,7 +161,7 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps-public\include;$(SolutionDir)..\..\deps-public\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=_WIN32_WINNT_WINXP;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4307;4804;</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -170,7 +170,7 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(Platform);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps-public\lib\$(Platform)\$(Configuration);$(SolutionDir)..\..\deps-public\lib\$(Platform);</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhysX_static_32.lib;PhysXCharacterKinematic_static_32.lib;PhysXCommon_static_32.lib;PhysXExtensions_static_32.lib;PhysXFoundation_static_32.lib;PhysXPvdSDK_static_32.lib;SDL3.lib;libzstd.dll.a;d3d9.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -192,7 +192,7 @@ $(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" "$(Platform)" $(Configu
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps\include;$(SolutionDir)..\..\deps\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(OutDir);$(SolutionDir)..\..\deps-public\include;$(SolutionDir)..\..\deps-public\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_GAMING_DESKTOP=1;_WIN32_WINNT=0x1000;_WINAPI_FAMILY=_WINAPI_FAMILY_DESKTOP_APP;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1;NDEBUG=1;PX_PHYSX_STATIC_LIB=1;USE_SDL=1;NOMINMAX=1;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING=1;_CRT_SECURE_NO_WARNINGS=1;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4307;4804;</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -201,7 +201,7 @@ $(SolutionDir)..\..\scripts\copyfiles.bat "$(TargetDir)" "$(Platform)" $(Configu
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)..\..\deps\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\deps-public\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)..\..\deps-public\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhysX_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_static_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_static_64.lib;PhysXPvdSDK_static_64.lib;SDL3.lib;libzstd.dll.a;d3d12.lib;dxgi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;discord_game_sdk.dll.lib;xgameruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -234,24 +234,24 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\deps\src\discord\achievement_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\activity_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\application_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\core.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\image_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\lobby_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\network_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\overlay_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\relationship_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\storage_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\store_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\types.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\user_manager.cpp" />
-    <ClCompile Include="..\..\deps\src\discord\voice_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\achievement_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\activity_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\application_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\core.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\image_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\lobby_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\network_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\overlay_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\relationship_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\storage_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\store_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\types.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\user_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\discord\voice_manager.cpp" />
     <ClCompile Include="..\..\src\components.cpp" />
-    <ClCompile Include="..\..\deps\src\flecs.c" />
-    <ClCompile Include="..\..\deps\src\metrohash128.cpp" />
-    <ClCompile Include="..\..\deps\src\metrohash64.cpp" />
+    <ClCompile Include="..\..\deps-public\src\flecs.c" />
+    <ClCompile Include="..\..\deps-public\src\metrohash128.cpp" />
+    <ClCompile Include="..\..\deps-public\src\metrohash64.cpp" />
     <ClCompile Include="..\..\src\discord.cpp" />
     <ClCompile Include="..\..\src\fs.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />

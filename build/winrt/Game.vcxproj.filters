@@ -219,13 +219,13 @@
     <ClCompile Include="..\..\src\physics.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\flecs.c">
+    <ClCompile Include="..\..\deps-public\src\flecs.c">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\metrohash128.cpp">
+    <ClCompile Include="..\..\deps-public\src\metrohash128.cpp">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\metrohash64.cpp">
+    <ClCompile Include="..\..\deps-public\src\metrohash64.cpp">
       <Filter>Content\Source Files\External</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\text.cpp">
@@ -237,46 +237,46 @@
     <ClCompile Include="..\..\src\systems.cpp">
       <Filter>Content\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\achievement_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\achievement_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\activity_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\activity_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\application_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\application_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\core.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\core.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\image_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\image_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\lobby_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\lobby_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\network_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\network_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\overlay_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\overlay_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\relationship_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\relationship_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\storage_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\storage_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\store_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\store_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\types.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\types.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\user_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\user_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\src\discord\voice_manager.cpp">
+    <ClCompile Include="..\..\deps-public\src\discord\voice_manager.cpp">
       <Filter>Content\Source Files\External\Discord</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\discord.cpp">
@@ -288,7 +288,7 @@
     <None Include="..\..\README.md" />
     <None Include="..\..\scripts\copyfiles.bat" />
     <None Include="Game_TemporaryKey.pfx" />
-    <None Include="..\..\deps\lib\$(Platform)\discord_game_sdk.dll" />
+    <None Include="..\..\deps-public\lib\$(Platform)\discord_game_sdk.dll" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UwpAssets\Resources.rc" />
@@ -332,7 +332,7 @@
     <CopyFileToFolders Include="..\..\assets\font.qoi" />
     <CopyFileToFolders Include="..\..\assets\font.toml" />
     <CopyFileToFolders Include="..\..\assets\sprites.qoi" />
-    <CopyFileToFolders Include="..\..\deps\lib\x64\Debug\SDL3-winrt.dll" />
-    <CopyFileToFolders Include="..\..\deps\lib\$(Platform)\libzstd.dll" />
+    <CopyFileToFolders Include="..\..\deps-public\lib\x64\Debug\SDL3-winrt.dll" />
+    <CopyFileToFolders Include="..\..\deps-public\lib\$(Platform)\libzstd.dll" />
   </ItemGroup>
 </Project>
