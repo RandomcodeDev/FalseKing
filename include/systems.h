@@ -19,9 +19,6 @@ struct Context
 // Register all the systems
 extern void Register(flecs::world& world, Context* context);
 
-// Handle input
-extern void PlayerInput(flecs::iter& iter);
-
 // Begin rendering
 extern void BeginRender(flecs::iter& iter);
 

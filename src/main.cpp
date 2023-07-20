@@ -6,6 +6,7 @@
 #include "image.h"
 #include "input.h"
 #include "physics.h"
+#include "player.h"
 #include "sprite.h"
 #include "sprites.h"
 #include "systems.h"
@@ -66,19 +67,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     PxMaterial* material =
         physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
 
-    PxCapsuleControllerDesc controllerDesc;
-    controllerDesc.setToDefault();
-    controllerDesc.radius = 5;
-    controllerDesc.height = 16;
-    controllerDesc.material = material;
-
-    flecs::entity player =
-        world.entity("Player")
-            .set(Physics::Controller(physics, controllerDesc))
-            .set(Sprites::Player::player)
-            .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
-            .set(Components::Health{100.0f, 100.0f})
-            .add<Tags::LocalPlayer>();
+    Player::Create(world, physics);
 
     bool run = true;
     while (run)

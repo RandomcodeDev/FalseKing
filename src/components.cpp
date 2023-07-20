@@ -3,6 +3,7 @@
 
 void Components::Register(flecs::world& world)
 {
-    world.component<Tags::LocalPlayer>().is_a<Tags::Player>();
-
+    world.component<Tags::LocalPlayer>()
+        .is_a(flecs::Private)
+        .is_a<Tags::Player>();
 }

@@ -1,7 +1,8 @@
-#include "systems.h"
 #include "backend.h"
 #include "discord.h"
+#include "player.h"
 #include "sprites.h"
+#include "systems.h"
 #include "text.h"
 
 void Systems::Register(flecs::world& world, Context* context)
@@ -14,12 +15,14 @@ void Systems::Register(flecs::world& world, Context* context)
         .interval(Physics::TIME_STEP)
         .iter(Physics::Update);
 
-    // systems.h
+    // player.h
     world.system<const Tags::LocalPlayer>("PlayerInput")
         .ctx(context)
         .kind(flecs::OnUpdate)
         .interval(Physics::TIME_STEP)
-        .iter(PlayerInput);
+        .iter(Player::Input);
+
+    // systems.h
     world.system("BeginRender")
         .ctx(context)
         .kind(flecs::PreFrame)
@@ -43,42 +46,6 @@ void Systems::Register(flecs::world& world, Context* context)
     world.system<Physics::Controller, const Sprite>("DrawController")
         .kind(flecs::OnUpdate)
         .iter(DrawPhysical);
-}
-
-void Systems::PlayerInput(flecs::iter& iter)
-{
-    Context* context = iter.ctx<Context>();
-    Input::State* input = context->input;
-
-    flecs::entity player = iter.entity(0);
-    auto controller = player.get_mut<Physics::Controller>();
-    auto movementSpeed = player.get<Components::MovementSpeed>();
-
-    if (input->GetRightTrigger())
-    {
-        iter.world()
-            .entity()
-            .set(Physics::Body(*context->physics, controller->GetTransform(), *shape))
-            .set(Sprites::Player::fireMelee)
-            .set(Components::Element{Components::Element::Enum::Fire})
-            .add<Tags::Projectile>()
-            .child_of(player);
-    }
-
-    float x = input->GetLeftStickDirection().x *
-              (input->GetLeftStickPressed() ? movementSpeed->run
-                                            : movementSpeed->walk) *
-              (input->GetRightStickPressed() ? movementSpeed->crouch
-                                             : movementSpeed->walk);
-    float z = input->GetLeftStickDirection().y *
-              (input->GetLeftStickPressed() ? movementSpeed->run
-                                            : movementSpeed->walk) *
-              (input->GetRightStickPressed() ? movementSpeed->crouch
-                                             : movementSpeed->walk);
-
-    controller->GetController().move(PxVec3(x, 0, z), 0.0001f,
-                                     iter.delta_system_time() * 1000.0f,
-                                     PxControllerFilters());
 }
 
 void Systems::BeginRender(flecs::iter& iter)

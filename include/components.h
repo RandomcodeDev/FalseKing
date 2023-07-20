@@ -45,7 +45,7 @@ struct MovementSpeed
 // Element
 struct Element
 {
-    enum class Enum
+    enum
     {
         None,
         Fire,
