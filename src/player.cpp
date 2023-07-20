@@ -8,18 +8,19 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
 
     PxCapsuleControllerDesc controllerDesc;
     controllerDesc.setToDefault();
-    controllerDesc.radius = 5;
-    controllerDesc.height = 16;
+    controllerDesc.radius = 0.5;
+    controllerDesc.height = 2;
     controllerDesc.material = material;
 
     flecs::entity player =
         world.entity("Player")
             .set(Physics::Controller(physics, controllerDesc))
-            .set(Sprites::Player::player)
+            .set(Sprite(Sprites::Player::player))
             .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})
             .set(Components::Element{Components::Element::None})
             .set(Cursor{0.0f, 0.0f})
+            .set(MeleeCooldown{0.0f})
             .add<LocalPlayer>();
 
     material->release();
@@ -31,7 +32,7 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
                                        Physics::State& physics)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
-    PxSphereGeometry sphere(9);
+    PxSphereGeometry sphere(1);
     PxShape* shape = physics.GetPhysics().createShape(sphere, *material);
 
     PxTransform transform(GetCursorPosition(player));
@@ -41,15 +42,14 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
     flecs::world& world = player.world();
     flecs::entity projectile = world.entity()
                                    .set(body)
-                                   .set(Sprites::Player::fireMelee)
+                                   .set(Sprite(Sprites::Player::fireMelee))
                                    .is_a<Tags::Projectile>()
-                                   .child_of(player)
-                                   .enable();
+                                   .child_of(player);
     material->release();
 
     // TODO: improve
     auto cursor = player.get<Cursor>();
-    body.GetBody().addForce(PxVec3(cursor->x, 0, cursor->y));
+    body.GetBody().addForce(PxVec3(cursor->x * 0.1, 0, cursor->y * 0.1));
 
     return projectile;
 }
@@ -63,10 +63,12 @@ void Player::Input(flecs::iter& iter)
     auto controller = player.get_mut<Physics::Controller>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
     auto cursor = player.get_mut<Cursor>();
+    auto meleeCooldown = player.get_mut<MeleeCooldown>();
 
-    if (input->GetRightTrigger())
+    if (input->GetRightTrigger() && meleeCooldown->value <= 0.0f)
     {
         CreateProjectile(player, *context->physics);
+        meleeCooldown->value = 
     }
 
     float x = input->GetLeftStickDirection().x *
@@ -90,7 +92,7 @@ void Player::Input(flecs::iter& iter)
                                      PxControllerFilters());
 }
 
-PxVec3 Player::GetCursorPosition(flecs::entity player)
+PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
 {
     auto controller = player.get_mut<Physics::Controller>();
     auto cursor = player.get<Cursor>();
@@ -99,7 +101,7 @@ PxVec3 Player::GetCursorPosition(flecs::entity player)
     float controllerY = controller->GetTransform().p.y;
     float controllerZ = controller->GetTransform().p.z;
     float radius =
-        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + 3;
+        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + distance;
 
     return PxVec3(controllerX + (cursor->x * radius), controllerY,
                   controllerZ + (cursor->y * radius));

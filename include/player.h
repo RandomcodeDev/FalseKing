@@ -25,6 +25,12 @@ struct Cursor
     float y;
 };
 
+// The cooldown on the player's melee attack
+struct MeleeCooldown
+{
+    float value;
+};
+
 // Create the player entity
 flecs::entity Create(flecs::world& world, Physics::State& physics);
 
@@ -35,7 +41,7 @@ flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics);
 void Input(flecs::iter& iter);
 
 // Get the cursor's position in the world
-PxVec3 GetCursorPosition(flecs::entity player);
+PxVec3 GetCursorPosition(flecs::entity player, float distance = 5);
 
 // Draw the cursor
 void DrawCursor(flecs::iter& iter);

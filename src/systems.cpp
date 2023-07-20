@@ -67,17 +67,17 @@ void Systems::DebugInfo(flecs::iter& iter)
     Context* context = iter.ctx<Context>();
     float fps = 1.0f / iter.delta_time();
     Text::DrawString(
-        fmt::format(
-            "FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\n{} "
-            "v{}.{}.{} commit {}\nTotal "
-            "runtime: {:%T}\nSystem: {}\nBackend: {}\nDiscord: {}, {}\n\n\n{}",
-            fps, 1000.0f * iter.delta_time(), g_backend->GetFrameCount(),
-            GAME_NAME, GAME_MAJOR_VERSION, GAME_MINOR_VERSION,
-            GAME_PATCH_VERSION, GAME_COMMIT,
-            precise_clock::now() - context->startTime,
-            g_backend->DescribeSystem(), g_backend->DescribeBackend(),
-            Discord::Available() ? "available" : "not available",
-            Discord::Connected() ? "connected" : "not connected",
-            context->input->DescribeState()),
+        fmt::format("FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\n{} "
+                    "v{}.{}.{} commit {}\nTotal "
+                    "runtime: {:%T}\nEntity count: {}\nSystem: {}\nBackend: {}\nDiscord: {}, "
+                    "{}\n\nInput:\n{}",
+                    fps, 1000.0f * iter.delta_time(),
+                    g_backend->GetFrameCount(), GAME_NAME, GAME_MAJOR_VERSION,
+                    GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT,
+                    precise_clock::now() - context->startTime, iter.count(),
+                    g_backend->DescribeSystem(), g_backend->DescribeBackend(),
+                    Discord::Available() ? "available" : "not available",
+                    Discord::Connected() ? "connected" : "not connected",
+                    context->input->DescribeState()),
         PxVec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
 }
