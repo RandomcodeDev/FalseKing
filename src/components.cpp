@@ -1,9 +1,9 @@
 #include "components.h"
-#include "sprite.h"
+#include "player.h"
 
 void Components::Register(flecs::world& world)
 {
-    world.component<Tags::LocalPlayer>()
-        .is_a(flecs::Private)
-        .is_a<Tags::Player>();
+    world.component<Player::LocalPlayer>()
+    //    .is_a(flecs::Private)
+        .is_a<Player::Player>();
 }

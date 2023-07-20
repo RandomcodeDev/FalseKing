@@ -29,7 +29,7 @@ class SdlBackend : protected Backend
     void BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
-                   uint32_t srcWidth, uint32_t srcHeight, glm::u8vec3 color);
+                   uint32_t srcWidth, uint32_t srcHeight, PxVec3 color);
     void EndRender();
     const WindowInfo& GetWindowInformation() const
     {
@@ -235,7 +235,9 @@ void SdlBackend::SetupImage(Image& image)
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
     image.backendData =
-        SDL_CreateTexture(m_renderer, image.GetChannels() == 4 ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR888,
+        SDL_CreateTexture(m_renderer,
+                          image.GetChannels() == 4 ? SDL_PIXELFORMAT_ABGR8888
+                                                   : SDL_PIXELFORMAT_BGR888,
                           SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
@@ -384,10 +386,10 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
         m_usingGamepad = false;
-        uint16_t mask = event.wheel.y > 0 ? Input::LEFT_SHOULDER
-                                          : Input::RIGHT_SHOULDER;
-        input.state &= event.wheel.y > 0 ? ~Input::LEFT_SHOULDER
-                                         : ~Input::RIGHT_SHOULDER;
+        uint16_t mask =
+            event.wheel.y > 0 ? Input::LEFT_SHOULDER : Input::RIGHT_SHOULDER;
+        input.state &=
+            event.wheel.y > 0 ? ~Input::LEFT_SHOULDER : ~Input::RIGHT_SHOULDER;
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
     }
@@ -519,7 +521,7 @@ void SdlBackend::BeginRender()
 void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
                            float scaleX, float scaleY, uint32_t srcX,
                            uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight,
-                           glm::u8vec3 color)
+                           PxVec3 color)
 {
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
@@ -545,8 +547,8 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
     float yScale = 0;
     SDL_GetRenderScale(m_renderer, &xScale, &yScale);
     SDL_SetRenderScale(m_renderer, xScale + scaleX, yScale + scaleY);
-    SDL_SetTextureColorMod((SDL_Texture*)image.backendData, color.r, color.g,
-                           color.b);
+    SDL_SetTextureColorMod((SDL_Texture*)image.backendData, color.x * 255,
+                           color.y * 255, color.z * 255);
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,
                       &destRegion);
     SDL_SetTextureColorMod((SDL_Texture*)image.backendData, 255, 255, 255);

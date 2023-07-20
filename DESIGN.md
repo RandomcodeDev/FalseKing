@@ -83,7 +83,8 @@ styles of attack, basic, special, and ranged. Combo moves between different
 elements will be investigated. The current ECS-based design lends itself well
 to this. Various movement features will also exist, such as jumping and
 dashing. Bosses will have various moves that depend on what phase of the fight
-they're in.
+they're in. Due to the 2D-in-3D situation, there will be a sort of auto aim,
+but only on the Y axis, similar to the original Doom.
 
 ## Objectives
 

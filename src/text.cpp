@@ -1,10 +1,8 @@
 #include "text.h"
 
 static Image* s_font;
-static std::unordered_map<wchar_t, glm::u8vec2> s_characterPositions;
+static std::unordered_map<wchar_t, PxVec2> s_characterPositions;
 static bool s_initialized;
-
-// FUCK UNICODE FUCK EXCEPTIONS IN TOML PARSERS ARRRGGHH
 
 template <typename... Args> [[noreturn]] void toml::failwith(Args&&... args)
 {
@@ -51,7 +49,7 @@ void Text::Initialize()
         std::wstring wideChr = converter.from_bytes(chr);
         int32_t x = position.at(0).as<int32_t>();
         int32_t y = position.at(1).as<int32_t>();
-        glm::u8vec2 pos((uint8_t)x, (uint8_t)y);
+        PxVec2 pos((float)x, (float)y);
         s_characterPositions[wideChr[0]] = pos;
     };
 
@@ -68,9 +66,9 @@ void Text::Shutdown()
     delete s_font;
 }
 
-void Text::DrawString(const std::string& text, glm::uvec2 position, float scale,
-                      glm::u8vec3 color, glm::uvec2 box, bool cutOff,
-                      glm::uvec2 padding)
+void Text::DrawString(const std::string& text, PxVec2 position, float scale,
+                      PxVec3 color, PxVec2 box, bool cutOff,
+                      PxVec2 padding)
 {
     if (!s_initialized)
     {
@@ -115,11 +113,11 @@ void Text::DrawString(const std::string& text, glm::uvec2 position, float scale,
         default: {
             if (c >= ' ')
             {
-                uint32_t targetX = position.x + x * xSize;
-                uint32_t targetY = position.y + y * ySize;
+                uint32_t targetX = (uint32_t)position.x + x * xSize;
+                uint32_t targetY = (uint32_t)position.y + y * ySize;
                 g_backend->DrawImage(*s_font, targetX, targetY, scale, scale,
-                                     s_characterPositions[c].x * CHARACTER_SIZE,
-                                     s_characterPositions[c].y * CHARACTER_SIZE,
+                                     (uint32_t)s_characterPositions[c].x * CHARACTER_SIZE,
+                                     (uint32_t)s_characterPositions[c].y * CHARACTER_SIZE,
                                      CHARACTER_SIZE, CHARACTER_SIZE, color);
                 x++;
             }

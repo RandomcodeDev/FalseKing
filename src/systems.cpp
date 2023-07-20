@@ -1,8 +1,8 @@
+#include "systems.h"
 #include "backend.h"
 #include "discord.h"
 #include "player.h"
 #include "sprites.h"
-#include "systems.h"
 #include "text.h"
 
 void Systems::Register(flecs::world& world, Context* context)
@@ -16,11 +16,14 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(Physics::Update);
 
     // player.h
-    world.system<const Tags::LocalPlayer>("PlayerInput")
+    world.system<const Player::LocalPlayer>("PlayerInput")
         .ctx(context)
         .kind(flecs::OnUpdate)
         .interval(Physics::TIME_STEP)
         .iter(Player::Input);
+    world.system<const Player::LocalPlayer>("DrawCursor")
+        .kind(flecs::OnUpdate)
+        .iter(Player::DrawCursor);
 
     // systems.h
     world.system("BeginRender")
@@ -58,6 +61,7 @@ void Systems::EndRender(flecs::iter& iter)
     g_backend->EndRender();
 }
 
+PxVec3 DEBUG_TEXT_COLOR = PxVec3(0, 1, 0);
 void Systems::DebugInfo(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
@@ -75,5 +79,5 @@ void Systems::DebugInfo(flecs::iter& iter)
             Discord::Available() ? "available" : "not available",
             Discord::Connected() ? "connected" : "not connected",
             context->input->DescribeState()),
-        glm::uvec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
+        PxVec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
 }

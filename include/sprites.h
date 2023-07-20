@@ -13,6 +13,7 @@ void Unload();
 namespace Player
 {
 extern Sprite player;
+extern Sprite cursor;
 extern Sprite fireMelee;
 } // namespace Player
 }

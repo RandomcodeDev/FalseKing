@@ -17,9 +17,9 @@ extern void Initialize();
 extern void Shutdown();
 
 // Draw a string
-extern void DrawString(const std::string& text, glm::uvec2 position,
-                       float scale = 1.0f, glm::u8vec3 color = glm::u8vec3(0),
-                       glm::uvec2 box = glm::uvec2(GAME_WIDTH, GAME_HEIGHT),
+extern void DrawString(const std::string& text, PxVec2 position,
+                       float scale = 1.0f, PxVec3 color = PxVec3(0),
+                       PxVec2 box = PxVec2(GAME_WIDTH, GAME_HEIGHT),
                        bool cutOff = false,
-                       glm::uvec2 padding = glm::uvec2(0, 2));
+                       PxVec2 padding = PxVec2(0, 2));
 }; // namespace Text

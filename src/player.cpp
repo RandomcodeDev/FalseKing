@@ -1,4 +1,5 @@
 #include "player.h"
+#include "backend.h"
 #include "sprites.h"
 
 flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
@@ -18,19 +19,39 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
             .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})
             .set(Components::Element{Components::Element::None})
-            .add<Tags::LocalPlayer>();
+            .set(Cursor{0.0f, 0.0f})
+            .add<LocalPlayer>();
 
     material->release();
 
     return player;
 }
 
-flecs::entity Player::CreateProjectile(flecs::entity player, Physics::State& physics)
+flecs::entity Player::CreateProjectile(flecs::entity player,
+                                       Physics::State& physics)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
+    PxSphereGeometry sphere(9);
+    PxShape* shape = physics.GetPhysics().createShape(sphere, *material);
 
-    flecs::entity projectile = 
-        world.entity().set(Physics::Body(physics, ))
+    PxTransform transform(GetCursorPosition(player));
+
+    Physics::Body body = Physics::Body(physics, transform, *shape);
+
+    flecs::world& world = player.world();
+    flecs::entity projectile = world.entity()
+                                   .set(body)
+                                   .set(Sprites::Player::fireMelee)
+                                   .is_a<Tags::Projectile>()
+                                   .child_of(player)
+                                   .enable();
+    material->release();
+
+    // TODO: improve
+    auto cursor = player.get<Cursor>();
+    body.GetBody().addForce(PxVec3(cursor->x, 0, cursor->y));
+
+    return projectile;
 }
 
 void Player::Input(flecs::iter& iter)
@@ -41,9 +62,11 @@ void Player::Input(flecs::iter& iter)
     flecs::entity player = iter.entity(0);
     auto controller = player.get_mut<Physics::Controller>();
     auto movementSpeed = player.get<Components::MovementSpeed>();
+    auto cursor = player.get_mut<Cursor>();
 
     if (input->GetRightTrigger())
     {
+        CreateProjectile(player, *context->physics);
     }
 
     float x = input->GetLeftStickDirection().x *
@@ -57,7 +80,37 @@ void Player::Input(flecs::iter& iter)
               (input->GetRightStickPressed() ? movementSpeed->crouch
                                              : movementSpeed->walk);
 
+    cursor->x =
+        std::clamp(cursor->x + input->GetRightStickDirection().x, -1.0f, 1.0f);
+    cursor->y =
+        std::clamp(cursor->y + input->GetRightStickDirection().y, -1.0f, 1.0f);
+
     controller->GetController().move(PxVec3(x, 0, z), 0.0001f,
                                      iter.delta_system_time() * 1000.0f,
                                      PxControllerFilters());
+}
+
+PxVec3 Player::GetCursorPosition(flecs::entity player)
+{
+    auto controller = player.get_mut<Physics::Controller>();
+    auto cursor = player.get<Cursor>();
+
+    float controllerX = controller->GetTransform().p.x;
+    float controllerY = controller->GetTransform().p.y;
+    float controllerZ = controller->GetTransform().p.z;
+    float radius =
+        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + 3;
+
+    return PxVec3(controllerX + (cursor->x * radius), controllerY,
+                  controllerZ + (cursor->y * radius));
+}
+
+// TODO: camera
+void Player::DrawCursor(flecs::iter& iter)
+{
+    auto player = iter.entity(0);
+    PxVec3 cursorPos(GetCursorPosition(player));
+    uint32_t x = cursorPos.x;
+    uint32_t y = cursorPos.z - cursorPos.y;
+    g_backend->DrawSprite(Sprites::Player::cursor, x, y);
 }

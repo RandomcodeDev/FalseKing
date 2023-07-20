@@ -1,5 +1,5 @@
-#include "image.h"
 #include "sprites.h"
+#include "image.h"
 
 namespace Sprites
 {
@@ -10,10 +10,9 @@ void Load()
 
     s_sprites = new Image("sprites.qoi");
 
-    Player::player =
-        Sprite(*s_sprites, 5, 1, 5, 15);
-    Player::fireMelee =
-        Sprite(*s_sprites, 20, 4, 9, 9);
+    Player::player = Sprite(*s_sprites, 5, 1, 5, 15);
+    Player::cursor = Sprite(*s_sprites, 5, 22, 5, 5);
+    Player::fireMelee = Sprite(*s_sprites, 20, 4, 9, 9);
 }
 
 void Unload()
@@ -28,6 +27,7 @@ void Unload()
 namespace Player
 {
 Sprite player;
+Sprite cursor;
 Sprite fireMelee;
-}
+} // namespace Player
 } // namespace Sprites

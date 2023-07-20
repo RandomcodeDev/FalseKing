@@ -35,8 +35,8 @@ class State
 {
   public:
     // Things that are usually analog on controller
-    glm::vec2 leftStick;  // WASD/left stick
-    glm::vec2 rightStick; // mouse/right stick
+    PxVec2 leftStick;  // WASD/left stick
+    PxVec2 rightStick; // mouse/right stick
     float leftTrigger;    // left trigger/mouse 2
     float rightTrigger;   // right trigger/mouse 1
     float scrollAmount;   // shoulders/mouse wheel
@@ -89,12 +89,12 @@ class State
 
     // A lot of getters
 
-    const glm::vec2& GetLeftStickDirection() const
+    const PxVec2& GetLeftStickDirection() const
     {
         return leftStick;
     }
 
-    const glm::vec2& GetRightStickDirection() const
+    const PxVec2& GetRightStickDirection() const
     {
         return rightStick;
     }

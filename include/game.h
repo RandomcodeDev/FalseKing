@@ -17,10 +17,6 @@
 
 #include "flecs.h"
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
-#include "glm/vec4.hpp"
-
 #define PX_STATIC 1
 #define PX_PHYSX_STATIC_LIB 1
 #include "PxPhysicsAPI.h"
@@ -72,7 +68,7 @@ constexpr uint32_t GAME_HEIGHT = 168;
 
 // Debug font settings
 constexpr float DEBUG_TEXT_SCALE = 0.3f;
-constexpr glm::u8vec3 DEBUG_TEXT_COLOR = glm::u8vec3(0, 255, 0);
+extern PxVec3 DEBUG_TEXT_COLOR;
 
 // Get the size of an array
 template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])

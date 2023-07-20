@@ -66,7 +66,7 @@ class Backend
                            float scaleX = 1.0f, float scaleY = 1.0f,
                            uint32_t srcX = 0, uint32_t srcY = 0,
                            uint32_t srcWidth = 0, uint32_t srcHeight = 0,
-                           glm::u8vec3 color = glm::u8vec3(255, 255, 255)) = 0;
+                           PxVec3 color = PxVec3(1, 1, 1)) = 0;
 
     // Draw a sprite
     void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);

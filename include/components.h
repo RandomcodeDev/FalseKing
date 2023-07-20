@@ -6,16 +6,6 @@
 
 namespace Tags
 {
-// Is a player
-struct Player
-{
-};
-
-// Is the player on the local instance
-struct LocalPlayer
-{
-};
-
 // Is a projectile
 struct Projectile
 {

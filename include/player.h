@@ -8,6 +8,23 @@
 // Player helper functions
 namespace Player
 {
+// Is a player
+struct Player
+{
+};
+
+// Is the player on the local instance
+struct LocalPlayer
+{
+};
+
+// The position of the player's cursor
+struct Cursor
+{
+    float x;
+    float y;
+};
+
 // Create the player entity
 flecs::entity Create(flecs::world& world, Physics::State& physics);
 
@@ -16,4 +33,10 @@ flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics);
 
 // Handle input
 void Input(flecs::iter& iter);
-}
+
+// Get the cursor's position in the world
+PxVec3 GetCursorPosition(flecs::entity player);
+
+// Draw the cursor
+void DrawCursor(flecs::iter& iter);
+} // namespace Player
