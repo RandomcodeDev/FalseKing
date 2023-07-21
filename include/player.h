@@ -25,6 +25,8 @@ struct Cursor
     float y;
 };
 
+constexpr float BASE_MELEE_COOLDOWN = 0.2f;
+
 // The cooldown on the player's melee attack
 struct MeleeCooldown
 {

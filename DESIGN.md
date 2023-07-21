@@ -68,7 +68,7 @@ with, allowing for an NPC area where the player starts.
 The game will (should approval from the necessary parties be obtained) be
 available on Steam, as well as all major console platforms at the time of
 release. Mobile devices (phones/tablets) might be supported at some point. The
-target price is around 11 Canadian dollars, though a free version for PC may
+target price is around 20 Canadian dollars, though a free version for PC may
 exist, as player enjoyment is a higher priority than money (within reason). The
 game will be available in English, with French, Russian, and simplified Chinese
 translations being possibilities.

@@ -38,17 +38,20 @@ void Systems::Register(flecs::world& world, Context* context)
         .ctx(context)
         .kind(flecs::PostUpdate)
         .iter(DebugInfo);
+    world.system<Components::Timeout>("KillTimedout")
+        .kind(flecs::PostFrame)
+        .each(KillTimedout);
 
     // sprite.h
     world.system<Physics::Base, const Sprite>("DrawPhysical")
         .kind(flecs::OnUpdate)
-        .iter(DrawPhysical);
+        .each(DrawPhysical);
     world.system<Physics::Body, const Sprite>("DrawBody")
         .kind(flecs::OnUpdate)
-        .iter(DrawPhysical);
+        .each(DrawBody);
     world.system<Physics::Controller, const Sprite>("DrawController")
         .kind(flecs::OnUpdate)
-        .iter(DrawPhysical);
+        .each(DrawController);
 }
 
 void Systems::BeginRender(flecs::iter& iter)
@@ -80,4 +83,13 @@ void Systems::DebugInfo(flecs::iter& iter)
                     Discord::Connected() ? "connected" : "not connected",
                     context->input->DescribeState()),
         PxVec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
+}
+
+void Systems::KillTimedout(flecs::entity& entity, Components::Timeout& timeout)
+{
+    timeout.seconds -= entity.world().delta_time();
+    if (timeout.seconds <= 0.0f)
+    {
+        entity.destruct();
+    }
 }

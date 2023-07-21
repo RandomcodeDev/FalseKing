@@ -40,16 +40,21 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
     Physics::Body body = Physics::Body(physics, transform, *shape);
 
     flecs::world& world = player.world();
-    flecs::entity projectile = world.entity()
-                                   .set(body)
-                                   .set(Sprite(Sprites::Player::fireMelee))
-                                   .is_a<Tags::Projectile>()
-                                   .child_of(player);
+    flecs::entity projectile =
+        world.entity()
+            .set(Components::Timeout{10.0f})
+            .set(body)
+            .set(*player.get<Components::Element>())
+            .set(Sprite(Sprites::Player::fireMelee)) // TODO: make this actually
+                                                     // respect the player's
+                                                     // element and attack type
+            .is_a<Tags::Projectile>()
+            .child_of(player);
     material->release();
 
     // TODO: improve
     auto cursor = player.get<Cursor>();
-    body.GetBody().addForce(PxVec3(cursor->x * 0.1, 0, cursor->y * 0.1));
+    body.GetBody().addForce(PxVec3(cursor->x * 0.1f, 0, cursor->y * 0.1f));
 
     return projectile;
 }
@@ -65,10 +70,11 @@ void Player::Input(flecs::iter& iter)
     auto cursor = player.get_mut<Cursor>();
     auto meleeCooldown = player.get_mut<MeleeCooldown>();
 
+    meleeCooldown->value -= iter.delta_time();
     if (input->GetRightTrigger() && meleeCooldown->value <= 0.0f)
     {
         CreateProjectile(player, *context->physics);
-        meleeCooldown->value = 
+        meleeCooldown->value = BASE_MELEE_COOLDOWN;
     }
 
     float x = input->GetLeftStickDirection().x *
@@ -101,7 +107,8 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
     float controllerY = controller->GetTransform().p.y;
     float controllerZ = controller->GetTransform().p.z;
     float radius =
-        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + distance;
+        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius +
+        distance;
 
     return PxVec3(controllerX + (cursor->x * radius), controllerY,
                   controllerZ + (cursor->y * radius));
@@ -112,7 +119,7 @@ void Player::DrawCursor(flecs::iter& iter)
 {
     auto player = iter.entity(0);
     PxVec3 cursorPos(GetCursorPosition(player));
-    uint32_t x = cursorPos.x;
-    uint32_t y = cursorPos.z - cursorPos.y;
+    uint32_t x = (uint32_t)cursorPos.x;
+    uint32_t y = (uint32_t)(cursorPos.z - cursorPos.y);
     g_backend->DrawSprite(Sprites::Player::cursor, x, y);
 }

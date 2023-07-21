@@ -17,6 +17,12 @@ namespace Components
 // Register components
 void Register(flecs::world& world);
 
+// Timeout in seconds
+struct Timeout
+{
+    float seconds;
+};
+
 // Health
 struct Health
 {

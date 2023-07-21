@@ -25,17 +25,16 @@ void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
 
 // TODO: replace with camera system
 
-void Systems::DrawPhysical(flecs::iter& iter, Physics::Base* object,
-                           const Sprite* sprite)
+void Systems::DrawPhysical(Physics::Base& object, const Sprite& sprite)
 {
-    uint32_t x = (uint32_t)object->GetTransform().p.x;
+    uint32_t x = (uint32_t)object.GetTransform().p.x;
     uint32_t y =
-        (uint32_t)(object->GetTransform().p.z - object->GetTransform().p.y);
+        (uint32_t)(object.GetTransform().p.z - object.GetTransform().p.y);
 
-    Text::DrawString(fmt::format("{:0.1} {:0.1} {:0.1}\n{} {}",
-                                 object->GetTransform().p.x,
-                                 object->GetTransform().p.y,
-                                 object->GetTransform().p.z, x, y),
-                     PxVec2(x - 5, y - 3), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
-    g_backend->DrawSprite(*sprite, x, y);
+    Text::DrawString(fmt::format("{} {} {}\n{} {}", object.GetTransform().p.x,
+                                 object.GetTransform().p.y,
+                                 object.GetTransform().p.z, x, y),
+                     PxVec2(x - 5.0f, y - 3.0f), DEBUG_TEXT_SCALE,
+                     DEBUG_TEXT_COLOR);
+    g_backend->DrawSprite(sprite, x, y);
 }

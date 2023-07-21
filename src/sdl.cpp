@@ -547,8 +547,9 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
     float yScale = 0;
     SDL_GetRenderScale(m_renderer, &xScale, &yScale);
     SDL_SetRenderScale(m_renderer, xScale + scaleX, yScale + scaleY);
-    SDL_SetTextureColorMod((SDL_Texture*)image.backendData, color.x * 255,
-                           color.y * 255, color.z * 255);
+    SDL_SetTextureColorMod((SDL_Texture*)image.backendData,
+                           (uint32_t)color.x * 255, (uint32_t)color.y * 255,
+                           (uint32_t)color.z * 255);
     SDL_RenderTexture(m_renderer, (SDL_Texture*)image.backendData, &srcRegion,
                       &destRegion);
     SDL_SetTextureColorMod((SDL_Texture*)image.backendData, 255, 255, 255);
