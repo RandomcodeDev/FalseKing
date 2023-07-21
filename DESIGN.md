@@ -2,9 +2,9 @@
 
 ## Revisions
 
-| Version | Author(s)     | Date       | Comments        |
-|---------|---------------|------------|-----------------|
-| 1       | Elliot McNeil | 2023-07-17 | Initial version |
+| Version | Author(s)    | Date       | Comments        |
+|---------|--------------|------------|-----------------|
+| 1       | MobSlicer152 | 2023-07-17 | Initial version |
 
 ## Introduction
 
