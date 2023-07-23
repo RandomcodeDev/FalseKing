@@ -4,12 +4,12 @@ setlocal enabledelayedexpansion enableextensions
 
 if "%2" == "Gaming.Scarlett.x64" (
 	set "ORIGCD=%CD%"
-	call "%GameDK%Command Prompts\GamingDesktopVars.cmd" GamingDesktop2022
+	call "%GameDK%Command Prompts\GamingScarlettVars.cmd" GamingScarlett2022
 	cd /d %ORIGCD%
 	set extraparams=
 ) else (
 	set "ORIGCD=%CD%"
-	call "%GameDK%Command Prompts\GamingScarlettVars.cmd" GamingScarlett2022
+	call "%GameDK%Command Prompts\GamingDesktopVars.cmd" GamingDesktop2022
 	cd /d %ORIGCD%
 	set extraparams=/pc
 )
