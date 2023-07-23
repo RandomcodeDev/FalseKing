@@ -3,16 +3,16 @@
 setlocal enabledelayedexpansion enableextensions
 
 if "%2" == "Gaming.Scarlett.x64" (
-	set varstype=GamingXboxVS2022
+	set "ORIGCD=%CD%"
+	call "%GameDK%Command Prompts\GamingDesktopVars.cmd" GamingDesktop2022
+	cd /d %ORIGCD%
 	set extraparams=
 ) else (
-	set varstype=GamingDesktopVS2022
+	set "ORIGCD=%CD%"
+	call "%GameDK%Command Prompts\GamingScarlettVars.cmd" GamingScarlett2022
+	cd /d %ORIGCD%
 	set extraparams=/pc
 )
-
-set "ORIGCD=%CD%"
-call "%GameDK%Command Prompts\GamingDesktopVars.cmd" %varstype%
-cd /d %ORIGCD%
 
 rmdir /s/q "%1"
 rmdir /s/q "%4"
