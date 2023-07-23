@@ -11,8 +11,10 @@ SRCS=${ROOT}/src/components.cpp \
      ${ROOT}/src/image.cpp \
      ${ROOT}/src/main.cpp \
      ${ROOT}/src/physics.cpp \
+     ${ROOT}/src/player.cpp \
      ${ROOT}/src/sdl.cpp \
      ${ROOT}/src/sprite.cpp \
+     ${ROOT}/src/sprites.cpp \
      ${ROOT}/src/systems.cpp \
      ${ROOT}/src/text.cpp \
      ${ROOT}/deps-public/src/flecs.c \

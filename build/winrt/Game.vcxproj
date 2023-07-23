@@ -308,20 +308,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\deps-public\src\discord\achievement_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\activity_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\application_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\core.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\image_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\lobby_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\network_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\overlay_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\relationship_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\storage_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\store_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\types.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\user_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\discord\voice_manager.cpp" />
     <ClCompile Include="..\..\deps-public\src\flecs.c" />
     <ClCompile Include="..\..\deps-public\src\metrohash128.cpp" />
     <ClCompile Include="..\..\deps-public\src\metrohash64.cpp" />
@@ -331,6 +317,7 @@
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\physics.cpp" />
+    <ClCompile Include="..\..\src\player.cpp" />
     <ClCompile Include="..\..\src\sdl.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">stdcpp17</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">stdcpp17</LanguageStandard>
@@ -342,6 +329,7 @@
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</CompileAsWinRT>
     </ClCompile>
     <ClCompile Include="..\..\src\sprite.cpp" />
+    <ClCompile Include="..\..\src\sprites.cpp" />
     <ClCompile Include="..\..\src\systems.cpp" />
     <ClCompile Include="..\..\src\text.cpp" />
   </ItemGroup>
@@ -381,7 +369,9 @@
     <ClInclude Include="..\..\include\image.h" />
     <ClInclude Include="..\..\include\input.h" />
     <ClInclude Include="..\..\include\physics.h" />
+    <ClInclude Include="..\..\include\player.h" />
     <ClInclude Include="..\..\include\sprite.h" />
+    <ClInclude Include="..\..\include\sprites.h" />
     <ClInclude Include="..\..\include\systems.h" />
     <ClInclude Include="..\..\include\text.h" />
   </ItemGroup>
