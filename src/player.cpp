@@ -39,7 +39,7 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
 
     Physics::Body body = Physics::Body(physics, transform, *shape);
 
-    flecs::world& world = player.world();
+    const flecs::world& world = player.world();
     flecs::entity projectile =
         world.entity()
             .set(Components::Timeout{10.0f})

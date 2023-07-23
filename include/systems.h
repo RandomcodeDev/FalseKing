@@ -29,5 +29,5 @@ extern void EndRender(flecs::iter& iter);
 extern void DebugInfo(flecs::iter& iter);
 
 // Kill off timed out entities
-extern void KillTimedout(flecs::entity& entity, Components::Timeout& timeout);
+extern void KillTimedout(const flecs::entity& entity, Components::Timeout& timeout);
 } // namespace Systems

@@ -85,7 +85,7 @@ void Systems::DebugInfo(flecs::iter& iter)
         PxVec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
 }
 
-void Systems::KillTimedout(flecs::entity& entity, Components::Timeout& timeout)
+void Systems::KillTimedout(const flecs::entity& entity, Components::Timeout& timeout)
 {
     timeout.seconds -= entity.world().delta_time();
     if (timeout.seconds <= 0.0f)
