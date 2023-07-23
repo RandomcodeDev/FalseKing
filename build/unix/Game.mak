@@ -51,7 +51,7 @@ LDADD+=${LIBDIR}/${ARCH}/${CONFIG}/libPhysX_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCharacterKinematic_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXCommon_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXExtensions_static_64${SLIBEXT} \
-	  ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXFoundation_static_64${SLIBEXT} \
+       ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXFoundation_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libPhysXPvdSDK_static_64${SLIBEXT} \
        ${LIBDIR}/${ARCH}/${CONFIG}/libSDL3${DLIBEXT} \
        ${LIBDIR}/${ARCH}/libzstd${SLIBEXT}
