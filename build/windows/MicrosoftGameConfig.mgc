@@ -9,6 +9,7 @@
   <ShellVisuals
     DefaultDisplayName="False King"
     PublisherDisplayName="MobSlicer152"
+    SplashScreenImage="GdkAssets\SplashScreen.png"
     StoreLogo="GdkAssets\Logo100x100.png"
     Square150x150Logo="GdkAssets\Logo150x150.png"
     Square44x44Logo="GdkAssets\Logo44x44.png"

@@ -369,3 +369,5 @@ build/darwin/build/
 deps
 deps-*/
 *.zip
+Game/
+*.msixvc
