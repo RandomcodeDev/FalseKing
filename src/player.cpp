@@ -29,7 +29,8 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
 }
 
 flecs::entity Player::CreateProjectile(flecs::entity player,
-                                       Physics::State& physics)
+                                       Physics::State& physics, float lifespan,
+                                       float speed)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
     PxSphereGeometry sphere(1);
@@ -38,11 +39,12 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
     PxTransform transform(GetCursorPosition(player));
 
     Physics::Body body = Physics::Body(physics, transform, *shape);
+    body.GetBody().setMass(0.0f);
 
     const flecs::world& world = player.world();
     flecs::entity projectile =
         world.entity()
-            .set(Components::Timeout{10.0f})
+            .set(Components::Timeout{lifespan})
             .set(body)
             .set(*player.get<Components::Element>())
             .set(Sprite(Sprites::Player::fireMelee)) // TODO: make this actually
@@ -54,7 +56,7 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
 
     // TODO: improve
     auto cursor = player.get<Cursor>();
-    body.GetBody().addForce(PxVec3(cursor->x * 0.1f, 0, cursor->y * 0.1f));
+    body.GetBody().addForce(PxVec3(cursor->x * speed, 0, cursor->y * speed));
 
     return projectile;
 }
@@ -73,7 +75,7 @@ void Player::Input(flecs::iter& iter)
     meleeCooldown->value -= iter.delta_time();
     if (input->GetRightTrigger() && meleeCooldown->value <= 0.0f)
     {
-        CreateProjectile(player, *context->physics);
+        CreateProjectile(player, *context->physics, 0.3f, 3.0f);
         meleeCooldown->value = BASE_MELEE_COOLDOWN;
     }
 

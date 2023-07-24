@@ -25,7 +25,7 @@ struct Cursor
     float y;
 };
 
-constexpr float BASE_MELEE_COOLDOWN = 0.2f;
+constexpr float BASE_MELEE_COOLDOWN = 0.07f;
 
 // The cooldown on the player's melee attack
 struct MeleeCooldown
@@ -37,7 +37,8 @@ struct MeleeCooldown
 flecs::entity Create(flecs::world& world, Physics::State& physics);
 
 // Create a projectile for the player
-flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics);
+flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics,
+                               float lifespan, float speed);
 
 // Handle input
 void Input(flecs::iter& iter);
