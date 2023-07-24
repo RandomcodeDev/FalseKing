@@ -58,6 +58,12 @@ class Backend
     // Process events
     virtual bool Update(class Input::State& input) = 0;
 
+    // Set up ImGui backend
+    virtual void InitializeImGui() = 0;
+
+    // Clean up ImGui backend
+    virtual void ShutdownImGui() = 0;
+
     // Prepare for rendering
     virtual void BeginRender() = 0;
 

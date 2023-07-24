@@ -10,7 +10,6 @@
 #include "sprite.h"
 #include "sprites.h"
 #include "systems.h"
-#include "text.h"
 
 Backend* g_backend;
 
@@ -40,8 +39,20 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
         paths.push_back(path);
     }
     Filesystem::Initialize(paths);
-    Text::Initialize();
     Discord::Initialize();
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGuiIO& io = ImGui::GetIO();
+
+    std::vector<uint8_t> font = Filesystem::Read("font.ttf");
+    ImFontConfig fontConfig;
+    fontConfig.FontDataOwnedByAtlas = false;
+    
+    io.Fonts->AddFontFromMemoryTTF(font.data(), font.size(), 4.0f, &fontConfig);
+
+    g_backend->InitializeImGui();
 
     Sprites::Load();
 
@@ -108,8 +119,10 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     Sprites::Unload();
 
+    g_backend->ShutdownImGui();
+    ImGui::DestroyContext();
+
     Discord::Shutdown();
-    Text::Shutdown();
 
     SPDLOG_INFO("Game shut down");
     SPDLOG_INFO("Game ran for {:%T}", now - start);

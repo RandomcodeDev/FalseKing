@@ -13,6 +13,9 @@
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_main.h"
 
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
+
 #include "backend.h"
 #include "image.h"
 #include "input.h"
@@ -26,6 +29,8 @@ class SdlBackend : protected Backend
     void SetupImage(Image& image);
     void CleanupImage(Image& image);
     bool Update(class Input::State& input);
+    void InitializeImGui();
+    void ShutdownImGui();
     void BeginRender();
     void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
@@ -272,6 +277,8 @@ bool SdlBackend::Update(Input::State& input)
 
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL3_ProcessEvent(&event);
+
         if (!HandleEvent(event, input))
         {
             return false;
@@ -328,6 +335,19 @@ bool SdlBackend::Update(Input::State& input)
     }
 
     return true;
+}
+
+void SdlBackend::InitializeImGui()
+{
+    ImGui_ImplSDL3_InitForSDLRenderer(m_window, m_renderer);
+    ImGui_ImplSDLRenderer3_Init(m_renderer);
+    ImGui_ImplSDLRenderer3_CreateFontsTexture();
+}
+
+void SdlBackend::ShutdownImGui()
+{
+    ImGui_ImplSDLRenderer3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
 }
 
 bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
@@ -519,6 +539,10 @@ void SdlBackend::BeginRender()
 
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
+
+    ImGui_ImplSDLRenderer3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
+
     return;
 }
 
@@ -563,6 +587,8 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 
 void SdlBackend::EndRender()
 {
+    //SDL_SetRenderScale(m_renderer, 1.0f, 1.0f);
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData());
     SDL_RenderPresent(m_renderer);
     m_frames++;
 }

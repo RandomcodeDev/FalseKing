@@ -23,6 +23,8 @@
 #include "characterkinematic/PxController.h"
 #endif
 
+#include "imgui.h"
+
 #include "metrohash.h"
 using namespace physx;
 
@@ -70,7 +72,6 @@ constexpr uint32_t GAME_WIDTH = 256;
 constexpr uint32_t GAME_HEIGHT = 168;
 
 // Debug font settings
-constexpr float DEBUG_TEXT_SCALE = 0.3f;
 extern PxVec3 DEBUG_TEXT_COLOR;
 
 // Get the size of an array

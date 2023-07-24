@@ -218,6 +218,8 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdl3.h" />
+    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.h" />
     <ClInclude Include="..\..\include\components.h" />
     <ClInclude Include="..\..\include\backend.h" />
     <ClInclude Include="..\..\include\discord.h" />
@@ -229,9 +231,7 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClInclude Include="..\..\include\player.h" />
     <ClInclude Include="..\..\include\sprite.h" />
     <ClInclude Include="..\..\include\sprites.h" />
-    <ClInclude Include="..\..\include\text.h" />
     <ClInclude Include="..\..\include\systems.h" />
-    <ClInclude Include="..\..\include\ui.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +249,13 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClCompile Include="..\..\deps-public\src\discord\types.cpp" />
     <ClCompile Include="..\..\deps-public\src\discord\user_manager.cpp" />
     <ClCompile Include="..\..\deps-public\src\discord\voice_manager.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_demo.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_draw.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_tables.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\components.cpp" />
     <ClCompile Include="..\..\deps-public\src\flecs.c" />
     <ClCompile Include="..\..\deps-public\src\metrohash128.cpp" />
@@ -263,8 +270,6 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClCompile Include="..\..\src\sprite.cpp" />
     <ClCompile Include="..\..\src\sprites.cpp" />
     <ClCompile Include="..\..\src\systems.cpp" />
-    <ClCompile Include="..\..\src\text.cpp" />
-    <ClCompile Include="..\..\src\ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\.clang-format" />

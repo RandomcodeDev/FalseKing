@@ -1,9 +1,8 @@
-#include "systems.h"
 #include "backend.h"
 #include "discord.h"
 #include "player.h"
 #include "sprites.h"
-#include "text.h"
+#include "systems.h"
 
 void Systems::Register(flecs::world& world, Context* context)
 {
@@ -57,10 +56,12 @@ void Systems::Register(flecs::world& world, Context* context)
 void Systems::BeginRender(flecs::iter& iter)
 {
     g_backend->BeginRender();
+    ImGui::NewFrame();
 }
 
 void Systems::EndRender(flecs::iter& iter)
 {
+    ImGui::Render();
     g_backend->EndRender();
 }
 
@@ -69,7 +70,7 @@ void Systems::DebugInfo(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
     float fps = 1.0f / iter.delta_time();
-    Text::DrawString(
+    std::string debugText = 
         fmt::format("FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\n{} "
                     "v{}.{}.{} commit {}\nTotal "
                     "runtime: {:%T}\nEntity count: {}\nSystem: {}\nBackend: {}\nDiscord: {}, "
@@ -81,8 +82,11 @@ void Systems::DebugInfo(flecs::iter& iter)
                     g_backend->DescribeSystem(), g_backend->DescribeBackend(),
                     Discord::Available() ? "available" : "not available",
                     Discord::Connected() ? "connected" : "not connected",
-                    context->input->DescribeState()),
-        PxVec2(0, 0), DEBUG_TEXT_SCALE, DEBUG_TEXT_COLOR);
+                    context->input->DescribeState());
+
+    ImGui::Begin("Debug Information");
+    ImGui::Text(debugText.c_str());
+    ImGui::End();
 }
 
 void Systems::KillTimedout(const flecs::entity& entity, Components::Timeout& timeout)
