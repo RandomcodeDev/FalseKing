@@ -50,6 +50,9 @@ using namespace physx;
 
 #include "zstd.h"
 
+// Windows redefines some things
+#undef LoadLibrary
+
 namespace chrono = std::chrono;
 using precise_clock = chrono::high_resolution_clock;
 

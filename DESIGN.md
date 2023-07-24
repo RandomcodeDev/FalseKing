@@ -81,10 +81,10 @@ shared archetypes between them, in the hopes of avoiding repetetiveness. The
 player will be able to select between the different elements and use three
 styles of attack, basic, special, and ranged. Combo moves between different
 elements will be investigated. The current ECS-based design lends itself well
-to this. Various movement features will also exist, such as jumping and
-dashing. Bosses will have various moves that depend on what phase of the fight
-they're in. Due to the 2D-in-3D situation, there will be a sort of auto aim,
-but only on the Y axis, similar to the original Doom.
+to this type of game. Various movement features will also exist, such as jumping
+and dashing. Bosses will have various moves that depend on what phase of the
+fight they're in. Due to the 2D-in-3D situation, there will be a sort of auto
+aim, but only on the Y axis, similar to the original Doom.
 
 ## Objectives
 
@@ -162,11 +162,12 @@ and other things.
 - Main game code is stored on GitHub, but assets and precompiled dependencies
   are stored on a personal Gitea server to get around file size limits. Any
   closed platform (console) related material (binaries, abstraction code) is to
-  be kept in a private repository on the Gitea server.
+  be kept in a private repository on GitHub.
 - Due to very simple formats, assets can largely be developed with any image
   editor and text editor, as well as some form of audio editor
 - Instead of having scripting, everything will simply be implemented in C++.
-  Some form of extension system may be introduced.
+  Some form of extension system may be introduced, to allow for user created
+  modifications.
 
 ## Target platforms
 

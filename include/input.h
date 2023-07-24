@@ -35,11 +35,12 @@ class State
 {
   public:
     // Things that are usually analog on controller
-    PxVec2 leftStick;  // WASD/left stick
-    PxVec2 rightStick; // mouse/right stick
-    float leftTrigger;    // left trigger/mouse 2
-    float rightTrigger;   // right trigger/mouse 1
-    float scrollAmount;   // shoulders/mouse wheel
+    PxVec2 leftStick;      // WASD/left stick
+    PxVec2 rightStick;     // mouse/right stick
+    float leftTrigger;     // left trigger/mouse 2
+    float rightTrigger;    // right trigger/mouse 1
+    float scrollAmount;    // shoulders/mouse wheel
+    PxVec2 cursorPosition; // mouse position
 
     // Stores all the binary inputs
     uint16_t state;

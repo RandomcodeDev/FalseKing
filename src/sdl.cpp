@@ -379,6 +379,10 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
     else if (event.type == SDL_EVENT_MOUSE_MOTION)
     {
         m_usingGamepad = false;
+
+        input.cursorPosition.x = event.motion.x;
+        input.cursorPosition.y = event.motion.y;
+        
         // this is a guess
         input.rightStick.x = event.motion.xrel / 5.0f;
         input.rightStick.y = event.motion.yrel / 5.0f;

@@ -74,6 +74,9 @@ class Backend
     // Complete rendering
     virtual void EndRender() = 0;
 
+    // Get the number of frames rendered
+    virtual uint64_t GetFrameCount() const = 0;
+
     // Get window information
     virtual const WindowInfo& GetWindowInformation() const = 0;
 
@@ -83,6 +86,9 @@ class Backend
     // Get a string describing the system
     virtual const std::string& DescribeSystem() const = 0;
 
+    // Get information about the backend
+    virtual const std::string& DescribeBackend() const = 0;
+
     // Load a library
     virtual void* LoadLibrary(const std::string& path) const = 0;
 
@@ -91,12 +97,6 @@ class Backend
 
     // Get a symbol from a library
     virtual Symbol GetSymbol(void* dll, const std::string& path) const = 0;
-
-    // Get the number of frames rendered
-    virtual uint64_t GetFrameCount() const = 0;
-
-    // Get information about the backend
-    virtual const std::string& DescribeBackend() const = 0;
 };
 
 #if __NX__
