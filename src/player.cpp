@@ -105,15 +105,13 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
     auto controller = player.get_mut<Physics::Controller>();
     auto cursor = player.get<Cursor>();
 
-    float controllerX = controller->GetTransform().p.x;
-    float controllerY = controller->GetTransform().p.y;
-    float controllerZ = controller->GetTransform().p.z;
     float radius =
-        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius +
-        distance;
+        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + distance;
+    PxVec3 position = controller->GetTransform().p;
+    float angle = PxAtan2(cursor->y, cursor->x);
 
-    return PxVec3(controllerX + (cursor->x * radius), controllerY,
-                  controllerZ + (cursor->y * radius));
+    return PxVec3(position.x + radius * PxCos(angle), position.y,
+                  position.z + radius * PxSin(angle));
 }
 
 // TODO: camera

@@ -371,3 +371,4 @@ deps-*/
 *.zip
 Game/
 *.msixvc
+imgui.ini

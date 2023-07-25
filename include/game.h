@@ -64,6 +64,10 @@ constexpr const char* GAME_NAME = "False King";
 constexpr uint8_t GAME_MAJOR_VERSION = 0;
 constexpr uint8_t GAME_MINOR_VERSION = 0;
 constexpr uint8_t GAME_PATCH_VERSION = 0;
+constexpr ImGuiWindowFlags ImGuiWindowFlags_DummyWindow =
+    ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+    ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs;
 
 extern const char* GAME_COMMIT;
 

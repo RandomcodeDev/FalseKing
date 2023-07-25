@@ -212,7 +212,7 @@ SdlBackend::SdlBackend()
     SDL_GetWindowSize(m_window, &m_windowInfo.width, &m_windowInfo.height);
     m_windowInfo.focused = true;
 
-    // SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 
     EnumerateGamepads();
 
@@ -334,6 +334,11 @@ bool SdlBackend::Update(Input::State& input)
         }
     }
 
+    if (input.GetStart())
+    {
+        SDL_SetRelativeMouseMode(SDL_FALSE);
+    }
+
     return true;
 }
 
@@ -360,6 +365,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
         {
         case SDL_EVENT_WINDOW_FOCUS_GAINED: {
             SPDLOG_INFO("Window focused");
+            SDL_SetRelativeMouseMode(SDL_TRUE);
             m_windowInfo.focused = true;
             break;
         }
@@ -587,7 +593,7 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
 
 void SdlBackend::EndRender()
 {
-    //SDL_SetRenderScale(m_renderer, 1.0f, 1.0f);
+    SDL_SetRenderScale(m_renderer, 1.0f, 1.0f);
     ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData());
     SDL_RenderPresent(m_renderer);
     m_frames++;
