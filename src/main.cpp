@@ -53,7 +53,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f));
-    io.Fonts->AddFontFromMemoryTTF(font.data(), font.size(), 16.0f,
+    io.Fonts->AddFontFromMemoryTTF(font.data(), (int32_t)font.size(), 16.0f,
                                    &fontConfig);
 
     g_backend->InitializeImGui();
