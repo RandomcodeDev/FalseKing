@@ -72,6 +72,7 @@ void Player::Input(flecs::iter& iter)
     auto cursor = player.get_mut<Cursor>();
     auto meleeCooldown = player.get_mut<MeleeCooldown>();
 
+    // TODO: make timing of this based on animation
     meleeCooldown->value -= iter.delta_time();
     if (input->GetRightTrigger() && meleeCooldown->value <= 0.0f)
     {
