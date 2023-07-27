@@ -19,7 +19,17 @@ SRCS=${ROOT}/src/components.cpp \
      ${ROOT}/src/text.cpp \
      ${ROOT}/deps-public/src/flecs.c \
      ${ROOT}/deps-public/src/metrohash128.cpp \
-     ${ROOT}/deps-public/src/metrohash64.cpp
+     ${ROOT}/deps-public/src/metrohash64.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_demo.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_draw.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_freetype.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_impl_sdl3.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_impl_sdl3.h \
+     ${ROOT}/deps-public/src/imgui/imgui_impl_sdlrenderer3.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_impl_sdlrenderer3.h \
+     ${ROOT}/deps-public/src/imgui/imgui_tables.cpp \
+     ${ROOT}/deps-public/src/imgui/imgui_widgets.cpp
 .if "${OS}" == "Linux"
      SRCS+=${ROOT}/deps-public/src/discord/achievement_manager.cpp \
            ${ROOT}/deps-public/src/discord/activity_manager.cpp \

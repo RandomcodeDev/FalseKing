@@ -218,8 +218,8 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdl3.h" />
-    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.h" />
+    <ClInclude Include="..\..\deps-public\src\imgui\imgui_impl_sdl3.h" />
+    <ClInclude Include="..\..\deps-public\src\imgui\imgui_impl_sdlrenderer3.h" />
     <ClInclude Include="..\..\include\components.h" />
     <ClInclude Include="..\..\include\backend.h" />
     <ClInclude Include="..\..\include\discord.h" />
@@ -249,13 +249,13 @@ xcopy /e/i/y $(SolutionDir)GdkAssets $(TargetDir)GdkAssets
     <ClCompile Include="..\..\deps-public\src\discord\types.cpp" />
     <ClCompile Include="..\..\deps-public\src\discord\user_manager.cpp" />
     <ClCompile Include="..\..\deps-public\src\discord\voice_manager.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_demo.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_draw.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdl3.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_tables.cpp" />
-    <ClCompile Include="..\..\deps-public\src\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_impl_sdlrenderer3.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\components.cpp" />
     <ClCompile Include="..\..\deps-public\src\flecs.c" />
     <ClCompile Include="..\..\deps-public\src\metrohash128.cpp" />

@@ -25,3 +25,5 @@ See [DESIGN.md]() for an overview of the game's design and plan.
 - [UWP/Xbox](build/winrt/BUILD.md)
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
+
+This project uses FreeType.

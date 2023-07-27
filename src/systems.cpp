@@ -35,6 +35,7 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(EndRender);
     world.system("DebugInfo")
         .ctx(context)
+        .with(EcsTraverseAll)
         .kind(flecs::PostUpdate)
         .iter(DebugInfo);
     world.system<Components::Timeout>("KillTimedout")
@@ -70,20 +71,6 @@ void Systems::DebugInfo(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
     float fps = 1.0f / iter.delta_time();
-    std::string debugText = fmt::format(
-        "FPS: {:0.3}\nFrame delta: {} ms\nFrames rendered: {}\n{} "
-        "v{}.{}.{} commit {}\nTotal "
-        "runtime: {:%T}\nEntity count: {}\nSystem: {}\nBackend: {}\nDiscord: "
-        "{}, "
-        "{}\n\nInput:\n{}",
-        fps, 1000.0f * iter.delta_time(), g_backend->GetFrameCount(), GAME_NAME,
-        GAME_MAJOR_VERSION, GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT,
-        precise_clock::now() - context->startTime, iter.count(),
-        g_backend->DescribeSystem(), g_backend->DescribeBackend(),
-        Discord::Available() ? "available" : "not available",
-        Discord::Connected() ? "connected" : "not connected",
-        context->input->DescribeState());
-
     ImGui::Begin("Debug Information", nullptr, ImGuiWindowFlags_DummyWindow);
     ImGui::SetWindowPos(ImVec2(0, 0));
     ImGui::Text(fmt::format("{} v{}.{}.{} commit {}", GAME_NAME,
@@ -99,7 +86,17 @@ void Systems::DebugInfo(flecs::iter& iter)
     ImGui::Text(fmt::format("Total runtime: {:%T}",
                             precise_clock::now() - context->startTime)
                     .c_str());
-
+    ImGui::Text(fmt::format("Entity count: {}", iter.count()).c_str());
+    ImGui::Text(fmt::format("System: {}", g_backend->DescribeSystem()).c_str());
+    ImGui::Text(
+        fmt::format("Backend: {}", g_backend->DescribeBackend()).c_str());
+    ImGui::Text(
+        fmt::format("Discord: {}, {}",
+                    Discord::Available() ? "available" : "not available",
+                    Discord::Connected() ? "connected" : "not connected")
+            .c_str());
+    ImGui::Text("Input state:");
+    ImGui::TextWrapped(context->input->DescribeState().c_str());
     ImGui::End();
 }
 

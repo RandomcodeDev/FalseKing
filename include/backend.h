@@ -8,7 +8,10 @@ struct WindowInfo
     void* handle;
     int32_t width;
     int32_t height;
+    int32_t lastWidth;
+    int32_t lastHeight;
     bool focused;
+    bool resized;
 };
 
 // Map of backend keycodes to controller inputs

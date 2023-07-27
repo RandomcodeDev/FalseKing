@@ -22,6 +22,9 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{8b660799-1523-4d3d-b5f3-120a2a1d0aed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\External\ImGui">
+      <UniqueIdentifier>{5d04c886-ff0f-48c3-8815-41affe1cc56d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\backend.h">
@@ -63,11 +66,11 @@
     <ClInclude Include="..\..\include\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdl3.h">
-      <Filter>Source Files\External</Filter>
+    <ClInclude Include="..\..\deps-public\src\imgui\imgui_impl_sdl3.h">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.h">
-      <Filter>Source Files\External</Filter>
+    <ClInclude Include="..\..\deps-public\src\imgui\imgui_impl_sdlrenderer3.h">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,26 +158,32 @@
     <ClCompile Include="..\..\src\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui.cpp">
+    <ClCompile Include="..\..\deps-public\src\imgui">
       <Filter>Source Files\External</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_demo.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_draw.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_demo.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdl3.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_draw.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_impl_sdlrenderer3.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_freetype.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_tables.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_impl_sdl3.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps-public\src\imgui_widgets.cpp">
-      <Filter>Source Files\External</Filter>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_impl_sdlrenderer3.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_tables.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps-public\src\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\External\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

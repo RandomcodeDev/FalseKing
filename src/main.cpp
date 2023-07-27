@@ -47,16 +47,17 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     embraceTheDarkness();
+    ImGuiStyle style = ImGui::GetStyle();
     ImGuiIO& io = ImGui::GetIO();
 
     std::vector<uint8_t> font = Filesystem::Read("font.ttf");
 
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;
-
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f));
-    io.Fonts->AddFontFromMemoryTTF(font.data(), (int32_t)font.size(), 16.0f,
+    io.Fonts->AddFontFromMemoryTTF(font.data(), (int32_t)font.size(), 64.0f,
                                    &fontConfig);
+    io.FontGlobalScale = 0.25f;
 
     g_backend->InitializeImGui();
 
@@ -86,6 +87,8 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     Player::Create(world, physics);
 
+    const WindowInfo& windowInfo = g_backend->GetWindowInformation();
+
     bool run = true;
     while (run)
     {
@@ -96,7 +99,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
             break;
         }
 
-        if (!g_backend->GetWindowInformation().focused)
+        if (!windowInfo.focused)
         {
             world.set_target_fps(10);
         }
@@ -106,6 +109,17 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
             {
                 world.set_target_fps(0);
             }
+        }
+
+        if (windowInfo.resized)
+        {
+            float scale = (float)windowInfo.width / (float)windowInfo.lastWidth;
+            for (const auto& viewport : ImGui::GetCurrentContext()->Viewports)
+            {
+                ImGui::ScaleWindowsInViewport(viewport, scale);
+            }
+            ImGui::GetStyle().ScaleAllSizes(scale);
+            ImGui::GetIO().FontGlobalScale *= scale;
         }
 
         // Keep inputs within functional range
@@ -178,8 +192,8 @@ void embraceTheDarkness()
     colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
     colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
     colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    //colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    //colors[ImGuiCol_DockingEmptyBg] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+    // colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
+    // colors[ImGuiCol_DockingEmptyBg] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
     colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
     colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
     colors[ImGuiCol_PlotHistogram] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);

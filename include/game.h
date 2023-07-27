@@ -24,6 +24,7 @@
 #endif
 
 #include "imgui.h"
+#include "imgui_internal.h"
 
 #include "metrohash.h"
 using namespace physx;

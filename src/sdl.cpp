@@ -275,6 +275,8 @@ bool SdlBackend::Update(Input::State& input)
 {
     SDL_Event event{};
 
+    m_windowInfo.resized = false;
+
     while (SDL_PollEvent(&event))
     {
         ImGui_ImplSDL3_ProcessEvent(&event);
@@ -381,6 +383,9 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
                 SPDLOG_INFO("Window resized from {}x{} to {}x{}",
                             m_windowInfo.width, m_windowInfo.height,
                             event.window.data1, event.window.data2);
+                m_windowInfo.resized = true;
+                m_windowInfo.lastWidth = m_windowInfo.width;
+                m_windowInfo.lastHeight = m_windowInfo.height;
                 m_windowInfo.width = event.window.data1;
                 m_windowInfo.height = event.window.data2;
             }
