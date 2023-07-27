@@ -54,10 +54,9 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f));
     io.Fonts->AddFontFromMemoryTTF(font.data(), (int32_t)font.size(), 64.0f,
                                    &fontConfig);
-    io.FontGlobalScale = 0.25f;
+    io.FontGlobalScale = 0.18f;
 
     g_backend->InitializeImGui();
 
@@ -154,9 +153,9 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 void embraceTheDarkness()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_Text] = ImVec4(0.00f, 1.00f, 0.00f, 1.00f);
     colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.00f);
     colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
     colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
