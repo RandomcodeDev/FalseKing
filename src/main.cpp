@@ -50,8 +50,10 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     ImGuiIO& io = ImGui::GetIO();
 
     std::vector<uint8_t> font = Filesystem::Read("font.ttf");
+
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;
+
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f));
     io.Fonts->AddFontFromMemoryTTF(font.data(), (int32_t)font.size(), 16.0f,
                                    &fontConfig);
@@ -106,7 +108,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
             }
         }
 
-        // Respect deadzones
+        // Keep inputs within functional range
         input.AdjustSticks();
 
         world.progress();
@@ -134,6 +136,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     return 0;
 }
 
+// A theme from GitHub
 void embraceTheDarkness()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -208,12 +211,12 @@ void embraceTheDarkness()
     style.PopupBorderSize = 1;
     style.FrameBorderSize = 1;
     style.TabBorderSize = 1;
-    style.WindowRounding = 7;
-    style.ChildRounding = 4;
-    style.FrameRounding = 3;
-    style.PopupRounding = 4;
+    style.WindowRounding = 0;
+    style.ChildRounding = 0;
+    style.FrameRounding = 0;
+    style.PopupRounding = 0;
     style.ScrollbarRounding = 9;
-    style.GrabRounding = 3;
+    style.GrabRounding = 0;
     style.LogSliderDeadzone = 4;
-    style.TabRounding = 4;
+    style.TabRounding = 0;
 }

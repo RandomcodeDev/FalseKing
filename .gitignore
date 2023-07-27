@@ -372,3 +372,4 @@ deps-*/
 Game/
 *.msixvc
 imgui.ini
+/build/windows/imgui.ini
