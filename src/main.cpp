@@ -17,7 +17,6 @@ const char* GAME_COMMIT = {
 #include "commit.txt"
 };
 
-// https://github.com/ocornut/imgui/issues/707
 void embraceTheDarkness();
 
 int GameMain(Backend* backend, std::vector<std::string> backendPaths)
@@ -149,7 +148,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     return 0;
 }
 
-// A theme from GitHub
+// https://github.com/ocornut/imgui/issues/707
 void embraceTheDarkness()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
