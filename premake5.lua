@@ -38,8 +38,13 @@ project 'Game'
     language 'C++'
     cppdialect 'C++17'
 
-    objdir '%{prj.location}/%{cfg.platform}/%{cfg.buildcfg}'
-    targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
+    filter { 'system:not macosx' }
+        objdir '%{prj.location}/%{cfg.platform}/%{cfg.buildcfg}'
+        targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
+    filter { 'system:macosx' }
+        objdir '%{prj.location}/Universal/%{cfg.buildcfg}'
+        targetdir '%{wks.location}/Universal/%{cfg.buildcfg}'
+    filter {}
 
     kind 'WindowedApp'
 
@@ -74,6 +79,42 @@ project 'Game'
         '%{cfg.targetdir}'
     }
 
+    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
+        files {
+            'deps-public/include/**',
+            'deps-public/src/**',
+            'src/sdl.cpp'
+        }
+
+        defines {
+            'USE_SDL'
+        }
+
+        includedirs {
+            'deps-public/include',
+        }
+
+        frameworkdirs {
+            'deps-public/Frameworks/%{cfg.buildcfg}',
+            'deps-public/Frameworks'
+        }
+
+        libdirs {
+            'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
+            'deps-public/lib/%{cfg.architecture}',
+            'deps-public/lib/Universal/%{cfg.buildcfg}',
+            'deps-public/lib/Universal'
+        }
+    filter { 'system:gaming_desktop or scarlett or windows or linux' }
+        links {
+            'SDL3'
+        }
+    filter { 'system:macosx' }
+        links {
+            'SDL3.framework'
+        }
+    filter {}
+
     filter { 'architecture:not x86' }
         links {
             'PhysX_static_64' .. OSEXT,
@@ -91,33 +132,6 @@ project 'Game'
             'PhysXExtensions_static_32' .. OSEXT,
             'PhysXFoundation_static_32' .. OSEXT,
             'PhysXPvdSDK_static_32' .. OSEXT
-        }
-    filter {}
-
-    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
-        files {
-            'deps-public/include/**',
-            'deps-public/src/**',
-            'src/sdl.cpp'
-        }
-
-        defines {
-            'USE_SDL'
-        }
-
-        includedirs {
-            'deps-public/include',
-        }
-
-        libdirs {
-            'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.architecture}',
-            'deps-public/lib/%{cfg.platform}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.platform}'
-        }
-
-        links {
-            'SDL3'
         }
     filter {}
 
@@ -145,7 +159,14 @@ project 'Game'
         prelinkcommands {
             '%{wks.location}/../scripts/copyfiles.bat %{cfg.targetdir} %{cfg.platform} %{cfg.buildcfg}'
         }
-    filter { 'system:macosx or linux' }
+    filter { 'system:macosx' }
+        prebuildcommands {
+            '%{wks.location}/../scripts/commit.sh %{cfg.targetdir}'
+        }
+        prelinkcommands {
+            '%{wks.location}/../scripts/copyfiles.sh %{cfg.targetdir} Universal %{cfg.buildcfg}'
+        }
+    filter { 'system:linux' }
         prebuildcommands {
             '%{wks.location}/../scripts/commit.sh %{cfg.targetdir}'
         }
