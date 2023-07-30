@@ -16,8 +16,8 @@ workspace 'Game'
         platforms { 'x86_64', 'ARM64' }
     filter {}
         
-    filter { 'toolset:msc' }
-        toolset 'v141_xp'
+    filter { 'system:windows', 'platforms:x86' }
+        toolset 'msc-v141_xp'
     filter {}
 
     filter { 'platforms:ARM64' }
