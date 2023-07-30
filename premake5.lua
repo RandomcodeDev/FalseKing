@@ -1,4 +1,4 @@
-require '../premake-consoles/consoles'
+require 'premake-consoles/consoles'
 
 workspace 'Game'
 

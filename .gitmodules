@@ -1,3 +1,6 @@
 [submodule "assets"]
 	path = assets
 	url = https://git.randomcode.dev/mobslicer152/FalseKing-assets
+[submodule "premake-consoles"]
+	path = premake-consoles
+	url = https://github.com/MobSlicer152/premake-consoles
