@@ -4,6 +4,7 @@ setlocal enabledelayedexpansion enableextensions
 
 if "%4" == "" exit /b
 
+pushd %TMP%
 if "%2" == "Gaming.Xbox.Scarlett.x64" (
 	set "ORIGCD=%CD%"
 	call "%GameDK%Command Prompts\GamingXboxScarlettVars.cmd" GamingXboxScarlettVS2022
@@ -15,6 +16,7 @@ if "%2" == "Gaming.Xbox.Scarlett.x64" (
 	cd /d %ORIGCD%
 	set extraparams=/pc
 )
+popd
 
 rmdir /s/q "%1"
 rmdir /s/q "%4"
