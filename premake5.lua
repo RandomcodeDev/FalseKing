@@ -1,5 +1,10 @@
 require 'premake-consoles/consoles'
 
+local OSEXT=''
+if os.target() == 'macosx' then
+    OSEXT='-darwin'
+end
+
 workspace 'Game'
 
     location 'build'
@@ -71,21 +76,21 @@ project 'Game'
 
     filter { 'architecture:not x86' }
         links {
-            'PhysX_static_64',
-            'PhysXCharacterKinematic_static_64',
-            'PhysXCommon_static_64',
-            'PhysXExtensions_static_64',
-            'PhysXFoundation_static_64',
-            'PhysXPvdSDK_static_64'
+            'PhysX_static_64' .. OSEXT,
+            'PhysXCharacterKinematic_static_64' .. OSEXT,
+            'PhysXCommon_static_64' .. OSEXT,
+            'PhysXExtensions_static_64' .. OSEXT,
+            'PhysXFoundation_static_64' .. OSEXT,
+            'PhysXPvdSDK_static_64' .. OSEXT
         }
     filter { 'architecture:x86' }
         links {
-            'PhysX_static_32',
-            'PhysXCharacterKinematic_static_32',
-            'PhysXCommon_static_32',
-            'PhysXExtensions_static_32',
-            'PhysXFoundation_static_32',
-            'PhysXPvdSDK_static_32'
+            'PhysX_static_32' .. OSEXT,
+            'PhysXCharacterKinematic_static_32' .. OSEXT,
+            'PhysXCommon_static_32' .. OSEXT,
+            'PhysXExtensions_static_32' .. OSEXT,
+            'PhysXFoundation_static_32' .. OSEXT,
+            'PhysXPvdSDK_static_32' .. OSEXT
         }
     filter {}
 
