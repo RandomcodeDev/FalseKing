@@ -111,7 +111,9 @@ project 'Game'
 
         libdirs {
             'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.architecture}'
+            'deps-public/lib/%{cfg.architecture}',
+            'deps-public/lib/%{cfg.platform}/%{cfg.buildcfg}',
+            'deps-public/lib/%{cfg.platform}'
         }
 
         links {
