@@ -131,11 +131,6 @@ project 'Game'
         optimize 'On'
     filter {}
 
-    filter { 'system:linux' }
-        -- PhysXPvdSDK wants PhysXGpu without partial linking, which GNU ld doesn't do by default
-        linkoptions { '-r' }
-    filter {}
-
     filter { 'system:gaming_desktop or scarlett or windows' }
         prebuildcommands {
             '%{wks.location}/../scripts/commit.bat %{cfg.targetdir}'

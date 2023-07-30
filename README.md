@@ -14,16 +14,19 @@ more so than for OOP (the game uses an ECS).
 
 See [DESIGN.md]() for an overview of the game's design and plan.
 
-## General build information
-- Have `curl` (always available on supported Windows, may need to install on others)
-- Have `7z` available in your path (install 7-zip/p7zip)
-- Run `scripts\pulldeps.bat public` or `scripts/pulldeps.sh public` depending on your platform
-- On Unix-like platforms (macOS, Linux, etc), run `chmod +x scripts/*.sh` in order for the build process to work
+## Build instructions
+- Run `scripts\pulldeps.bat public` or `scripts/pulldeps.sh public` depending
+  on your platform
+- On Unix-like platforms (macOS, Linux, etc), run
+  `chmod +x deps-public/bin/* scripts/*.sh` in order for the build process to
+  work
+- use Premake to generate the appropriate project files for your platform
+- On Linux, in order to link correctly, you need to use LLD because it does
+ partial linking of static libraries by default, which is necessary to link
+ to one of the PhysX libraries. Example: `make -C build LDFLAGS=-fuse-ld=lld`
 
 ## Platform-specific instructions
 - [Windows (Windows XP or later)](build/windows/BUILD.md)
 - [UWP/Xbox](build/winrt/BUILD.md)
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
-
-This project uses FreeType.
