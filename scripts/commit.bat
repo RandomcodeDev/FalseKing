@@ -2,6 +2,8 @@
 
 if "%1" == "" exit /b
 
+echo %PATH%
+
 set COMMIT=^<unknown^>
 for /f "usebackq tokens=2" %%x in (`git log`) do (
     set COMMIT="%%x"

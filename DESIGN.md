@@ -171,8 +171,7 @@ and other things.
 
 ## Target platforms
 
-Although it can lead to fragmentation, simply using a different build system
-for each platform is currently working.
+Premake is used to generate build files for every platform currently supported.
 
 - Windows 10/11 are supported using the Microsoft Game Development Kit
 - macOS Ventura is supported

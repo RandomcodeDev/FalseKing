@@ -73,7 +73,8 @@ void Systems::DebugInfo(flecs::iter& iter)
     float fps = 1.0f / iter.delta_time();
     ImGui::Begin("Debug Information", nullptr, ImGuiWindowFlags_DummyWindow);
     ImGui::SetWindowPos(ImVec2(0, 0));
-    ImGui::SetWindowSize(ImVec2(g_backend->GetWindowInformation().width, ImGui::GetFontSize() * 18));
+    ImGui::SetWindowSize(ImVec2((float)g_backend->GetWindowInformation().width,
+                                ImGui::GetFontSize() * 18));
     ImGui::Text(fmt::format("{} v{}.{}.{} commit {}", GAME_NAME,
                             GAME_MAJOR_VERSION, GAME_MINOR_VERSION,
                             GAME_PATCH_VERSION, GAME_COMMIT)

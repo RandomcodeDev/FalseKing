@@ -327,7 +327,7 @@ bool SdlBackend::Update(Input::State& input)
             // There are 4 mappings that aren't bit flags, they're handled above
             for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
             {
-                bool down = keys[m_mapping.values[i]];
+                int8_t down = keys[m_mapping.values[i]];
                 // Mapping is in same order as bit flags for state
                 // https://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching
                 uint32_t mapping = 1 << i;
@@ -446,7 +446,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
     {
         m_usingGamepad = true;
         // Same as keyboard buttons
-        bool down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
+        int8_t down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
         if (event.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
         {
             input.state = (input.state & ~Input::RIGHT_SHOULDER) |
