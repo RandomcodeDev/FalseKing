@@ -75,30 +75,21 @@ void Systems::DebugInfo(flecs::iter& iter)
     ImGui::SetWindowPos(ImVec2(0, 0));
     ImGui::SetWindowSize(ImVec2((float)g_backend->GetWindowInformation().width,
                                 ImGui::GetFontSize() * 18));
-    ImGui::Text(fmt::format("{} v{}.{}.{} commit {}", GAME_NAME,
-                            GAME_MAJOR_VERSION, GAME_MINOR_VERSION,
-                            GAME_PATCH_VERSION, GAME_COMMIT)
-                    .c_str());
-    ImGui::Text(fmt::format("FPS:{:0.3}", fps).c_str());
-    ImGui::Text(
-        fmt::format("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f)
-            .c_str());
-    ImGui::Text(fmt::format("Frames renderered: {}", g_backend->GetFrameCount())
-                    .c_str());
-    ImGui::Text(fmt::format("Total runtime: {:%T}",
-                            precise_clock::now() - context->startTime)
-                    .c_str());
-    ImGui::Text(fmt::format("Entity count: {}", iter.count()).c_str());
-    ImGui::Text(fmt::format("System: {}", g_backend->DescribeSystem()).c_str());
-    ImGui::Text(
-        fmt::format("Backend: {}", g_backend->DescribeBackend()).c_str());
-    ImGui::Text(
-        fmt::format("Discord: {}, {}",
+    IMGUI_TEXT("{} v{}.{}.{} commit {}", GAME_NAME, GAME_MAJOR_VERSION,
+               GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT);
+    IMGUI_TEXT("FPS:{:0.3}", fps);
+    IMGUI_TEXT("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f);
+    IMGUI_TEXT("Frames renderered: {}", g_backend->GetFrameCount());
+    IMGUI_TEXT("Total runtime: {:%T}",
+                            precise_clock::now() - context->startTime);
+    IMGUI_TEXT("Entity count: {}", iter.count());
+    IMGUI_TEXT("System: {}", g_backend->DescribeSystem());
+    IMGUI_TEXT("Backend: {}", g_backend->DescribeBackend());
+    IMGUI_TEXT("Discord: {}, {}",
                     Discord::Available() ? "available" : "not available",
-                    Discord::Connected() ? "connected" : "not connected")
-            .c_str());
+                    Discord::Connected() ? "connected" : "not connected");
     ImGui::Text("Input state:");
-    ImGui::TextWrapped(context->input->DescribeState().c_str());
+    ImGui::TextWrapped("%s", context->input->DescribeState().c_str());
     ImGui::End();
 }
 

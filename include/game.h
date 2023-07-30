@@ -96,3 +96,8 @@ template <typename T> T SIGN(T val)
 [[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);
 #define QUIT(...) Quit(fmt::format(__VA_ARGS__))
 #define QUIT_CODE(exitCode, ...) Quit(fmt::format(__VA_ARGS__), exitCode)
+
+// ImGui text
+#define IMGUI_TEXT_(Type, ...) ImGui::Text##Type("%s", fmt::format(__VA_ARGS__).c_str())
+#define IMGUI_TEXT(...) IMGUI_TEXT_(, __VA_ARGS__)
+#define IMGUI_TEXT_WRAPPED(...) IMGUI_TEXT_(Wrapped, __VA_ARGS__)
