@@ -73,7 +73,7 @@ jobs:
         if: matrix.os == 'macOS-13'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          make -C build CONFIG=${{ matrix.config }}_universal LDFLAGS=-fuse-ld=lld
+          make -C build CONFIG=${{ matrix.config }}_universal
       #- name: Install the Apple certificate and provisioning profile
       #  working-directory: ${{env.GITHUB_WORKSPACE}}
       #  if: matrix.os == 'macOS-13'
