@@ -4,19 +4,15 @@ setlocal enabledelayedexpansion enableextensions
 
 if "%4" == "" exit /b
 
-pushd %TMP%
+set "ORIGCD=%CD%"
 if "%2" == "Gaming.Xbox.Scarlett.x64" (
-	set "ORIGCD=%CD%"
 	call "%GameDK%Command Prompts\GamingXboxScarlettVars.cmd" GamingXboxScarlettVS2022
-	cd /d %ORIGCD%
 	set extraparams=
 ) else (
-	set "ORIGCD=%CD%"
 	call "%GameDK%Command Prompts\GamingDesktopVars.cmd" GamingDesktopVS2022
-	cd /d %ORIGCD%
 	set extraparams=/pc
 )
-popd
+cd /d %ORIGCD%
 
 rmdir /s/q "%1"
 rmdir /s/q "%4"
@@ -28,7 +24,7 @@ copy "%~dp0..\build\%2\%3\Game.%2.pdb" "%1"
 
 copy "%~dp0..\build\%2\%3\MicrosoftGame.Config" "%1"
 copy "%~dp0..\build\%2\%3\"*.dll "%1"
-xcopy /e/i/y "%~dp0..\build\GdkAssets" "%1\GdkAssets"
+xcopy /e/i/y "%~dp0..\gdk\Assets" "%1\Assets"
 xcopy /e/i/y "%~dp0..\deps-public\licenses" "%1\licenses"
 copy "%~dp0..\LICENSE.txt" "%1\licenses\falseking.txt"
 
