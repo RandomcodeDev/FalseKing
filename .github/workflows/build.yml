@@ -116,7 +116,7 @@ jobs:
           ${{matrix.target}} ${{matrix.config}} Game
       - name: Distrib (macOS)
         working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macOS-13'
         run: scripts/distrib.sh
           FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
           Universal ${{matrix.config}} Game
