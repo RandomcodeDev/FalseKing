@@ -16,7 +16,8 @@ mkdir -pv "$1"
 cp -v "$ROOT/deps-public/lib/$2/$3/"*$ENDING "$1"
 cp -v "$ROOT/deps-public/lib/$2/"*$ENDING "$1"
 if [ $(uname) == Darwin ]; then
-    for i in $(ls -d "$ROOT/deps-public/Frameworks" "$ROOT/deps-public/Frameworks/$3" | grep '\.framework'); do cp -rv "$i" "$1"; done
+    cp -r "$ROOT/deps-public/Frameworks/$3/"*.framework "$1"
+    cp -r "$ROOT/deps-public/Frameworks/"*.framework "$1"
 fi
 cp -rv "$ROOT/assets" "$1"
 rm "$1/assets/.git"
