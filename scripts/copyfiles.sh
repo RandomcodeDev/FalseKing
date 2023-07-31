@@ -15,7 +15,7 @@ echo Copying libraries and assets
 mkdir -p "$1"
 cp "$ROOT/deps-public/lib/$2/$3/"*$ENDING "$1"
 cp "$ROOT/deps-public/lib/$2/"*$ENDING "$1"
-if [ $(uname) == Darwin ];
+if [ $(uname) == Darwin ]; then
     cp -r "$ROOT/deps-public/Frameworks/$3/*.framework" "$1"
     cp -r "$ROOT/deps-public/Frameworks/*.framework" "$1"
 fi
