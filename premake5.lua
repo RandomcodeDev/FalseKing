@@ -28,15 +28,15 @@ project 'Game'
 
     location 'build/Game'
 
-    targetname 'Game.%{cfg.platform}'
-
     language 'C++'
     cppdialect 'C++17'
 
     filter { 'system:not macosx' }
+        targetname 'Game.%{cfg.platform}'
         objdir '%{prj.location}/%{cfg.platform}/%{cfg.buildcfg}'
         targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
     filter { 'system:macosx' }
+        targetname 'Game.Universal'
         objdir '%{prj.location}/Universal/%{cfg.buildcfg}'
         targetdir '%{wks.location}/Universal/%{cfg.buildcfg}'
     filter {}
