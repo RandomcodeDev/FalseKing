@@ -43,6 +43,8 @@ project 'Game'
 
     kind 'WindowedApp'
 
+    characterset 'MBCS'
+
     files {
         '.github/**',
         'include/**.h',
