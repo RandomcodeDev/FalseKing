@@ -110,10 +110,16 @@ jobs:
       #    ${{matrix.config}} Game
       - name: Distrib (Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'macOS-13' || matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: scripts/distrib.sh
           FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
           ${{matrix.target}} ${{matrix.config}} Game
+      - name: Distrib (macOS)
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        if: matrix.os == 'macOS-13'
+        run: scripts/distrib.sh
+          FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
+          Universal ${{matrix.config}} Game
       #- name: Upload a Build Artifact (MSBuild Debug)
       #  uses: actions/upload-artifact@v3.1.2
       #  if: matrix.os == 'windows-latest' && matrix.config == 'Debug'
@@ -140,7 +146,13 @@ jobs:
       #    path: build/darwin/build/${{matrix.config}}
       - name: Upload a Build Artifact (Make)
         uses: actions/upload-artifact@v3.1.2
-        if: matrix.os == 'macOS-13' || matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
+          path: Game.zip
+      - name: Upload a Build Artifact (macOS)
+        uses: actions/upload-artifact@v3.1.2
+        if: matrix.os == 'macOS-13'
+        with:
+          name: FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
           path: Game.zip
