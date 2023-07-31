@@ -1,10 +1,5 @@
 require 'premake-consoles/consoles'
 
-local OSEXT=''
-if os.target() == 'macosx' then
-    OSEXT='-darwin'
-end
-
 workspace 'Game'
 
     location 'build'
@@ -98,40 +93,50 @@ project 'Game'
             'deps-public/Frameworks/%{cfg.buildcfg}',
             'deps-public/Frameworks'
         }
-
+    filter { 'system:gaming_desktop or scarlett or windows or linux' }
         libdirs {
             'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.architecture}',
-            'deps-public/lib/Universal/%{cfg.buildcfg}',
-            'deps-public/lib/Universal'
+            'deps-public/lib/%{cfg.architecture}'
         }
-    filter { 'system:gaming_desktop or scarlett or windows or linux' }
         links {
             'SDL3'
         }
     filter { 'system:macosx' }
+        libdirs {
+            'deps-public/lib/Universal/%{cfg.buildcfg}',
+            'deps-public/lib/Universal'
+        }
         links {
             'SDL3.framework'
         }
     filter {}
 
-    filter { 'architecture:not x86' }
+    filter { 'system:not macosx', 'architecture:not x86' }
         links {
-            'PhysX_static_64' .. OSEXT,
-            'PhysXCharacterKinematic_static_64' .. OSEXT,
-            'PhysXCommon_static_64' .. OSEXT,
-            'PhysXExtensions_static_64' .. OSEXT,
-            'PhysXFoundation_static_64' .. OSEXT,
-            'PhysXPvdSDK_static_64' .. OSEXT
+            'PhysX_static_64',
+            'PhysXCharacterKinematic_static_64',
+            'PhysXCommon_static_64',
+            'PhysXExtensions_static_64',
+            'PhysXFoundation_static_64',
+            'PhysXPvdSDK_static_64'
         }
-    filter { 'architecture:x86' }
+    filter { 'system:not macosx', 'architecture:x86' }
         links {
-            'PhysX_static_32' .. OSEXT,
-            'PhysXCharacterKinematic_static_32' .. OSEXT,
-            'PhysXCommon_static_32' .. OSEXT,
-            'PhysXExtensions_static_32' .. OSEXT,
-            'PhysXFoundation_static_32' .. OSEXT,
-            'PhysXPvdSDK_static_32' .. OSEXT
+            'PhysX_static_32',
+            'PhysXCharacterKinematic_static_32',
+            'PhysXCommon_static_32',
+            'PhysXExtensions_static_32',
+            'PhysXFoundation_static_32',
+            'PhysXPvdSDK_static_32'
+        }
+    filter { 'system:macosx' }
+        links {
+            'PhysX',
+            'PhysXCharacterKinematic',
+            'PhysXCommon',
+            'PhysXExtensions',
+            'PhysXFoundation',
+            'PhysXPvdSDK'
         }
     filter {}
 
