@@ -27,3 +27,4 @@ if "%gdk%" == "1" (
 
 del "%1"\*-winrt.*
 xcopy /e/i/y "%~dp0..\assets" "%1\assets"
+del "%1\assets\.git"
