@@ -149,4 +149,4 @@ jobs:
         if: matrix.os == 'macOS-13'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
-          path: build/Universal/${{matrix.config}}/Game.Universal.app
+          path: Game.zip
