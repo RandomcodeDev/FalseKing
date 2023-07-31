@@ -131,12 +131,12 @@ project 'Game'
         }
     filter { 'system:macosx' }
         links {
-            'PhysX',
-            'PhysXCharacterKinematic',
-            'PhysXCommon',
-            'PhysXExtensions',
-            'PhysXFoundation',
-            'PhysXPvdSDK'
+            'PhysX-darwin',
+            'PhysXCharacterKinematic-darwin',
+            'PhysXCommon-darwin',
+            'PhysXExtensions-darwin',
+            'PhysXFoundation-darwin',
+            'PhysXPvdSDK-darwin'
         }
     filter {}
 
