@@ -17,8 +17,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - debug
-          - release
+          - Debug
+          - Release
         target:
           - x86_64
         os:
@@ -67,7 +67,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          make -C build CONFIG=${{ matrix.config }}_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
+          make -C build CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
       - name: Build (macOS Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'macOS-13'
