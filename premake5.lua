@@ -37,6 +37,7 @@ project 'Game'
         targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
     filter { 'system:macosx' }
         targetname 'Game.Universal'
+        targetextension ''
         objdir '%{prj.location}/Universal/%{cfg.buildcfg}'
         targetdir '%{wks.location}/Universal/%{cfg.buildcfg}'
     filter {}
