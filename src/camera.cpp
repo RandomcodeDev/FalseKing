@@ -4,6 +4,7 @@
 PxVec2 Components::Camera::Project(const PxVec3& position) const
 {
     // TODO: Should this be assuming top-left coordinates?
+    // TODO: Center the owner properly
     float x = position.x - this->position.x + GAME_WIDTH / 2.5f;
     float y = position.z - position.y + this->position.y + GAME_HEIGHT / 2.5f;
 

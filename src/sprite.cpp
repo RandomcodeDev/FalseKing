@@ -27,6 +27,7 @@ void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
 
 void Systems::DrawPhysical(flecs::iter& iter)
 {
+    // TODO: Fix flickering
     auto context = iter.ctx<Systems::Context>();
     auto entity = iter.entity(0);
     auto sprite = entity.get<Sprite>();
