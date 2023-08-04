@@ -211,6 +211,12 @@ SdlBackend::SdlBackend()
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
+    SDL_Rect clippingRect{Sprite::TILE_SIZE, Sprite::TILE_SIZE,
+                          GAME_WIDTH + Sprite::TILE_SIZE * 2,
+                          GAME_HEIGHT + Sprite::TILE_SIZE * 2};
+    //SDL_SetRenderClipRect(m_renderer,
+    //                      &clippingRect);
+
     EnumerateGamepads();
 
     SDL_version version;
@@ -410,7 +416,7 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
 
         input.cursorPosition.x = event.motion.x;
         input.cursorPosition.y = event.motion.y;
-        
+
         // this is a guess
         input.rightStick.x = event.motion.xrel / 5.0f;
         input.rightStick.y = event.motion.yrel / 5.0f;
@@ -572,6 +578,7 @@ void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
     {
         imageHeight = srcHeight;
     }
+
     SDL_FRect srcRegion{(float)srcX, (float)srcY, (float)imageWidth,
                         (float)imageHeight};
     imageWidth = (uint32_t)(imageWidth * scaleX);

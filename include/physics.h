@@ -104,11 +104,14 @@ struct Body : Base
 // Physics controller
 struct Controller : Base
 {
-    Controller() = default;
+    Controller() : m_controller(nullptr)
+    {
+    }
+
     Controller(State& physics, const PxControllerDesc& desc)
     {
         m_controller = physics.GetControllerManager().createController(desc);
-    };
+    }
 
     PxController& GetController() const
     {
@@ -127,8 +130,9 @@ struct Controller : Base
         {
             return nullptr;
         }
-        
-        GetController().getActor()->getShapes(shapes.data(), (uint32_t)shapes.size());
+
+        GetController().getActor()->getShapes(shapes.data(),
+                                              (uint32_t)shapes.size());
 
         return shapes[index];
     }
@@ -136,5 +140,22 @@ struct Controller : Base
   private:
     PxController* m_controller;
 };
+
+// TODO: there must be a better way than this
+// Get the physics base of an entity
+inline const Base* GetBase(flecs::entity& entity)
+{
+    auto object = entity.get<Physics::Base>();
+    if (!object)
+    {
+        object = entity.get<Physics::Body>();
+        if (!object)
+        {
+            object = entity.get<Physics::Controller>();
+        }
+    }
+
+    return object;
+}
 
 } // namespace Physics

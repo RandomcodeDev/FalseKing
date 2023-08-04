@@ -1,8 +1,14 @@
 #include "player.h"
 #include "backend.h"
+#include "camera.h"
+#include "components.h"
+#include "input.h"
+#include "physics.h"
 #include "sprites.h"
+#include "systems.h"
 
-flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
+flecs::entity Player::Create(flecs::world& world, Physics::State& physics,
+                             Components::Camera** camera)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
 
@@ -21,7 +27,10 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics)
             .set(Components::Element{Components::Element::None})
             .set(Cursor{0.0f, 0.0f})
             .set(MeleeCooldown{0.0f})
+            .set(**camera)
             .add<LocalPlayer>();
+
+    *camera = player.get_mut<Components::Camera>();
 
     material->release();
 
@@ -63,8 +72,8 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
 
 void Player::Input(flecs::iter& iter)
 {
-    Systems::Context* context = iter.ctx<Systems::Context>();
-    Input::State* input = context->input;
+    auto context = iter.ctx<Systems::Context>();
+    auto input = context->input;
 
     flecs::entity player = iter.entity(0);
     auto controller = player.get_mut<Physics::Controller>();
@@ -107,7 +116,8 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
     auto cursor = player.get<Cursor>();
 
     float radius =
-        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius + distance;
+        ((PxCapsuleGeometry&)controller->GetShape(0)->getGeometry()).radius +
+        distance;
     PxVec3 position = controller->GetTransform().p;
     float angle = PxAtan2(cursor->y, cursor->x);
 
@@ -119,8 +129,9 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
 void Player::DrawCursor(flecs::iter& iter)
 {
     auto player = iter.entity(0);
-    PxVec3 cursorPos(GetCursorPosition(player));
-    uint32_t x = (uint32_t)cursorPos.x;
-    uint32_t y = (uint32_t)(cursorPos.z - cursorPos.y);
-    g_backend->DrawSprite(Sprites::Player::cursor, x, y);
+    auto camera = player.get<Components::Camera>();
+    PxVec3 cursorPosition(GetCursorPosition(player));
+    PxVec2 screenPosition = camera->Project(cursorPosition);
+    g_backend->DrawSprite(Sprites::Player::cursor, (uint32_t)screenPosition.x,
+                          (uint32_t)screenPosition.y);
 }

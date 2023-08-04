@@ -1,11 +1,21 @@
 #include "systems.h"
 #include "backend.h"
+#include "camera.h"
+#include "components.h"
 #include "discord.h"
+#include "input.h"
+#include "physics.h"
 #include "player.h"
 #include "sprites.h"
 
 void Systems::Register(flecs::world& world, Context* context)
 {
+    // camera.h
+    world.system<Components::Camera>("CameraTrack")
+        .ctx(context)
+        .kind(flecs::PreUpdate)
+        .each(Systems::CameraTrack);
+
     // physics.h
     world.system("PhysicsUpdate")
         .ctx(context)
@@ -35,7 +45,6 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(EndRender);
     world.system("DebugInfo")
         .ctx(context)
-        .with(EcsTraverseAll)
         .kind(flecs::PostUpdate)
         .iter(DebugInfo);
     world.system<Components::Timeout>("KillTimedout")
@@ -43,15 +52,10 @@ void Systems::Register(flecs::world& world, Context* context)
         .each(KillTimedout);
 
     // sprite.h
-    world.system<Physics::Base, const Sprite>("DrawPhysical")
+    world.system<Sprite>("DrawPhysical")
+        .ctx(context)
         .kind(flecs::OnUpdate)
-        .each(DrawPhysical);
-    world.system<Physics::Body, const Sprite>("DrawBody")
-        .kind(flecs::OnUpdate)
-        .each(DrawBody);
-    world.system<Physics::Controller, const Sprite>("DrawController")
-        .kind(flecs::OnUpdate)
-        .each(DrawController);
+        .iter(DrawPhysical);
 }
 
 void Systems::BeginRender(flecs::iter& iter)
@@ -81,13 +85,15 @@ void Systems::DebugInfo(flecs::iter& iter)
     IMGUI_TEXT("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f);
     IMGUI_TEXT("Frames renderered: {}", g_backend->GetFrameCount());
     IMGUI_TEXT("Total runtime: {:%T}",
-                            precise_clock::now() - context->startTime);
+               precise_clock::now() - context->startTime);
     IMGUI_TEXT("Entity count: {}", iter.count());
     IMGUI_TEXT("System: {}", g_backend->DescribeSystem());
     IMGUI_TEXT("Backend: {}", g_backend->DescribeBackend());
     IMGUI_TEXT("Discord: {}, {}",
-                    Discord::Available() ? "available" : "not available",
-                    Discord::Connected() ? "connected" : "not connected");
+               Discord::Available() ? "available" : "not available",
+               Discord::Connected() ? "connected" : "not connected");
+    IMGUI_TEXT("Camera position: ({}, {})", context->mainCamera->position.x,
+               context->mainCamera->position.y);
     ImGui::Text("Input state:");
     ImGui::TextWrapped("%s", context->input->DescribeState().c_str());
     ImGui::End();

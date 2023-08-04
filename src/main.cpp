@@ -1,4 +1,5 @@
 ﻿#include "backend.h"
+#include "camera.h"
 #include "components.h"
 #include "discord.h"
 #include "fs.h"
@@ -73,7 +74,9 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
 #endif
     // world.set_target_fps(60);
 
-    Systems::Context context{&input, &physics, start};
+    Components::Camera camera;
+
+    Systems::Context context{start, &input, &physics, &camera};
     Components::Register(world);
     Systems::Register(world, &context);
 
@@ -83,7 +86,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     PxMaterial* material =
         physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
 
-    Player::Create(world, physics);
+    Player::Create(world, physics, &context.mainCamera);
 
     const WindowInfo& windowInfo = g_backend->GetWindowInformation();
 

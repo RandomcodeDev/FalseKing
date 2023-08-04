@@ -1,19 +1,32 @@
 #pragma once
 
-#include "components.h"
 #include "game.h"
-#include "input.h"
-#include "physics.h"
-#include "sprite.h"
+
+namespace Components
+{
+class Camera;
+struct Timeout;
+}
+
+namespace Input
+{
+class State;
+}
+
+namespace Physics
+{
+class State;
+}
 
 namespace Systems
 {
 // Information systems can use
 struct Context
 {
+    precise_clock::time_point startTime;
     Input::State* input;
     Physics::State* physics;
-    precise_clock::time_point startTime;
+    Components::Camera* mainCamera;
 };
 
 // Register all the systems
@@ -29,5 +42,6 @@ extern void EndRender(flecs::iter& iter);
 extern void DebugInfo(flecs::iter& iter);
 
 // Kill off timed out entities
-extern void KillTimedout(const flecs::entity& entity, Components::Timeout& timeout);
+extern void KillTimedout(const flecs::entity& entity,
+                         Components::Timeout& timeout);
 } // namespace Systems

@@ -1,5 +1,5 @@
-#include "sprites.h"
 #include "image.h"
+#include "sprites.h"
 
 namespace Sprites
 {

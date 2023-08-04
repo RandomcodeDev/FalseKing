@@ -1,10 +1,10 @@
 #pragma once
 
 #include "game.h"
-#include "image.h"
 
 // Forward declarations
 class Backend;
+class Image;
 
 // Sprite
 struct Sprite
@@ -28,23 +28,10 @@ struct Sprite
            uint32_t height);
 };
 
-namespace Physics
-{
-struct Base;
-struct Body;
-struct Controller;
-}; // namespace Physics
-
 namespace Systems
 {
+struct Context;
+
 // Draw a sprite with a physics thing
-void DrawPhysical(Physics::Base& object, const Sprite& sprite);
-inline void DrawBody(Physics::Body& object, const Sprite& sprite)
-{                              
-    DrawPhysical((Physics::Base&)object, sprite);
-}
-inline void DrawController(Physics::Controller& object, const Sprite& sprite)
-{
-    DrawPhysical((Physics::Base&)object, sprite);
-}
+void DrawPhysical(flecs::iter& iter);
 } // namespace Systems

@@ -1,4 +1,6 @@
 #include "components.h"
+#include "input.h"
+#include "physics.h"
 #include "player.h"
 
 void Components::Register(flecs::world& world)

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "game.h"
-#include "input.h"
-#include "physics.h"
 
 namespace Tags
 {

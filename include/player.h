@@ -1,9 +1,16 @@
 #pragma once
 
-#include "components.h"
 #include "game.h"
-#include "physics.h"
-#include "systems.h"
+
+namespace Components
+{
+class Camera;
+}
+
+namespace Physics
+{
+class State;
+}
 
 // Player helper functions
 namespace Player
@@ -34,7 +41,7 @@ struct MeleeCooldown
 };
 
 // Create the player entity
-flecs::entity Create(flecs::world& world, Physics::State& physics);
+flecs::entity Create(flecs::world& world, Physics::State& physics, Components::Camera** camera);
 
 // Create a projectile for the player
 flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics,
