@@ -125,7 +125,6 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
                   position.z + radius * PxSin(angle));
 }
 
-// TODO: camera
 void Player::DrawCursor(flecs::iter& iter)
 {
     auto player = iter.entity(0);

@@ -214,8 +214,7 @@ SdlBackend::SdlBackend()
     SDL_Rect clippingRect{Sprite::TILE_SIZE, Sprite::TILE_SIZE,
                           GAME_WIDTH + Sprite::TILE_SIZE * 2,
                           GAME_HEIGHT + Sprite::TILE_SIZE * 2};
-    //SDL_SetRenderClipRect(m_renderer,
-    //                      &clippingRect);
+    SDL_SetRenderClipRect(m_renderer, &clippingRect);
 
     EnumerateGamepads();
 
@@ -430,6 +429,10 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
             event.wheel.y > 0 ? ~Input::LEFT_SHOULDER : ~Input::RIGHT_SHOULDER;
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
+    }
+    else if (event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP)
+    {
+        m_usingGamepad = false;
     }
     else if (event.type == SDL_EVENT_GAMEPAD_ADDED)
     {
