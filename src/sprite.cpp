@@ -16,12 +16,14 @@ Sprite::Sprite(const Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
 {
 }
 
-void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y)
+void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y,
+                         bool center)
 {
     if (sprite.sheet)
     {
-        DrawImage(*sprite.sheet, x, y, 1.0f, 1.0f, sprite.x, sprite.y,
-                  sprite.width, sprite.height);
+        DrawImage(*sprite.sheet, x - (center ? sprite.width / 2 : 0),
+                  y - (center ? sprite.height / 2 : 0), 1.0f, 1.0f, sprite.x,
+                  sprite.y, sprite.width, sprite.height);
     }
 }
 
@@ -34,12 +36,11 @@ void Systems::DrawPhysical(flecs::iter& iter)
     auto object = Physics::GetBase(entity);
 
     if (object && context->mainCamera->IsVisible(
-            object->GetTransform().p,
-            PxVec2((float)sprite->width, (float)sprite->height)))
+                      object->GetTransform().p,
+                      PxVec2((float)sprite->width, (float)sprite->height)))
     {
-        PxVec2 position = context->mainCamera->Project(object->GetTransform().p);
-        position.x -= sprite->width / 2;
-        position.y -= sprite->height / 2;
+        PxVec2 position =
+            context->mainCamera->Project(object->GetTransform().p);
         g_backend->DrawSprite(*sprite, (uint32_t)std::round(position.x),
                               (uint32_t)std::round(position.y));
     }

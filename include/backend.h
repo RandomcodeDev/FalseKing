@@ -78,7 +78,7 @@ class Backend
                            PxVec3 color = PxVec3(1, 1, 1)) = 0;
 
     // Draw a sprite
-    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y);
+    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y, bool center = true);
 
     // Complete rendering
     virtual void EndRender() = 0;
