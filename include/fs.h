@@ -3,9 +3,22 @@
 
 #include "game.h"
 
-// Abstracts the filesystem, works on an archive file or raw folders
+// Abstracts the filesystem
 namespace Filesystem
 {
+
+// Represents a thing with files
+class FileSource
+{
+  public:
+    static FileSource* Create(const std::string& path);
+
+    virtual std::string GetRealPath() = 0;
+
+    virtual std::vector<uint8_t> Read(const std::string& path) = 0;
+    virtual bool Exists(const std::string& path) = 0;
+};
+
 // Initialize the filesystem
 extern void Initialize(const std::vector<std::string>& paths);
 

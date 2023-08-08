@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale>
+#include <map>
 #include <sstream>
 #include <string>
 
@@ -53,7 +54,7 @@ using namespace physx;
 
 #include "zstd.h"
 
-// Windows redefines some things
+// Windows redefines some things, that could cause issues
 #undef LoadLibrary
 
 namespace chrono = std::chrono;

@@ -8,7 +8,7 @@ void Load()
 {
     SPDLOG_INFO("Loading sprites");
 
-    s_sprites = new Image("sprites.qoi");
+    s_sprites = new Image("textures/sprites.qoi");
 
     Player::player = Sprite(*s_sprites, 5, 1, 5, 15);
     Player::cursor = Sprite(*s_sprites, 5, 22, 5, 5);

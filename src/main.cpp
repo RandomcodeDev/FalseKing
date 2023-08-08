@@ -41,6 +41,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     {
         paths.push_back(path);
     }
+    paths.push_back("assets.vpk");
     Filesystem::Initialize(paths);
     Discord::Initialize();
 
@@ -50,7 +51,7 @@ int GameMain(Backend* backend, std::vector<std::string> backendPaths)
     ImGuiStyle style = ImGui::GetStyle();
     ImGuiIO& io = ImGui::GetIO();
 
-    std::vector<uint8_t> font = Filesystem::Read("font.ttf");
+    std::vector<uint8_t> font = Filesystem::Read("fonts/monocraft.ttf");
 
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;

@@ -27,11 +27,6 @@ class Camera
 
 } // namespace Components
 
-namespace Physics
-{
-struct Base;
-}
-
 namespace Systems
 {
 

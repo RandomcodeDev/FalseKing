@@ -54,7 +54,7 @@ project 'Game'
         '.clang-format',
         '.gitattributes',
         '.gitignore',
-        '.gitmoduls',
+        '.gitmodules',
         'DESIGN.md',
         'LICENSE.txt',
         'logo.png',
