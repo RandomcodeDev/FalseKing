@@ -151,9 +151,6 @@ extern "C" int main(int argc, char* argv[])
 
     std::vector<std::string> paths;
     std::string baseDir = SDL_GetBasePath();
-#ifndef __WINRT__
-    baseDir += "assets";
-#endif
     paths.push_back(baseDir);
     int returnCode = GameMain(backend, paths);
     SPDLOG_INFO("Destroying backend");
@@ -163,7 +160,8 @@ extern "C" int main(int argc, char* argv[])
 
 [[noreturn]] void Quit(const std::string& message, int32_t exitCode)
 {
-    std::string title = fmt::format("Error {0}/0x{0:X}", exitCode);
+    std::string title =
+        exitCode == 1 ? "Error" : fmt::format("Error {0}/0x{0:X}", exitCode);
     SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), nullptr);
     SDL_TriggerBreakpoint();
     exit(exitCode);

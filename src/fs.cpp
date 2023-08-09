@@ -45,7 +45,6 @@ void Filesystem::Initialize(const std::vector<std::string>& paths)
     SPDLOG_INFO("Initializing filesystem");
 
     SPDLOG_INFO("Search paths: {}", paths.size());
-    s_fileSources.push_back(FileSource::Create(""));
     for (auto path : paths)
     {
         std::string cleanPath = CleanPath(path);

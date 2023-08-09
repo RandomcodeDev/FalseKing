@@ -2,7 +2,7 @@
 
 ROOT="$(realpath $(dirname $0)/..)"
 
-if [ $# -lt 3 ]; then exit; fi
+if [ $# -lt 3 ]; then echo "$0 <output> <architecture> <configuration>"; exit; fi
 
 ENDING=".so"
 case $(uname) in
@@ -19,5 +19,5 @@ if [ $(uname) == Darwin ]; then
     cp -r "$ROOT/deps-public/Frameworks/$3/"*.framework "$1"
     cp -r "$ROOT/deps-public/Frameworks/"*.framework "$1"
 fi
-cp -rv "$ROOT/assets" "$1"
+cp -v "$ROOT/assets_"*.vpk "$1"
 rm "$1/assets/.git"

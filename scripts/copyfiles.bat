@@ -1,15 +1,15 @@
 ::@echo off
 
-if "%3" == "" exit /b
+if "%3" == "" echo %0 ^<output^> ^<architecture^> ^<configuration^> & exit /b
 
 if "%2" == "Gaming.Desktop.x64" (
     set gdk=1
     set arch=x86_64
-    set "gdkpath=%gaming_desktopLatest%"
+    set "gdkpath=%GRDKLatest%"
 ) else if "%2" == "Gaming.Xbox.Scarlett.x64" (
     set gdk=1
     set arch=x86_64
-    set "gdkpath=%scarlettLatest%"
+    set "gdkpath=%GXDKLatest%"
 ) else (
     set arch=%2
 )
@@ -26,5 +26,4 @@ if "%gdk%" == "1" (
 )
 
 del "%1"\*-winrt.*
-xcopy /e/i/y "%~dp0..\assets" "%1\assets"
-del "%1\assets\.git"
+copy "%~dp0..\assets_"*.vpk "%1"
