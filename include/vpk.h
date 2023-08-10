@@ -58,6 +58,7 @@ struct Vpk2Signature
 class Vpk2 : public Filesystem::FileSource
 {
   public:
+    Vpk2();
     Vpk2(const std::string& path);
     ~Vpk2();
 
@@ -70,10 +71,10 @@ class Vpk2 : public Filesystem::FileSource
     bool Exists(const std::string& path);
 
     // Write the VPK
-    void Write(const std::string& path);
+    void Write(const std::string& path, const std::string& extension = ".vpk");
 
-    // Write a file into the VPK
-    void Write(const std::string& path, const std ::vector<uint8_t>& data);
+    // Add a file into the VPK
+    void AddFile(const std::string& path, const std::vector<uint8_t>& data);
 
   private:
     std::string m_realPath;
@@ -81,6 +82,7 @@ class Vpk2 : public Filesystem::FileSource
     Vpk2Header m_header;
     std::vector<Vpk2ExternalMd5Entry> m_externalMd5Section;
     Vpk2Md5 m_md5;
+    Vpk2Signature m_signature;
 
     std::map<std::string, Vpk2DirectoryEntry> m_files;
 };
