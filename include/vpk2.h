@@ -29,7 +29,7 @@ struct Vpk2DirectoryEntry
     uint16_t archiveIndex;
     uint32_t entryOffset;
     uint32_t entryLength;
-    uint16_t terminator;
+    //uint16_t terminator;
 };
 
 struct Vpk2ExternalMd5Entry

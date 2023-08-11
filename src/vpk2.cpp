@@ -119,7 +119,7 @@ Vpk::Vpk2::Vpk2(const std::string& path, bool create)
                     (extension == " " ? "" : "." + extension);
                 m_files[fullPath] =
                     *(Vpk2DirectoryEntry*)(directory.data() + currentOffset);
-                currentOffset += sizeof(Vpk2DirectoryEntry) - 2 +
+                currentOffset += sizeof(Vpk2DirectoryEntry) +
                                  m_files[fullPath].preloadSize;
                 SPDLOG_DEBUG("Got entry {}", fullPath);
             }
@@ -233,7 +233,7 @@ void Vpk::Vpk2::Write(const std::string& path, const std::string& extension)
         nameTree[extension][path][name] = entry;
     }
 
-    std::vector<uint8_t> directory(sizeof(Vpk2Header) + sizeof(Vpk2Md5));
+    std::vector<uint8_t> directory(sizeof(Vpk2Header));
     for (const auto& paths : nameTree)
     {
         const std::string& extension = paths.first;
@@ -252,7 +252,7 @@ void Vpk::Vpk2::Write(const std::string& path, const std::string& extension)
             {
                 const std::string& name = entry.first;
                 const Vpk2DirectoryEntry& directoryEntry = entry.second;
-
+                oldSize = directory.size();
                 directory.resize(directory.size() + name.size() + 1 +
                                  sizeof(Vpk2DirectoryEntry));
                 std::copy(name.begin(), name.begin() + name.size(),
@@ -272,9 +272,10 @@ void Vpk::Vpk2::Write(const std::string& path, const std::string& extension)
     directory.resize(directory.size() + 1);
 
     m_header.treeSize =
-        (uint32_t)(directory.size() - sizeof(Vpk2Header) - sizeof(Vpk2Md5));
+        (uint32_t)(directory.size() - sizeof(Vpk2Header));
     std::copy((uint8_t*)&m_header, (uint8_t*)(&m_header + 1),
               directory.begin());
+    directory.resize(directory.size() + sizeof(Vpk2Md5));
     std::copy((uint8_t*)&m_md5, (uint8_t*)(&m_md5 + 1),
               directory.end() - sizeof(Vpk2Md5));
 
@@ -326,11 +327,9 @@ void Vpk::Vpk2::AddFile(const std::string& path,
     entry.archiveIndex = m_currentArchive;
     entry.entryOffset = m_currentOffset;
     entry.entryLength = (uint32_t)data.size();
-    entry.terminator = VPK2_ENTRY_TERMINATOR;
 
     archive.seekp(m_currentOffset, std::ios::beg);
     archive.write((const char*)data.data(), data.size());
 
     m_files[path] = entry;
-    Write(m_realPath, "");
 }
