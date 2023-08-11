@@ -20,7 +20,7 @@ const char* GAME_COMMIT = {
 
 void embraceTheDarkness();
 
-int GameMain(Backend* backend, std::vector<std::string> backendPaths)
+int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 {
     chrono::time_point<precise_clock> start = precise_clock::now();
     chrono::time_point<precise_clock> now;

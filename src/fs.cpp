@@ -1,5 +1,5 @@
 #include "fs.h"
-#include "vpk.h"
+#include "vpk2.h"
 
 class PhysicalFileSource : public Filesystem::FileSource
 {
@@ -32,7 +32,7 @@ static std::string CleanPath(const std::string& path)
             cleanPath[i] = '/';
         }
     }
-    if (cleanPath[i - 1] == '/')
+    if (i > 0 && cleanPath[i - 1] == '/')
     {
         cleanPath.resize(cleanPath.size() - 1);
     }
@@ -40,29 +40,30 @@ static std::string CleanPath(const std::string& path)
     return cleanPath;
 }
 
-void Filesystem::Initialize(const std::vector<std::string>& paths)
+void Filesystem::Initialize(const std::vector<std::string>& searchPaths)
 {
     SPDLOG_INFO("Initializing filesystem");
 
-    SPDLOG_INFO("Search paths: {}", paths.size());
-    for (auto path : paths)
+    for (auto path : searchPaths)
     {
-        std::string cleanPath = CleanPath(path);
-        SPDLOG_INFO("\t{}", cleanPath);
-
-        s_fileSources.push_back(FileSource::Create(cleanPath));
+        AddSearchPath(path);
     }
+    AddSearchPath("");
 
     SPDLOG_INFO("Filesystem initialized");
 }
 
+void Filesystem::AddSearchPath(const std::string& path)
+{
+    std::string cleanPath = CleanPath(path);
+    SPDLOG_INFO("Adding search path {}", cleanPath);
+
+    s_fileSources.push_back(FileSource::Create(cleanPath));
+}
+
 Filesystem::FileSource* Filesystem::FileSource::Create(const std::string& path)
 {
-    if (path.length() == 0)
-    {
-        return new PhysicalFileSource(".");
-    }
-    else if (path.length() > 4 && path.substr(path.length() - 4, path.length()) == ".vpk")
+    if (path.length() > 4 && path.substr(path.length() - 4, path.length()) == ".vpk")
     {
         return new Vpk::Vpk2(path);
     }

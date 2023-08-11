@@ -5,11 +5,11 @@
 namespace Vpk
 {
 
-constexpr uint16_t VPK_ENTRY_TERMINATOR = 0xFFFF;
-
 constexpr uint32_t VPK2_SIGNATURE = 0x55AA1234;
 constexpr uint32_t VPK2_VERSION = 2;
 constexpr uint16_t VPK2_SPECIAL_INDEX = 0x7FFF;
+constexpr uint16_t VPK2_ENTRY_TERMINATOR = 0xFFFF;
+constexpr uint32_t VPK2_CHUNK_MAX_SIZE = 209715200; // 200M
 
 struct Vpk2Header
 {
@@ -58,9 +58,12 @@ struct Vpk2Signature
 class Vpk2 : public Filesystem::FileSource
 {
   public:
+    // Create a VPK. The path will be set when it's written the first time, and
+    // files cannot be added until then.
     Vpk2();
-    Vpk2(const std::string& path);
-    ~Vpk2();
+
+    // Load or create a VPK
+    Vpk2(const std::string& path, bool create = false);
 
     std::string GetRealPath()
     {
@@ -70,8 +73,9 @@ class Vpk2 : public Filesystem::FileSource
     std::vector<uint8_t> Read(const std::string& path);
     bool Exists(const std::string& path);
 
-    // Write the VPK
-    void Write(const std::string& path, const std::string& extension = ".vpk");
+    // Write the VPK directory
+    void Write(const std::string& path = "",
+               const std::string& extension = ".vpk");
 
     // Add a file into the VPK
     void AddFile(const std::string& path, const std::vector<uint8_t>& data);
@@ -85,6 +89,8 @@ class Vpk2 : public Filesystem::FileSource
     Vpk2Signature m_signature;
 
     std::map<std::string, Vpk2DirectoryEntry> m_files;
+    uint16_t m_currentArchive;
+    uint32_t m_currentOffset;
 };
 
 } // namespace Vpk

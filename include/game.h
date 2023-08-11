@@ -22,13 +22,15 @@
 #define PX_PHYSX_STATIC_LIB 1
 #include "PxPhysicsAPI.h"
 #include "characterkinematic/PxController.h"
-#endif
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#endif
+
+#include "foundation/Px.h"
+using namespace physx;
 
 #include "metrohash.h"
-using namespace physx;
 
 #define QOI_NO_STDIO
 #include "qoi.h"
@@ -66,10 +68,13 @@ constexpr const char* GAME_NAME = "False King";
 constexpr uint8_t GAME_MAJOR_VERSION = 0;
 constexpr uint8_t GAME_MINOR_VERSION = 0;
 constexpr uint8_t GAME_PATCH_VERSION = 0;
+
+#ifndef TOOL
 constexpr ImGuiWindowFlags ImGuiWindowFlags_DummyWindow =
     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
     ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs;
+#endif
 
 extern const char* GAME_COMMIT;
 

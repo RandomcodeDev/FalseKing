@@ -108,14 +108,14 @@ class Backend
     virtual Symbol GetSymbol(void* dll, const std::string& path) const = 0;
 };
 
-#if __NX__
+#ifdef __NX__
 class SwitchBackend;
 #elif defined(USE_SDL)
 class SdlBackend;
 #endif
 
 // Program entry point
-extern int GameMain(Backend* backend, std::vector<std::string> backendPaths);
+extern int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths);
 
 // Global backend pointer
 extern Backend* g_backend;

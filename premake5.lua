@@ -1,65 +1,17 @@
-require 'premake-consoles/consoles'
+include 'premake5-base.lua'
 
 workspace 'Game'
 
-    location 'build'
-
-    configurations { 'Debug', 'Release' }
-
-    filter { 'system:windows' }
-        platforms { 'x86', 'ARM64' }
-    filter { 'system:gaming_desktop' }
-        platforms { 'Gaming.Desktop.x64' }
-    filter { 'system:scarlett' }
-        platforms { 'Gaming.Xbox.Scarlett.x64' }
-    filter { 'system:linux' }
-        platforms { 'x86_64', 'ARM64' }
-    filter {}
-        
-    filter { 'system:windows', 'platforms:x86' }
-        toolset 'msc-v141_xp'
-    filter {}
-
-    filter { 'platforms:ARM64' }
-        architecture 'arm64'
-    filter {}
+    default_workspace_settings()
 
 project 'Game'
-
-    location 'build/Game'
-
-    language 'C++'
-    cppdialect 'C++17'
-
-    filter { 'system:not macosx' }
-        targetname 'Game.%{cfg.platform}'
-        objdir '%{prj.location}/%{cfg.platform}/%{cfg.buildcfg}'
-        targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
-    filter { 'system:macosx' }
-        targetname 'Game.Universal'
-        targetextension ''
-        objdir '%{prj.location}/Universal/%{cfg.buildcfg}'
-        targetdir '%{wks.location}/Universal/%{cfg.buildcfg}'
-    filter {}
+    default_project_settings()
 
     kind 'WindowedApp'
 
-    characterset 'MBCS'
-
     files {
-        '.github/**',
         'include/**.h',
         'src/**.cpp',
-        'scripts/*',
-        '.clang-format',
-        '.gitattributes',
-        '.gitignore',
-        '.gitmodules',
-        'DESIGN.md',
-        'LICENSE.txt',
-        'logo.png',
-        'premake5.lua',
-        'README.md',
     }
 
     removefiles {
@@ -72,43 +24,22 @@ project 'Game'
         }
     filter {}
 
-    includedirs {
-        'include',
-        '%{cfg.targetdir}'
-    }
-
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
         files {
-            'deps-public/include/**',
+            -- Get Discord and ImGui files
             'deps-public/src/**',
+
             'src/sdl.cpp'
         }
 
         defines {
             'USE_SDL'
         }
-
-        includedirs {
-            'deps-public/include',
-        }
-
-        frameworkdirs {
-            'deps-public/Frameworks/%{cfg.buildcfg}',
-            'deps-public/Frameworks'
-        }
     filter { 'system:gaming_desktop or scarlett or windows or linux' }
-        libdirs {
-            'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.architecture}'
-        }
         links {
             'SDL3'
         }
     filter { 'system:macosx' }
-        libdirs {
-            'deps-public/lib/Universal/%{cfg.buildcfg}',
-            'deps-public/lib/Universal'
-        }
         links {
             'SDL3.framework'
         }
@@ -141,23 +72,6 @@ project 'Game'
             'PhysXFoundation-darwin',
             'PhysXPvdSDK-darwin'
         }
-    filter {}
-
-    defines {
-        'NOMINMAX',
-        '_CRT_SECURE_NO_DEPRECATE',
-        '_CRT_SECURE_NO_WARNINGS',
-    }
-
-    flags { 'MultiProcessorCompile' }
-    staticruntime 'Off'
-    
-    filter { 'configurations:Debug' }
-        defines '_DEBUG'
-        symbols 'On'
-    filter { 'configurations:Release' }
-        defines 'NDEBUG'
-        optimize 'On'
     filter {}
 
     filter { 'system:gaming_desktop or scarlett or windows' }

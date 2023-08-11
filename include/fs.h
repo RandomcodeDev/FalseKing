@@ -6,7 +6,7 @@
 namespace Filesystem
 {
 
-// Represents a thing with files
+// Represents a thing that files can be read from
 class FileSource
 {
   public:
@@ -19,7 +19,11 @@ class FileSource
 };
 
 // Initialize the filesystem
-extern void Initialize(const std::vector<std::string>& paths);
+extern void Initialize(
+    const std::vector<std::string>& searchPaths = std::vector<std::string>());
+
+// Add a search path
+extern void AddSearchPath(const std::string& path);
 
 // Read a file
 extern std::vector<uint8_t> Read(const std::string& path);
