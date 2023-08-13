@@ -11,6 +11,7 @@ constexpr uint16_t VPK2_SPECIAL_INDEX = 0x7FFF;
 constexpr uint16_t VPK2_ENTRY_TERMINATOR = 0xFFFF;
 constexpr uint32_t VPK2_CHUNK_MAX_SIZE = 209715200; // 200M
 
+#pragma pack(push, 1)
 struct Vpk2Header
 {
     uint32_t signature;
@@ -29,7 +30,7 @@ struct Vpk2DirectoryEntry
     uint16_t archiveIndex;
     uint32_t entryOffset;
     uint32_t entryLength;
-    //uint16_t terminator;
+    uint16_t terminator;
 };
 
 struct Vpk2ExternalMd5Entry
@@ -54,6 +55,7 @@ struct Vpk2Signature
     uint32_t signatureSize;
     uint8_t* signature;
 };
+#pragma pack(pop)
 
 class Vpk2 : public Filesystem::FileSource
 {
@@ -91,6 +93,20 @@ class Vpk2 : public Filesystem::FileSource
     std::map<std::string, Vpk2DirectoryEntry> m_files;
     uint16_t m_currentArchive;
     uint32_t m_currentOffset;
+
+    std::string GetDirectoryPath()
+    {
+        return fmt::format("{}_dir.vpk",
+                           m_realPath.substr(0, m_realPath.length() - 4),
+                           m_currentArchive);
+    }
+
+    std::string GetArchivePath(uint32_t archiveIndex = UINT32_MAX)
+    {
+        return fmt::format(
+            "{}_{:03}.vpk", m_realPath.substr(0, m_realPath.length() - 4),
+            archiveIndex == UINT32_MAX ? m_currentArchive : archiveIndex);
+    }
 };
 
 } // namespace Vpk

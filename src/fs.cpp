@@ -88,9 +88,23 @@ std::vector<uint8_t> Filesystem::Read(const std::string& path)
     return std::vector<uint8_t>();
 }
 
-void Filesystem::Write(const std::string& path, const std::vector<uint8_t>& data)
+void Filesystem::Write(const std::string& path,
+                       const std::vector<uint8_t>& data)
 {
-
+    SPDLOG_INFO("Writing {} byte(s) to {}", data.size(), path);
+    std::ofstream file(path, std::ios::binary);
+    if (!file.is_open())
+    {
+        SPDLOG_WARN("Failed to open file {}", path);
+        return;
+    }
+    file.write((const char*)data.data(), data.size());
+    size_t written = file.tellp();
+    if (written < data.size())
+    {
+        SPDLOG_WARN("Only wrote {}/{} byte(s)", written, data.size());
+    }
+    file.close();
 }
 
 bool Filesystem::Exists(const std::string& path)
