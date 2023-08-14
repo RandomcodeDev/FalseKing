@@ -189,18 +189,18 @@ bool Vpk::Vpk2::Exists(const std::string& path)
 
 // TODO: This implementation probably works fine, but it could be improved to do
 // less allocations somehow.
-void Vpk::Vpk2::Write(const std::string& path, const std::string& extension)
+void Vpk::Vpk2::Write(const std::string& path)
 {
     if (!path.length() && !m_realPath.length())
     {
         SPDLOG_WARN("Ignoring request to write VPK file with no name");
     }
 
-    SPDLOG_INFO("Writing VPK file to {}{}", path, extension);
+    SPDLOG_INFO("Writing VPK file to {}{}", path, VPK_EXTENSION);
 
     if (!m_realPath.length() || path.length())
     {
-        m_realPath = path + extension;
+        m_realPath = path + VPK_EXTENSION;
     }
     std::string dirPath = GetDirectoryPath();
     std::ofstream file(dirPath, std::ios::binary);
