@@ -27,6 +27,8 @@
 #include "imgui_internal.h"
 #endif
 
+#include "CLI11.hpp"
+
 #include "foundation/Px.h"
 using namespace physx;
 

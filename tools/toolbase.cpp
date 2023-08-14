@@ -1,14 +1,8 @@
 #include "tool.h"
 
-int32_t main(int32_t argc, char* argv[])
+int32_t main()
 {
-    std::vector<std::string> args(argc);
-    for (int32_t i = 0; i < argc; i++)
-    {
-        args[i] = argv[i];
-    }
-
-    return ToolMain(args);
+    return ToolMain();
 }
 
 void Quit(const std::string& message, int32_t exitCode)

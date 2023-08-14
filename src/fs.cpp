@@ -21,17 +21,11 @@ class PhysicalFileSource : public Filesystem::FileSource
 
 static std::vector<Filesystem::FileSource*> s_fileSources;
 
-static std::string CleanPath(const std::string& path)
+std::string Filesystem::CleanPath(const std::string& path)
 {
     std::string cleanPath = path;
     size_t i = 0;
-    for (; i < cleanPath.size(); i++)
-    {
-        if (cleanPath[i] == '\\')
-        {
-            cleanPath[i] = '/';
-        }
-    }
+    std::replace(cleanPath.begin(), cleanPath.end(), '\\', '/');
     if (i > 0 && cleanPath[i - 1] == '/')
     {
         cleanPath.resize(cleanPath.size() - 1);

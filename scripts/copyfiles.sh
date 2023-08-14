@@ -20,4 +20,3 @@ if [ $(uname) == Darwin ]; then
     cp -r "$ROOT/deps-public/Frameworks/"*.framework "$1"
 fi
 cp -v "$ROOT/assets_"*.vpk "$1"
-rm "$1/assets/.git"

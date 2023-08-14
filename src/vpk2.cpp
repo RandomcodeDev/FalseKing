@@ -295,7 +295,8 @@ void Vpk::Vpk2::Write(const std::string& path)
 void Vpk::Vpk2::AddFile(const std::string& path,
                         const std::vector<uint8_t>& data)
 {
-    SPDLOG_INFO("Adding {}-byte file as {}", data.size(), path);
+    std::string cleanPath = Filesystem::CleanPath(path);
+    SPDLOG_INFO("Adding {}-byte file as {}", data.size(), cleanPath);
 
     if (!m_realPath.length())
     {
@@ -319,7 +320,7 @@ void Vpk::Vpk2::AddFile(const std::string& path,
                     archivePath, VPK2_CHUNK_MAX_SIZE - m_currentOffset);
     }
 
-    std::ofstream archive(archivePath, std::ios::binary | std::ios::app);
+    std::ofstream archive(archivePath, std::ios::binary | std::ios::ate);
 
     Vpk2DirectoryEntry entry;
     entry.crc = 0;
@@ -336,5 +337,5 @@ void Vpk::Vpk2::AddFile(const std::string& path,
                 (size_t)archive.tellp() - m_currentOffset, m_currentOffset);
     m_currentOffset = (uint32_t)archive.tellp();
 
-    m_files[path] = entry;
+    m_files[cleanPath] = entry;
 }

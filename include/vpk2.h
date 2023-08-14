@@ -6,6 +6,7 @@ namespace Vpk
 {
 
 constexpr const char* VPK_EXTENSION = ".vpk";
+constexpr uint32_t VPK_EXTENSION_LENGTH = 4;
 constexpr uint32_t VPK2_SIGNATURE = 0x55AA1234;
 constexpr uint32_t VPK2_VERSION = 2;
 constexpr uint16_t VPK2_SPECIAL_INDEX = 0x7FFF;
@@ -96,16 +97,19 @@ class Vpk2 : public Filesystem::FileSource
 
     std::string GetDirectoryPath()
     {
-        return fmt::format("{}_dir{}",
-                           m_realPath.substr(0, m_realPath.length() - 4),
-                           m_currentArchive, VPK_EXTENSION);
+        return fmt::format(
+            "{}_dir{}",
+            m_realPath.substr(0, m_realPath.length() - VPK_EXTENSION_LENGTH),
+            VPK_EXTENSION);
     }
 
     std::string GetArchivePath(uint32_t archiveIndex = UINT32_MAX)
     {
         return fmt::format(
-            "{}_{:03}{}", m_realPath.substr(0, m_realPath.length() - 4),
-            archiveIndex == UINT32_MAX ? m_currentArchive : archiveIndex, VPK_EXTENSION);
+            "{}_{:03}{}",
+            m_realPath.substr(0, m_realPath.length() - VPK_EXTENSION_LENGTH),
+            archiveIndex == UINT32_MAX ? m_currentArchive : archiveIndex,
+            VPK_EXTENSION);
     }
 };
 

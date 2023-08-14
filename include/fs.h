@@ -18,6 +18,9 @@ class FileSource
     virtual bool Exists(const std::string& path) = 0;
 };
 
+// Clean a path
+extern std::string CleanPath(const std::string& path);
+
 // Initialize the filesystem
 extern void Initialize(
     const std::vector<std::string>& searchPaths = std::vector<std::string>());
