@@ -1,6 +1,7 @@
-include 'premake5-base.lua'
-
 workspace 'Tools'
+
+    system(os.host())
+
     default_workspace_settings()
 
     filter { 'system:windows' }
@@ -8,6 +9,7 @@ workspace 'Tools'
     filter {}
 
 project 'vpktool'
+
     default_project_settings()
 
     files {

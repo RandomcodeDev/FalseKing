@@ -18,7 +18,7 @@ See [DESIGN.md]() for an overview of the game's design and plan.
 - Run `scripts\pulldeps.bat public` or `scripts/pulldeps.sh public` depending
   on your platform
 - On Unix-like platforms (macOS, Linux, etc), run
-  `chmod +x deps-public/bin/* scripts/*.sh` in order for the build process to
+  `chmod +x deps-public/bin/* scripts/*` in order for the build process to
   work
 - Use Premake to generate the appropriate project files for your platform
 - On Linux, in order to link correctly, you need to use LLD because it does

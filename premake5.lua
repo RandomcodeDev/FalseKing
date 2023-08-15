@@ -1,98 +1,114 @@
-include 'premake5-base.lua'
+require 'premake-consoles/consoles'
 
-workspace 'Game'
+function default_workspace_settings()
+    location 'build'
+    filename '%{wks.name}-%{_ACTION or \'\'}'
 
-    default_workspace_settings()
+    configurations { 'Debug', 'Release' }
 
-project 'Game'
-    default_project_settings()
+    filter { 'system:windows' }
+        platforms { 'x86', 'ARM64' }
+    filter { 'system:gaming_desktop' }
+        platforms { 'Gaming.Desktop.x64' }
+    filter { 'system:scarlett' }
+        platforms { 'Gaming.Xbox.Scarlett.x64' }
+    filter { 'system:linux' }
+        platforms { 'x86_64', 'ARM64' }
+    filter {}
+        
+    filter { 'system:windows', 'platforms:x86' }
+        toolset 'msc-v141_xp'
+    filter {}
 
-    kind 'WindowedApp'
+    filter { 'platforms:ARM64' }
+        architecture 'arm64'
+    filter {}
 
     files {
-        'include/**.h',
-        'src/**.cpp',
+        '.github/**',
+        'scripts/*',
+        '.clang-format',
+        '.gitattributes',
+        '.gitignore',
+        '.gitmodules',
+        'DESIGN.md',
+        'LICENSE.txt',
+        'logo.png',
+        '*.lua',
+        'README.md',
     }
+end
 
-    removefiles {
-        'src/sdl.cpp',
-    }
+function default_project_settings()
+    location 'build/%{prj.name}'
+    filename '%{prj.name}-%{_ACTION or \'\'}'
 
-    filter { 'system:gaming_desktop or scarlett' }
-        files {
-            'gdk/**'
-        }
+    language 'C++'
+    cppdialect 'C++17'
+
+    filter { 'system:not macosx' }
+        targetname '%{prj.name}.%{cfg.platform}'
+        objdir '%{prj.location}/%{cfg.platform}/%{cfg.buildcfg}'
+        targetdir '%{wks.location}/%{cfg.platform}/%{cfg.buildcfg}'
+    filter { 'system:macosx' }
+        targetname '%{prj.name}.Universal'
+        targetextension ''
+        objdir '%{prj.location}/Universal/%{cfg.buildcfg}'
+        targetdir '%{wks.location}/Universal/%{cfg.buildcfg}'
     filter {}
+
+    characterset 'MBCS'
+
+    defines {
+        'NOMINMAX',
+        '_CRT_SECURE_NO_DEPRECATE',
+        '_CRT_SECURE_NO_WARNINGS',
+    }
+
+    flags { 'MultiProcessorCompile' }
+    staticruntime 'Off'
+    
+    filter { 'configurations:Debug' }
+        defines '_DEBUG'
+        symbols 'On'
+    filter { 'configurations:Release' }
+        defines 'NDEBUG'
+        optimize 'On'
+    filter {}
+
+    includedirs {
+        'include',
+        '%{cfg.targetdir}'
+    }
+
+    kind 'ConsoleApp'
 
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
-        files {
-            -- Get Discord and ImGui files
-            'deps-public/src/**',
-
-            'src/sdl.cpp'
+        includedirs {
+            'deps-public/include',
         }
 
-        defines {
-            'USE_SDL'
+        frameworkdirs {
+            'deps-public/Frameworks/%{cfg.buildcfg}',
+            'deps-public/Frameworks'
+        }
+
+        files {
+            'deps-public/include/**',
+            'deps-public/src/*',
+        }
+    filter { 'system:macosx' }
+        libdirs {
+            'deps-public/lib/Universal/%{cfg.buildcfg}',
+            'deps-public/lib/Universal'
         }
     filter { 'system:gaming_desktop or scarlett or windows or linux' }
-        links {
-            'SDL3'
-        }
-    filter { 'system:macosx' }
-        links {
-            'SDL3.framework'
+        libdirs {
+            'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
+            'deps-public/lib/%{cfg.architecture}'
         }
     filter {}
+end
 
-    filter { 'system:not macosx', 'architecture:not x86' }
-        links {
-            'PhysX_static_64',
-            'PhysXCharacterKinematic_static_64',
-            'PhysXCommon_static_64',
-            'PhysXExtensions_static_64',
-            'PhysXFoundation_static_64',
-            'PhysXPvdSDK_static_64'
-        }
-    filter { 'system:not macosx', 'architecture:x86' }
-        links {
-            'PhysX_static_32',
-            'PhysXCharacterKinematic_static_32',
-            'PhysXCommon_static_32',
-            'PhysXExtensions_static_32',
-            'PhysXFoundation_static_32',
-            'PhysXPvdSDK_static_32'
-        }
-    filter { 'system:macosx' }
-        links {
-            'PhysX-darwin',
-            'PhysXCharacterKinematic-darwin',
-            'PhysXCommon-darwin',
-            'PhysXExtensions-darwin',
-            'PhysXFoundation-darwin',
-            'PhysXPvdSDK-darwin'
-        }
-    filter {}
-
-    filter { 'system:gaming_desktop or scarlett or windows' }
-        prebuildcommands {
-            '%{wks.location}/../scripts/commit.bat %{cfg.targetdir}'
-        }
-        prelinkcommands {
-            '%{wks.location}/../scripts/copyfiles.bat %{cfg.targetdir} %{cfg.platform} %{cfg.buildcfg}'
-        }
-    filter { 'system:macosx' }
-        prebuildcommands {
-            '%{wks.location}/../scripts/commit.sh %{cfg.targetdir}'
-        }
-        prelinkcommands {
-            '%{wks.location}/../scripts/copyfiles.sh %{cfg.targetdir} Universal %{cfg.buildcfg}'
-        }
-    filter { 'system:linux' }
-        prebuildcommands {
-            '%{wks.location}/../scripts/commit.sh %{cfg.targetdir}'
-        }
-        prelinkcommands {
-            '%{wks.location}/../scripts/copyfiles.sh %{cfg.targetdir} %{cfg.platform} %{cfg.buildcfg}'
-        }
-    filter {}
+include 'game.lua'
+include 'tools.lua'
