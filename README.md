@@ -31,6 +31,11 @@ See [DESIGN.md]() for an overview of the game's design and plan.
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
 
+## Assets
+Right now, the [assets](https://git.randomcode.dev/mobslicer152/FalseKing-assets)
+are freely available under the same license as the code. However, that might
+change once I release the game, similar to what games like DOOM have done.
+
 ## Third-party code and files
 See [here](https://git.randomcode.dev/mobslicer152/FalseKing-deps-public) for
 the dependencies in use. Additionally, various snippets from other projects
