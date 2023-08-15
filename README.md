@@ -30,3 +30,9 @@ See [DESIGN.md]() for an overview of the game's design and plan.
 - [UWP/Xbox](build/winrt/BUILD.md)
 - [macOS](build/darwin/BUILD.md)
 - [Unix](build/unix/BUILD.md)
+
+## Third-party code and files
+See [here](https://git.randomcode.dev/mobslicer152/FalseKing-deps-public) for
+the dependencies in use. Additionally, various snippets from other projects
+have been used. Where this is the case, I've done my best to put a link to the
+source of the snippet.

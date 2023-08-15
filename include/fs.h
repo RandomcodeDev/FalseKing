@@ -12,7 +12,7 @@ class FileSource
   public:
     static FileSource* Create(const std::string& path);
 
-    virtual std::string GetRealPath() = 0;
+    virtual const std::string& GetRealPath() = 0;
 
     virtual std::vector<uint8_t> Read(const std::string& path) = 0;
     virtual bool Exists(const std::string& path) = 0;

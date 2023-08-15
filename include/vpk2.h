@@ -59,6 +59,9 @@ struct Vpk2Signature
 };
 #pragma pack(pop)
 
+// Calculate a CRC32 using the table Valve formats use
+uint32_t ValveCrc32(const std::vector<uint8_t>& data);
+
 class Vpk2 : public Filesystem::FileSource
 {
   public:
@@ -75,7 +78,12 @@ class Vpk2 : public Filesystem::FileSource
     // Load or create a VPK
     Vpk2(const std::string& path, bool create = false);
 
-    std::string GetRealPath()
+    const Vpk2Header& GetHeader()
+    {
+        return m_header;
+    }
+
+    const std::string& GetRealPath()
     {
         return m_realPath;
     }
@@ -88,6 +96,14 @@ class Vpk2 : public Filesystem::FileSource
 
     // Add a file into the VPK
     void AddFile(const std::string& path, const std::vector<uint8_t>& data);
+
+    // Compute the CRC32 of an entry
+    uint32_t ComputeCrc32(const std::string& path);
+
+    size_t GetFileCount()
+    {
+        return m_files.size();
+    }
 
     iterator begin()
     {

@@ -15,7 +15,7 @@ void Initialize()
     }
     if (g_debug)
     {
-        spdlog::set_level(spdlog::level::debug);
+        spdlog::set_level(spdlog::level::trace);
     }
 }
 
@@ -42,15 +42,14 @@ class CreateCommand : public Subcommand
 
         Vpk::Vpk2 vpk(outputVpk, true);
 
-        SPDLOG_INFO("Creating VPK file {} from directory {}", outputVpk,
-                    directory.string());
+        fmt::print("Creating VPK file {} from directory {}\n", outputVpk,
+                   directory.string());
         for (const auto& entry : fs::recursive_directory_iterator(directory))
         {
             if (entry.is_regular_file() || entry.is_symlink())
             {
                 std::string innerPath =
-                    fs::relative(entry.path(), directory)
-                        .string();
+                    fs::relative(entry.path(), directory).string();
                 vpk.AddFile(innerPath, Filesystem::Read(entry.path().string()));
             }
         }
@@ -86,8 +85,8 @@ class ExtractCommand : public Subcommand
         }
         fs::path directoryPath(outputDirectory);
 
-        SPDLOG_INFO("Extracting VPK file {} to directory {}", vpkPath.string(),
-                    directoryPath.string());
+        fmt::print("Extracting VPK file {} to directory {}\n", vpkPath.string(),
+                   directoryPath.string());
 
         Vpk::Vpk2 vpk(vpkPath.string());
         for (const auto& entry : vpk)
@@ -95,8 +94,70 @@ class ExtractCommand : public Subcommand
             fs::path path(entry.first);
             path = directoryPath / path;
             fs::create_directories(path.parent_path());
-            SPDLOG_INFO("Writing file {}", path.string());
+            if (g_verbose)
+            {
+                fmt::print("Writing file {}\n", path.string());
+            }
             Filesystem::Write(path.string(), vpk.Read(entry.first));
+        }
+    }
+};
+
+class ListCommand : public Subcommand
+{
+  public:
+    std::string inputVpk;
+    bool checkHashes;
+
+    void Run()
+    {
+        Initialize();
+
+        // 4 is length of _dir
+        if (inputVpk.length() > 4 + Vpk::VPK_EXTENSION_LENGTH &&
+            inputVpk.substr(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH,
+                            4) == "_dir")
+        {
+            inputVpk.resize(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH);
+            inputVpk += Vpk::VPK_EXTENSION;
+        }
+        fs::path vpkPath = fs::absolute(inputVpk);
+
+        Vpk::Vpk2 vpk(vpkPath.string());
+        const auto& header = vpk.GetHeader();
+        fmt::print("Header:\n");
+        fmt::print("\tSignature: {:08X} (should be {:08X})\n", header.signature,
+                   Vpk::VPK2_SIGNATURE);
+        fmt::print("\tVersion: {}\n", header.version);
+        fmt::print("\tTree size: {}\n", header.treeSize);
+        fmt::print("\tSize of file data in directory: {}\n",
+                   header.fileDataSize);
+        fmt::print("\tMD5 section size: {}\n", header.externalMd5Size);
+        fmt::print("\tInternal MD5 data size: {}\n", header.md5Size);
+        fmt::print("\tSignature data size: {}\n", header.signature);
+        fmt::print("\tFile count: {}\n", vpk.GetFileCount());
+        for (const auto& pair : vpk)
+        {
+            const auto& name = pair.first;
+            const auto& entry = pair.second;
+
+            fmt::print("Entry {}\n", name);
+            if (checkHashes)
+            {
+                uint32_t crc = vpk.ComputeCrc32(name);
+                fmt::print("\tStored CRC: 0x{:08X} (computed 0x{:08X}{})\n",
+                           entry.crc, crc,
+                           entry.crc != crc ? ", data could be incorrect"
+                                            : ", data is correct");
+            }
+            else
+            {
+                fmt::print("\tCRC: 0x{:08X}\n", entry.crc);
+            }
+            fmt::print("\tPreload size: {}\n", entry.preloadSize);
+            fmt::print("\tArchive index: {}\n", entry.archiveIndex);
+            fmt::print("\tOffset: 0x{:08X}\n", entry.offset);
+            fmt::print("\tLength: {}\n", entry.length);
         }
     }
 };
@@ -127,7 +188,7 @@ int32_t ToolMain()
                      "The path to save the VPK file to (defaults to the name "
                      "of the directory)")
         ->type_name("DIR");
-    create->callback([&createData]() { createData.Run(); });
+    createData.Register(create);
 
     auto extract =
         app.add_subcommand("extract", "Extract a VPK file to a directory");
@@ -142,7 +203,17 @@ int32_t ToolMain()
                      "The directory to extract the VPK file into (will be "
                      "created, defaults to the name of the VPK)")
         ->type_name("DIR");
-    extract->callback([&extractData]() { extractData.Run(); });
+    extractData.Register(extract);
+
+    auto list = app.add_subcommand(
+        "list", "List the information and contents of a VPK file");
+    ListCommand listData{};
+    list->add_option("-i,--vpk", listData.inputVpk, "The VPK file to read")
+        ->type_name("FILE")
+        ->required();
+    list->add_flag("-c,--check", listData.checkHashes,
+                   "Check the hashes of files where possible");
+    listData.Register(list);
 
     Filesystem::Initialize();
 

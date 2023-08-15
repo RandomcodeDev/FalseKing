@@ -7,7 +7,7 @@ class PhysicalFileSource : public Filesystem::FileSource
     PhysicalFileSource(const std::string& path);
     ~PhysicalFileSource() = default;
 
-    std::string GetRealPath()
+    const std::string& GetRealPath()
     {
         return m_realPath;
     }

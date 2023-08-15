@@ -40,7 +40,8 @@ using namespace physx;
 #define FMT_HEADER_ONLY
 #define SPDLOG_HEADER_ONLY
 #ifdef _DEBUG
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+// This only enables the macros, the level of the default level actuall controls it.
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #endif
 #define FMT_NO_EXCEPTIONS
 #define SPDLOG_NO_EXCEPTIONS
