@@ -20,16 +20,15 @@ See [DESIGN.md]() for an overview of the game's design and plan.
 - On Unix-like platforms (macOS, Linux, etc), run
   `chmod +x deps-public/bin/* scripts/*.sh` in order for the build process to
   work
-- use Premake to generate the appropriate project files for your platform
+- Use Premake to generate the appropriate project files for your platform
 - On Linux, in order to link correctly, you need to use LLD because it does
  partial linking of static libraries by default, which is necessary to link
  to one of the PhysX libraries. Example: `make -C build LDFLAGS=-fuse-ld=lld`
 
-## Platform-specific instructions
-- [Windows (Windows XP or later)](build/windows/BUILD.md)
-- [UWP/Xbox](build/winrt/BUILD.md)
-- [macOS](build/darwin/BUILD.md)
-- [Unix](build/unix/BUILD.md)
+## Assets
+Right now, the [assets](https://git.randomcode.dev/mobslicer152/FalseKing-assets)
+are freely available under the same license as the code. However, that might
+change once I release the game, similar to what games like DOOM have done.
 
 ## Third-party code and files
 See [here](https://git.randomcode.dev/mobslicer152/FalseKing-deps-public) for
