@@ -30,8 +30,8 @@ struct Vpk2DirectoryEntry
     uint32_t crc;
     uint16_t preloadSize;
     uint16_t archiveIndex;
-    uint32_t entryOffset;
-    uint32_t entryLength;
+    uint32_t offset;
+    uint32_t length;
     uint16_t terminator;
 };
 
@@ -62,6 +62,12 @@ struct Vpk2Signature
 class Vpk2 : public Filesystem::FileSource
 {
   public:
+    using container = std::map<std::string, Vpk2DirectoryEntry>;
+    using iterator = container::iterator;
+    using const_iterator = container::const_iterator;
+    using reverse_iterator = container::reverse_iterator;
+    using const_reverse_iterator = container::const_reverse_iterator;
+
     // Create a VPK. The path will be set when it's written the first time, and
     // files cannot be added until then.
     Vpk2();
@@ -82,6 +88,26 @@ class Vpk2 : public Filesystem::FileSource
 
     // Add a file into the VPK
     void AddFile(const std::string& path, const std::vector<uint8_t>& data);
+
+    iterator begin()
+    {
+        return m_files.begin();
+    }
+
+    iterator end()
+    {
+        return m_files.end();
+    }
+
+    const_iterator begin() const
+    {
+        return m_files.begin();
+    }
+
+    const_iterator end() const
+    {
+        return m_files.end();
+    }
 
   private:
     std::string m_realPath;

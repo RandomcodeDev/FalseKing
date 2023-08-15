@@ -3,22 +3,19 @@
 #include "vpk2.h"
 
 bool g_verbose;
-bool g_silent;
+bool g_debug;
 
 // Initializes stuff like the log level
 void Initialize()
 {
-    if (g_verbose && !g_silent)
-    {
-        spdlog::set_level(spdlog::level::debug);
-    }
-    else if (!g_verbose && g_silent)
-    {
-        spdlog::set_level(spdlog::level::warn);
-    }
-    else
+    spdlog::set_level(spdlog::level::warn);
+    if (g_verbose)
     {
         spdlog::set_level(spdlog::level::info);
+    }
+    if (g_debug)
+    {
+        spdlog::set_level(spdlog::level::debug);
     }
 }
 
@@ -52,9 +49,8 @@ class CreateCommand : public Subcommand
             if (entry.is_regular_file() || entry.is_symlink())
             {
                 std::string innerPath =
-                    fs::relative(entry.path(), directory.parent_path())
+                    fs::relative(entry.path(), directory)
                         .string();
-                SPDLOG_DEBUG("{} -> {}", entry.path().string(), innerPath);
                 vpk.AddFile(innerPath, Filesystem::Read(entry.path().string()));
             }
         }
@@ -72,6 +68,36 @@ class ExtractCommand : public Subcommand
     void Run()
     {
         Initialize();
+
+        // 4 is length of _dir
+        if (inputVpk.length() > 4 + Vpk::VPK_EXTENSION_LENGTH &&
+            inputVpk.substr(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH,
+                            4) == "_dir")
+        {
+            inputVpk.resize(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH);
+            inputVpk += Vpk::VPK_EXTENSION;
+        }
+        fs::path vpkPath = fs::absolute(inputVpk);
+        if (!outputDirectory.length())
+        {
+            outputDirectory = vpkPath.string();
+            outputDirectory.resize(outputDirectory.length() -
+                                   Vpk::VPK_EXTENSION_LENGTH);
+        }
+        fs::path directoryPath(outputDirectory);
+
+        SPDLOG_INFO("Extracting VPK file {} to directory {}", vpkPath.string(),
+                    directoryPath.string());
+
+        Vpk::Vpk2 vpk(vpkPath.string());
+        for (const auto& entry : vpk)
+        {
+            fs::path path(entry.first);
+            path = directoryPath / path;
+            fs::create_directories(path.parent_path());
+            SPDLOG_INFO("Writing file {}", path.string());
+            Filesystem::Write(path.string(), vpk.Read(entry.first));
+        }
     }
 };
 
@@ -85,8 +111,8 @@ int32_t ToolMain()
     app.require_subcommand();
 
     app.add_flag<bool>("-v,--verbose", g_verbose,
-                       "Output debugging information");
-    app.add_flag<bool>("-s,--silent", g_silent, "Output reduced information");
+                       "Output information for each file");
+    app.add_flag<bool>("-d,--debug", g_debug, "Output debugging information");
 
     auto create =
         app.add_subcommand("create", "Create a VPK file from a directory");

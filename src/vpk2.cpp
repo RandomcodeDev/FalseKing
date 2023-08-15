@@ -117,14 +117,14 @@ Vpk::Vpk2::Vpk2(const std::string& path, bool create)
                     (extension == " " ? "" : "." + extension);
                 m_files[fullPath] =
                     *(Vpk2DirectoryEntry*)(directory.data() + currentOffset);
-                if (m_files[fullPath].entryOffset > m_currentOffset)
+                if (m_files[fullPath].offset > m_currentOffset)
                 {
-                    m_currentOffset = m_files[fullPath].entryOffset;
+                    m_currentOffset = m_files[fullPath].offset;
                 }
                 if (m_files[fullPath].archiveIndex > m_currentArchive)
                 {
                     m_currentArchive = m_files[fullPath].archiveIndex;
-                    m_currentOffset = m_files[fullPath].entryOffset;
+                    m_currentOffset = m_files[fullPath].offset;
                 }
                 currentOffset +=
                     sizeof(Vpk2DirectoryEntry) + m_files[fullPath].preloadSize;
@@ -171,11 +171,11 @@ std::vector<uint8_t> Vpk::Vpk2::Read(const std::string& path)
         Vpk2DirectoryEntry entry = m_files[path];
         std::string archivePath = GetArchivePath();
         std::vector<uint8_t> archive = Filesystem::Read(archivePath);
-        if (entry.entryOffset + entry.entryLength < archive.size())
+        if (entry.offset + entry.length <= archive.size())
         {
-            return std::vector<uint8_t>(archive.begin() + entry.entryOffset,
-                                        archive.begin() + entry.entryOffset +
-                                            entry.entryLength);
+            return std::vector<uint8_t>(archive.begin() + entry.offset,
+                                        archive.begin() + entry.offset +
+                                            entry.length);
         }
     }
 
@@ -225,12 +225,12 @@ void Vpk::Vpk2::Write(const std::string& path)
                 : filePath.substr(lastDot + 1, filePath.length() - lastDot - 1);
 
         size_t lastSlash = filePath.rfind('/', lastDot);
-        std::string path = lastSlash > filePath.length()
-                               ? " "
-                               : filePath.substr(0, lastSlash - 1);
+        std::string path =
+            lastSlash > filePath.length() ? " " : filePath.substr(0, lastSlash);
 
-        std::string name = filePath.substr(
-            lastSlash <= filePath.length() ? lastSlash + 1 : 0, lastDot);
+        std::string name =
+            filePath.substr(lastSlash < filePath.length() ? lastSlash + 1 : 0,
+                            lastDot - lastSlash - 1);
 
         SPDLOG_DEBUG(
             "Adding file {} to the directory tree as \"{}\" \"{}\" \"{}\"",
@@ -263,7 +263,8 @@ void Vpk::Vpk2::Write(const std::string& path)
                                  {});
                 std::copy(name.begin(), name.begin() + name.size(),
                           directory.begin() + oldSize);
-                // TODO: figure out where these 4 bytes come from and annihilate them
+                // TODO: figure out where these 4 bytes come from and annihilate
+                // them
                 std::copy((uint8_t*)&directoryEntry,
                           (uint8_t*)(&directoryEntry + 1),
                           directory.begin() + oldSize + name.size() + 1);
@@ -305,36 +306,34 @@ void Vpk::Vpk2::AddFile(const std::string& path,
         return;
     }
 
-    std::string archivePath = GetArchivePath();
-    SPDLOG_INFO("Checking if file will fit in {}", archivePath);
-
+    // Make sure not to exceed the chunk size unless the file is bigger than it
     if (m_currentOffset + data.size() > VPK2_CHUNK_MAX_SIZE)
     {
         m_currentArchive++;
         m_currentOffset = 0;
-
-        archivePath = GetArchivePath();
-        SPDLOG_INFO("File is {} byte(s) too large, writing to {} instead. "
-                    "Previous archive padded {} byte(s).",
-                    m_currentOffset + data.size() - VPK2_CHUNK_MAX_SIZE,
-                    archivePath, VPK2_CHUNK_MAX_SIZE - m_currentOffset);
     }
 
-    std::ofstream archive(archivePath, std::ios::binary | std::ios::ate);
+    std::string archivePath = GetArchivePath();
+    std::ofstream archive(archivePath, std::ios::binary | std::ios::app);
+    if (!archive.is_open())
+    {
+        QUIT("Failed to open VPK archive {}", archivePath);
+    }
 
     Vpk2DirectoryEntry entry;
     entry.crc = 0;
     entry.preloadSize = 0;
     entry.archiveIndex = m_currentArchive;
-    entry.entryOffset = m_currentOffset;
-    entry.entryLength = (uint32_t)data.size();
+    entry.offset = m_currentOffset;
+    entry.length = (uint32_t)data.size();
     entry.terminator = VPK2_ENTRY_TERMINATOR;
 
-    archive.seekp(m_currentOffset, std::ios::beg);
     archive.write((const char*)data.data(), data.size());
+    archive.flush();
 
-    SPDLOG_INFO("File added, {} byte(s) written at offset 0x{:X}",
-                (size_t)archive.tellp() - m_currentOffset, m_currentOffset);
+    SPDLOG_INFO("File added to {}, {} byte(s) written at offset 0x{:X}",
+                archivePath, (size_t)archive.tellp() - m_currentOffset,
+                m_currentOffset);
     m_currentOffset = (uint32_t)archive.tellp();
 
     m_files[cleanPath] = entry;
