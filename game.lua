@@ -78,13 +78,13 @@ project 'Game'
             'python %{wks.location}/../scripts/commit.py %{cfg.targetdir}'
         }
         prelinkcommands {
-            'python %{wks.location}/../scripts/copyfiles.py %{cfg.system} %{cfg.targetdir} %{cfg.platform} %{cfg.buildcfg}'
+            'python %{wks.location}/../scripts/copyfiles.py %{cfg.targetdir} %{cfg.system} %{cfg.platform} %{cfg.architecture} %{cfg.buildcfg} build'
         }
     filter { 'system:macosx' }
         prebuildcommands {
             '%{wks.location}/../scripts/commit.py %{cfg.targetdir}'
         }
         prelinkcommands {
-            '%{wks.location}/../scripts/copyfiles.py  %{cfg.system} %{cfg.targetdir} Universal %{cfg.buildcfg}'
+            '%{wks.location}/../scripts/copyfiles.py %{cfg.targetdir} %{cfg.system} Universal Universal %{cfg.buildcfg} build'
         }
     filter {}

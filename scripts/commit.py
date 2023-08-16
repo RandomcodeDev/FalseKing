@@ -7,6 +7,7 @@ import subprocess
 import os
 
 if len(sys.argv) < 2:
+    print(f"{sys.argv[0]} <output directory>")
     sys.exit()
 
 commit = subprocess.check_output(["git", "log", "-n", "1", "--pretty=format:'%H'"], text=True).strip("'")

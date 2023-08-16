@@ -1,3 +1,0 @@
-:: ~ $GENARCH$/discord_game_sdk.$DLIBEXT$ = discord_game_sdk.$DLIBEXT$
-windows:: ~ $GENARCH$/libzstd.$DLIBEXT$ = libzstd.$DLIBEXT$
-:: ~ $GENARCH$/$CONFIG$/$PREFIX$SDL3$SUFFIX$.$DLIBEXT$ = $PREFIX$SDL3$SUFFIX$.$DLIBEXT$

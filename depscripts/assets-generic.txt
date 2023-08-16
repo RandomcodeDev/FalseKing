@@ -1,0 +1,4 @@
+!depscript
+
+::~assets_000.vpk=
+::~assets_dir.vpk=

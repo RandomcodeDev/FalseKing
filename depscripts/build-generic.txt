@@ -1,0 +1,4 @@
+!deplist
+
+assets
+libs
