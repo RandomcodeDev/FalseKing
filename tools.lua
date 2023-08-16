@@ -16,6 +16,7 @@ project 'vpktool'
     files {
         'include/fs.h',
         'include/game.h',
+        'include/stdafx.h',
         'include/vpk2.h',
         'src/fs.cpp',
         'src/vpk2.cpp',
@@ -23,4 +24,3 @@ project 'vpktool'
         'tools/toolbase.cpp',
         'tools/vpktool.cpp'
     }
-

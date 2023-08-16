@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game.h"
+#include "stdafx.h"
 
 // Abstracts the filesystem
 namespace Filesystem

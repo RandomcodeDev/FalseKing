@@ -17,6 +17,16 @@ project 'Game'
         'src/sdl.cpp',
     }
 
+    filter { 'files:src/**.cpp' }
+        pchheader 'stdafx.h'
+        pchsource 'stdafx.cpp'
+    filter {}
+    filter { 'files:stdafx.cpp' }
+        includedirs {
+            _MAIN_SCRIPT_DIR
+        }
+    filter {}
+
     filter { 'system:gaming_desktop or scarlett' }
         files {
             'gdk/**'

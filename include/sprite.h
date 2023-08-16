@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game.h"
+#include "stdafx.h"
 
 // Forward declarations
 class Backend;

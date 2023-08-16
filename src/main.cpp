@@ -14,10 +14,6 @@
 
 Backend* g_backend;
 
-const char* GAME_COMMIT = {
-#include "commit.txt"
-};
-
 void embraceTheDarkness();
 
 int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)

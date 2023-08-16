@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game.h"
+#include "stdafx.h"
 
 namespace Physics
 {
