@@ -1,0 +1,4 @@
+!depscript
+
+:: ~ deps-public/licenses = licenses
+:: ~ LICENSE.txt = licenses/falseking.txt

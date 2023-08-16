@@ -156,8 +156,7 @@ and other things.
 
 ## Development
 
-- The game is primarily developed using Visual Studio, alongside similar tools
-  on platforms like macOS and Linux (Xcode and Neovim + BSD make)
+- The game is primarily developed using Visual Studio.
 - Various open source libraries with non-strict licenses are used
 - Main game code is stored on GitHub, but assets and precompiled dependencies
   are stored on a personal Gitea server to get around file size limits. Any

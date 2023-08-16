@@ -1,0 +1,3 @@
+!depscript
+
+:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$EXEEXT$ = Game.$BLDARCH$$EXEEXT$

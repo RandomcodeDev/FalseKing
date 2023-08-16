@@ -1,0 +1,6 @@
+!deplist
+
+assets
+distrib-files
+libs
+licenses

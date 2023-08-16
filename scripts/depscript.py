@@ -4,47 +4,25 @@ from typing import AnyStr
 
 def script_name(name: AnyStr, system: AnyStr, platform: AnyStr):
     script = f"{name}.txt"
-    print(f"Checking for {script}")
     if not os.path.exists(script):
+        print(f"Couldn't find {script}")
         script = f"{name}-{system}-{platform}.txt"
-        print(f"Checking for {script}")
         if not os.path.exists(script):
+            print(f"Couldn't find {script}")
             script = f"{name}-generic.txt"
-            print(f"Checking for {script}")
             if not os.path.exists(script):
                 script = "<not-found>"
                 print(f"Could not find any expected name for script {name}")
+    print(f"Using {script}")
     return script
 
-"""
-Basically, this is a way to more consistently copy arbitrary files for
-build/distribution
-
-Variables, these are replaced if encountered:
-    $GENARCH$=the target architecture, e.g. x86_64, x86, Universal, ARM64, etc
-    $BLDARCH$=the target architecture as the build system sees it, e.g. x64,
-              Gaming.Desktop.x64
-    $CONFIG$=the build configuration, e.g. Debug, Release
-    $PREFIX$=library prefix, e.g. lib
-    $SUFFIX$=library suffix, e.g. -darwin, -switch
-    $SLIBEXT$=static library extension, e.g. .lib, .a
-    $DLIBEXT$=dynamic library extension, e.g. .dll, .dylib, .so
-
-Syntax:
-    !deplist
-    [script name]
-    [script name]
-    ...
-
-    or
-
-    !depscript
-    [platform]:[architecture]:[configuration]~<source>=<destination>
-"""
 class DepScript:
     MAIN_SEPARATOR='~'
     CONDITION_SEPARATOR=':'
     EXPRESSION_SEPARATOR='='
+    COMMENT="//"
+    LIST_MAGIC="!deplist"
+    SCRIPT_MAGIC="!depscript"
 
     def __init__(self, path: os.PathLike[any], system: AnyStr,
                  platform: AnyStr, architecture: AnyStr,
@@ -52,27 +30,35 @@ class DepScript:
         with open(path, "r") as f:
             script = f.read()
 
-        # TODO: Maybe make this if a little better
+        # TODO: Maybe replace this with something better
         if system in ["windows", "gaming_desktop", "scarlett"]:
             prefix = ""
             suffix = ""
             slibext = ".lib"
             dlibext = ".dll"
+            exeext = ".exe"
+            dbgext = ".pdb"
         elif system in ["macosx"]:
             prefix = "lib"
             suffix = "-darwin"
             slibext = ".a"
             dlibext = ".dylib"
+            exeext = ""
+            dbgext = ""
         elif system in ["linux"]:
             prefix = "lib"
             suffix = ""
             slibext = ".a"
             dlibext = ".so"
+            exeext = ""
+            dbgext = ""
         else:
             prefix = "lib"
             suffix = f"-{system}"
             slibext = ".a"
             dlibext = ".so"
+            exeext = ""
+            dbgext = ""
 
         variables = [
             ["$GENARCH$", architecture],
@@ -82,14 +68,22 @@ class DepScript:
             ["$SUFFIX$", suffix],
             ["$SLIBEXT$", slibext],
             ["$DLIBEXT$", dlibext],
+            ["$EXEEXT$", exeext],
+            ["$DBGEXT$", dbgext]
         ]
         
         for variable in variables:
             script = script.replace(variable[0], variable[1])
 
-        lines = script.split('\n')
-        type = lines.pop(0)
-        if type == "!deplist":
+        def uncomment(line: AnyStr):
+            find = line.find(self.COMMENT)
+            if find != -1:
+                return line[0:find]
+            return line
+
+        lines = list(map(uncomment, script.split('\n')))
+        kind = lines.pop(0)
+        if kind == self.LIST_MAGIC:
             self.deps: list[DepScript] = []
             for script in lines:
                 if len(script) > 0:
@@ -103,7 +97,7 @@ class DepScript:
                     self.deps.append(
                         DepScript(script_name(path, system, architecture),
                             system, platform, architecture, configuration))
-        elif type == "!depscript":
+        elif kind == self.SCRIPT_MAGIC:
             self.deps: list[self.Dependency] = []
             for dep in lines:
                 if len(dep) > 0:

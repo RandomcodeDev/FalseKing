@@ -1,0 +1,6 @@
+!depscript
+
+:: ~ build/$BLDARCH$/$CONFIG$/MicrosoftGame.config = MicrosoftGame.config
+:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$EXEEXT$ = Game.$BLDARCH$$EXEEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DBGEXT$ = Game.$BLDARCH$$DBGEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/XCurl$DLIBEXT$ = XCurl$DLIBEXT$

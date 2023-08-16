@@ -26,6 +26,7 @@ function default_workspace_settings()
 
     files {
         '.github/**',
+        'depscripts/*',
         'scripts/*',
         '.clang-format',
         '.gitattributes',
