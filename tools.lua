@@ -6,6 +6,7 @@ workspace 'Tools'
 
     filter { 'system:windows' }
         platforms { 'x86', 'x64', 'ARM64' }
+        toolset 'msc'
     filter {}
 
 project 'vpktool'

@@ -30,11 +30,9 @@ def main():
         deps += depscript.DepScript(script, system, platform, architecture,
                                     configuration).deps
 
-    print(f"Copying {len(deps)} dependencies")
-
     def copydeps(deps):
+        print(f"Copying {len(deps)} dependencies")
         for dep in deps:
-            print(type(dep))
             if type(dep) == depscript.DepScript.Dependency:
                 if dep.matches(system, platform, configuration):
                     source = os.path.normpath(os.path.join(root_dir, dep.source))
@@ -43,7 +41,6 @@ def main():
                     print(f"Copying {source} -> {destination}")
                     shutil.copy2(source, destination)
             elif type(dep) == depscript.DepScript:
-                print(type(dep.deps))
                 copydeps(dep.deps)
     
     copydeps(deps)

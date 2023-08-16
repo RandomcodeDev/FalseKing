@@ -67,7 +67,7 @@ class DepScript:
             prefix = "lib"
             suffix = ""
             slibext = ".a"
-            dlibext = ".dylib"
+            dlibext = ".so"
         else:
             prefix = "lib"
             suffix = f"-{system}"
