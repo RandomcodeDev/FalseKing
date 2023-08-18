@@ -14,12 +14,13 @@ more so than for OOP (the game uses an ECS).
 
 See [DESIGN.md]() for an overview of the game's design and plan.
 
+## Requirements
+- Python 3
+- An OS that isn't totally cursed
+
 ## Build instructions
-- Run `scripts/pulldeps.py`
+- Run `python3 scripts/pulldeps.py`
 - Add `deps-public/bin` to your `PATH`
-- On Unix-like platforms (macOS, Linux, etc), run
-  `chmod +x deps-public/bin/* scripts/*` in order for the build process to
-  work
 - Use Premake to generate the appropriate project files for your platform (e.g.
   `premake5 --os=gaming_desktop vs2022` or `premake5 gmake2`)
 - On Windows, open `build\Game-vs2022.sln`, on everything else, the Makefile

@@ -37,8 +37,7 @@ jobs:
       #  if: matrix.os == 'windows-latest'
       #  working-directory: ${{env.GITHUB_WORKSPACE}}
       #  run: cmd /c scripts\pulldeps.bat public
-      - name: Download dependencies (Unix)
-        if: matrix.os != 'windows-latest'
+      - name: Download dependencies
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: |
           scripts/pulldeps.sh public
