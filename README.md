@@ -19,7 +19,11 @@ See [](DESIGN.md) for an overview of the game's design and plan.
 
 - Python 3
 - An OS that isn't totally cursed
-- A C++ compiler with C++17 support. For Windows, I recommend Visual Studio 2022, for macOS I recommend Xcode, and for Linux and others I recommend Clang.
+- A C++ compiler with C++17 support. For Windows, I recommend Visual Studio
+  2022, for macOS I recommend Xcode, and for Linux and others I recommend
+  Clang. However, most popular compilers should work.
+- Currently, Windows x86 and Gaming.Desktop.x64 are supported, Linux x86-64,
+  and macOS Universal are supported
 - To run the game on Windows XP, you need a CPU that can run the latest Visual
   C++ runtime it supports
 
