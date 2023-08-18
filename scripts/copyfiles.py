@@ -48,8 +48,10 @@ def get_default_platform(system):
         return "Gaming.Desktop.x64"
     elif system == "scarlett":
         return "Gaming.Xbox.Scarlett.x64"
+    elif system == "macosx":
+        return "Universal"
     else:
-        return ""
+        return get_default_architecture(system)
     
 def get_system():
     if platform.system() == "Windows":

@@ -15,25 +15,34 @@ more so than for OOP (the game uses an ECS).
 See [DESIGN.md]() for an overview of the game's design and plan.
 
 ## Build instructions
-- Run `scripts\pulldeps.bat public` or `scripts/pulldeps.sh public` depending
-  on your platform
+- Run `scripts/pulldeps.py`
+- Add `deps-public/bin` to your `PATH`
 - On Unix-like platforms (macOS, Linux, etc), run
   `chmod +x deps-public/bin/* scripts/*` in order for the build process to
   work
-- Use Premake to generate the appropriate project files for your platform
+- Use Premake to generate the appropriate project files for your platform (e.g.
+  `premake5 --os=gaming_desktop vs2022` or `premake5 gmake2`)
+- On Windows, open `build\Game-vs2022.sln`, on everything else, the Makefile
+  will be `build/Game-gmake2.mak`
 - On Linux, in order to link correctly, you need to use LLD because it does
- partial linking of static libraries by default, which is necessary to link
- to one of the PhysX libraries. Example: `make -C build LDFLAGS=-fuse-ld=lld`
+  partial linking of static libraries by default, which is necessary to link
+  to one of the PhysX libraries. Example: `make -C build -f Game-gmake2.mak 
+  LDFLAGS=-fuse-ld=lld`
+- There is also a separate solution/Makefile for tools (`Tools-vs2022.sln`/
+  `Tools-gmake2.mak`), which you might want if you're making a mod or
+  something.
 
 ## Assets
 Right now, the [assets](https://git.randomcode.dev/mobslicer152/FalseKing-assets)
 are freely available under the same license as the code. However, that might
-change once I release the game, similar to what games like DOOM have done.
-
-## Assets
-Right now, the [assets](https://git.randomcode.dev/mobslicer152/FalseKing-assets)
-are freely available under the same license as the code. However, that might
-change once I release the game, similar to what games like DOOM have done.
+change once I release the game, similar to what games like DOOM have done. They
+are stored in folders or in Valve Pack Files. To create those pack files, you
+can use `vpktool` (you have to build the tools), the `vpk` Python module, or
+the official Source Engine `vpk.exe`. They both offer a bit more functionality
+than `vpktool`, but it also works well enough. The game looks in `assets/` and
+`assets.vpk` by default, plus some places dependant on the platform. Possibly,
+some way to include other locations without modifying the binary might be
+added.
 
 ## Third-party code and files
 See [here](https://git.randomcode.dev/mobslicer152/FalseKing-deps-public) for

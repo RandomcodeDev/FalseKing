@@ -32,7 +32,7 @@ jobs:
       - name: chmod scripts
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os != 'windows-latest'
-        run: chmod a+x scripts/*.sh
+        run: chmod a+x scripts/*
       #- name: Download dependencies (Windows)
       #  if: matrix.os == 'windows-latest'
       #  working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -67,13 +67,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          make -C build CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
+          PATH="deps-public/bin:$PATH" make -C build CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
       - name: Build (macOS Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'macOS-13'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          make -C build CONFIG=${{ matrix.config }}_universal
+          PATH="deps-public/bin:$PATH" make -C build CONFIG=${{ matrix.config }}_universal
       #- name: Install the Apple certificate and provisioning profile
       #  working-directory: ${{env.GITHUB_WORKSPACE}}
       #  if: matrix.os == 'macOS-13'
@@ -111,15 +111,18 @@ jobs:
       - name: Distrib (Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'ubuntu-latest'
-        run: scripts/distrib.sh
+        run: python3 scripts/copyfiles.py
+          --configuration ${{matrix.config}}
+          --architecture ${{matrix.target}}
           FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          ${{matrix.target}} ${{matrix.config}} Game
+          distrib
       - name: Distrib (macOS)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'macOS-13'
-        run: scripts/distrib.sh
+        run: scripts/copyfiles.py
+          --configuration ${{matrix.config}}
           FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
-          Universal ${{matrix.config}} Game
+          distrib
       #- name: Upload a Build Artifact (MSBuild Debug)
       #  uses: actions/upload-artifact@v3.1.2
       #  if: matrix.os == 'windows-latest' && matrix.config == 'Debug'
@@ -149,10 +152,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          path: Game.zip
       - name: Upload a Build Artifact (macOS)
         uses: actions/upload-artifact@v3.1.2
         if: matrix.os == 'macOS-13'
         with:
           name: FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
-          path: Game.zip

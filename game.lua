@@ -85,16 +85,16 @@ project 'Game'
 
     filter { 'system:gaming_desktop or scarlett or windows or linux' }
         prebuildcommands {
-            'python %{wks.location}/../scripts/commit.py %{cfg.targetdir}'
+            'python3 %{wks.location}/../scripts/commit.py %{cfg.targetdir}'
         }
         prelinkcommands {
-            'python %{wks.location}/../scripts/copyfiles.py %{cfg.targetdir} %{cfg.system} %{cfg.platform} %{cfg.architecture} %{cfg.buildcfg} build'
+            'python3 %{wks.location}/../scripts/copyfiles.py --system %{cfg.system} --platform %{cfg.platform} --architecture %{cfg.architecture} --configuration %{cfg.buildcfg} %{cfg.targetdir} build'
         }
     filter { 'system:macosx' }
         prebuildcommands {
             '%{wks.location}/../scripts/commit.py %{cfg.targetdir}'
         }
         prelinkcommands {
-            '%{wks.location}/../scripts/copyfiles.py %{cfg.targetdir} %{cfg.system} Universal Universal %{cfg.buildcfg} build'
+            'python3 %{wks.location}/../scripts/copyfiles.py --system %{cfg.system} --configuration %{cfg.buildcfg} %{cfg.targetdir} build'
         }
     filter {}

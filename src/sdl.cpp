@@ -129,7 +129,10 @@ extern "C" int main(int argc, char* argv[])
 {
 #ifdef _WIN32
 #ifdef _DEBUG
-    AllocConsole();
+    if (!AttachConsole(ATTACH_PARENT_PROCESS))
+    {
+        AllocConsole();
+    }
     FILE* dummy;
     freopen_s(&dummy, "CONIN$", "r", stdin);
     freopen_s(&dummy, "CONOUT$", "w", stdout);
@@ -187,7 +190,7 @@ SdlBackend::SdlBackend()
     m_renderer = SDL_CreateRenderer(m_window,
 #if defined(__APPLE__)
                                     "metal",
-#elif _WIN32_WINNT == _WIN32_WNINT_WINXP
+#elif _WIN32_WINNT == _WIN32_WINNT_WINXP
                                     "software",
 #elif defined(_GAMING_DESKTOP)
                                     "direct3d12",

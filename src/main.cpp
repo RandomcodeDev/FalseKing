@@ -38,6 +38,7 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
         paths.push_back(path);
     }
     paths.push_back("assets.vpk");
+    paths.push_back("assets");
     Filesystem::Initialize(paths);
     Discord::Initialize();
 
