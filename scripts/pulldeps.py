@@ -26,7 +26,7 @@ def main():
     git_update_commands = [["git", "pull"], ["git", "submodule", "foreach", "git pull origin HEAD"]]
 
     def del_rw(action, name, exc):
-        os.chmod(name, stat.S_IWRITE)
+        os.chmod(name, stat.S_IWUSR)
         os.remove(name)
 
     results = []
@@ -47,7 +47,7 @@ def main():
         for file in files:
             file = os.path.join(root, file)
             print(f"Making {file} executable")
-            os.chmod(file, stat.S_IEXEC)
+            os.chmod(file, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
     print(f"Git results: {results}")
 
