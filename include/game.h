@@ -63,6 +63,7 @@ using namespace physx;
 #undef LoadLibrary
 
 namespace chrono = std::chrono;
+using namespace std::chrono_literals;
 using precise_clock = chrono::high_resolution_clock;
 
 // Constants

@@ -35,7 +35,6 @@ project 'Game'
 
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
         files {
-            -- Get Discord and ImGui files
             'deps-public/src/**',
 
             'src/sdl.cpp'

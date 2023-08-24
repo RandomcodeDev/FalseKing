@@ -4,7 +4,7 @@ function default_workspace_settings()
     location 'build'
     filename '%{wks.name}-%{_ACTION or \'\'}'
 
-    configurations { 'Debug', 'Release' }
+    configurations { 'Debug', 'Release', 'Retail' }
 
     filter { 'system:windows' }
         platforms { 'x86', 'ARM64' }
@@ -75,6 +75,10 @@ function default_project_settings()
     filter { 'configurations:Release' }
         defines 'NDEBUG'
         optimize 'On'
+        symbols 'On'
+    filter { 'configurations:Retail' }
+        defines { 'NDEBUG', 'RETAIL' }
+        optimize 'On'
     filter {}
 
     includedirs {
@@ -106,7 +110,8 @@ function default_project_settings()
     filter { 'system:gaming_desktop or scarlett or windows or linux' }
         libdirs {
             'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
-            'deps-public/lib/%{cfg.architecture}'
+            'deps-public/lib/%{cfg.architecture}',
+            'deps-public/lib/%{cfg.architecture}/Release' -- This is for Retail builds
         }
     filter {}
 end

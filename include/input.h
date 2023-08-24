@@ -20,6 +20,7 @@ static constexpr uint16_t LEFT_SHOULDER = 0b0000010000000000;  // Scroll up
 static constexpr uint16_t RIGHT_SHOULDER = 0b0000100000000000; // Scroll down
 static constexpr uint16_t LEFT_STICK = 0b0001000000000000;     // Left control
 static constexpr uint16_t RIGHT_STICK = 0b0010000000000000;    // Left shift
+static constexpr uint16_t DEBUG_CYCLE = 0b0100000000000000;    // Debug mode
 
 // FIXME: hardcoded deadzones based on my specific controller
 static constexpr float LEFT_STICK_MIN_X = 0.3f;
@@ -67,13 +68,15 @@ class State
             "left={:.03}, {:.03}\tright={:.03}, {:.03}\ttriggers={:.03}, "
             "{:.03}\tstart={}, select={}, "
             "up={}, down={}, left={}, right={}, A={}, B={}, X={}, Y={}, "
-            "shoulders={}, {}, stick buttons={}, {}, scroll amount={}",
+            "shoulders={}, {}, stick buttons={}, {}, scroll amount={}, debug "
+            "cycle={}",
             GetLeftStickDirection().x, GetLeftStickDirection().y,
             GetRightStickDirection().x, GetRightStickDirection().y,
             GetLeftTrigger(), GetRightTrigger(), GetStart(), GetSelect(),
             GetDpadUp(), GetDpadDown(), GetDpadLeft(), GetDpadRight(), GetA(),
             GetB(), GetX(), GetY(), GetLeftShoulder(), GetRightShoulder(),
-            GetLeftStickPressed(), GetRightStickPressed(), GetScrollAmount());
+            GetLeftStickPressed(), GetRightStickPressed(), GetScrollAmount(),
+            GetDebugCycled());
     }
 
     // Constrain sticks to deadzones
@@ -188,6 +191,11 @@ class State
     bool GetRightStickPressed() const
     {
         return state & RIGHT_STICK;
+    }
+
+    bool GetDebugCycled() const
+    {
+        return state & DEBUG_CYCLE;
     }
 };
 

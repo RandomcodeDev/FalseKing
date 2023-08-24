@@ -86,24 +86,14 @@ class SdlBackend : protected Backend
     bool HandleEvent(const SDL_Event& event, Input::State& input);
     void EnumerateGamepads();
 
-    static const inline KeyMapping DEFAULT_KEYMAP = {SDL_SCANCODE_ESCAPE,
-                                                     SDL_SCANCODE_TAB,
-                                                     SDL_SCANCODE_Q,
-                                                     SDL_SCANCODE_C,
-                                                     SDL_SCANCODE_X,
-                                                     SDL_SCANCODE_V,
-                                                     SDL_SCANCODE_SPACE,
-                                                     SDL_SCANCODE_F,
-                                                     SDL_SCANCODE_E,
-                                                     SDL_SCANCODE_R,
-                                                     0,
-                                                     0,
-                                                     SDL_SCANCODE_LSHIFT,
-                                                     SDL_SCANCODE_LCTRL,
-                                                     SDL_SCANCODE_W,
-                                                     SDL_SCANCODE_S,
-                                                     SDL_SCANCODE_A,
-                                                     SDL_SCANCODE_D};
+    static const inline KeyMapping DEFAULT_KEYMAP = {
+        SDL_SCANCODE_ESCAPE, SDL_SCANCODE_TAB, SDL_SCANCODE_Q, SDL_SCANCODE_C,
+        SDL_SCANCODE_X, SDL_SCANCODE_V, SDL_SCANCODE_SPACE, SDL_SCANCODE_F,
+        SDL_SCANCODE_E, SDL_SCANCODE_R, 0, 0, SDL_SCANCODE_LSHIFT,
+        SDL_SCANCODE_LCTRL, SDL_SCANCODE_F3,
+
+        // These are handled differently and should always be last
+        SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D};
 
     static const inline SDL_GamepadButton BUTTONS_IN_ORDER[] = {
         SDL_GAMEPAD_BUTTON_START,

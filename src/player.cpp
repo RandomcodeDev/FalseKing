@@ -70,7 +70,7 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
     return projectile;
 }
 
-void Player::Input(flecs::iter& iter)
+void Player::HandleInput(flecs::iter& iter)
 {
     auto context = iter.ctx<Systems::Context>();
     auto input = context->input;

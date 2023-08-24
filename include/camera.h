@@ -5,6 +5,8 @@
 namespace Components
 {
 
+constexpr float CAMERA_ANGLE = 45.0f;
+
 class Camera
 {
   public:

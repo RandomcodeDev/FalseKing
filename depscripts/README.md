@@ -10,7 +10,9 @@ These are replaced if encountered:
    `ARM64`, etc
  - `$BLDARCH$`: the target architecture as the build system sees it
    (`copyfiles.py` sees this as the platform), e.g. `x64`, `Gaming.Desktop.x64`
- - `$CONFIG$`: the build configuration, e.g. `Debug`, `Release`
+ - `$CONFIG$`: the build configuration, e.g. `Debug`, `Release`, `Retail`
+ - `$DCONFIG$`: the build configuration mapped to what's available in the
+   dependency tree, e.g `Debug` or `Release`
  - `$PREFIX$`: library prefix, e.g. `lib`
  - `$SUFFIX$`: library suffix, e.g. `-darwin`, `-switch`
  - `$SLIBEXT$`: static library extension, e.g. `.lib`, `.a`

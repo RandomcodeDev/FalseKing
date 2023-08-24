@@ -15,10 +15,11 @@ bool Components::Camera::IsVisible(const PxVec3& position,
 {
     PxVec2 screenPosition = Project(position);
 
-    // Basically, is any part of the given area within the screen
     float x = screenPosition.x + size.x;
     float y = screenPosition.y + size.y;
-    return true; //(0 < x) && (x < GAME_WIDTH) && (0 < y) && (y < GAME_HEIGHT);
+
+    // Basically, is any part of the given area within the screen
+    return (0 < x) && (x < GAME_WIDTH) && (0 < y) && (y < GAME_HEIGHT);
 }
 
 void Systems::CameraTrack(flecs::entity entity, Components::Camera& camera)
@@ -29,6 +30,7 @@ void Systems::CameraTrack(flecs::entity entity, Components::Camera& camera)
     {
         camera.position.x = object->GetTransform().p.x;
         camera.position.y =
-            object->GetTransform().p.y - object->GetTransform().p.z;
+            (object->GetTransform().p.y * (1.0f / Components::CAMERA_ANGLE)) -
+            object->GetTransform().p.z;
     }
 }

@@ -48,7 +48,7 @@ flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics,
                                float lifespan, float speed);
 
 // Handle input
-void Input(flecs::iter& iter);
+void HandleInput(flecs::iter& iter);
 
 // Get the cursor's position in the world
 PxVec3 GetCursorPosition(flecs::entity player, float distance = 5);

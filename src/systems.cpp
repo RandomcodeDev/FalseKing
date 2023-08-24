@@ -29,7 +29,7 @@ void Systems::Register(flecs::world& world, Context* context)
         .ctx(context)
         .kind(flecs::OnUpdate)
         .interval(Physics::TIME_STEP)
-        .iter(Player::Input);
+        .iter(Player::HandleInput);
     world.system<const Player::LocalPlayer>("DrawCursor")
         .kind(flecs::OnUpdate)
         .iter(Player::DrawCursor);
@@ -43,10 +43,10 @@ void Systems::Register(flecs::world& world, Context* context)
         .ctx(context)
         .kind(flecs::PostFrame)
         .iter(EndRender);
-    world.system("DebugInfo")
+    world.system("ShowDebugOverlay")
         .ctx(context)
         .kind(flecs::PostUpdate)
-        .iter(DebugInfo);
+        .iter(ShowDebugOverlay);
     world.system<Components::Timeout>("KillTimedout")
         .kind(flecs::PostFrame)
         .each(KillTimedout);
@@ -71,32 +71,38 @@ void Systems::EndRender(flecs::iter& iter)
 }
 
 PxVec3 DEBUG_TEXT_COLOR = PxVec3(0, 1, 0);
-void Systems::DebugInfo(flecs::iter& iter)
+void Systems::ShowDebugOverlay(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
-    float fps = 1.0f / iter.delta_time();
-    ImGui::Begin("Debug Information", nullptr, ImGuiWindowFlags_DummyWindow);
-    ImGui::SetWindowPos(ImVec2(0, 0));
-    ImGui::SetWindowSize(ImVec2((float)g_backend->GetWindowInformation().width,
-                                ImGui::GetFontSize() * 18));
-    IMGUI_TEXT("{} v{}.{}.{} commit {}", GAME_NAME, GAME_MAJOR_VERSION,
-               GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT);
-    IMGUI_TEXT("FPS:{:0.3}", fps);
-    IMGUI_TEXT("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f);
-    IMGUI_TEXT("Frames renderered: {}", g_backend->GetFrameCount());
-    IMGUI_TEXT("Total runtime: {:%T}",
-               precise_clock::now() - context->startTime);
-    IMGUI_TEXT("Entity count: {}", iter.count());
-    IMGUI_TEXT("System: {}", g_backend->DescribeSystem());
-    IMGUI_TEXT("Backend: {}", g_backend->DescribeBackend());
-    IMGUI_TEXT("Discord: {}, {}",
-               Discord::Available() ? "available" : "not available",
-               Discord::Connected() ? "connected" : "not connected");
-    IMGUI_TEXT("Camera position: ({}, {})", context->mainCamera->position.x,
-               context->mainCamera->position.y);
-    ImGui::Text("Input state:");
-    ImGui::TextWrapped("%s", context->input->DescribeState().c_str());
-    ImGui::End();
+
+    if (context->debugMode >= DebugMode::TextOverlay)
+    {
+        float fps = 1.0f / iter.delta_time();
+        ImGui::Begin("Debug Information", nullptr,
+                     ImGuiWindowFlags_DummyWindow);
+        ImGui::SetWindowPos(ImVec2(0, 0));
+        ImGui::SetWindowSize(
+            ImVec2((float)g_backend->GetWindowInformation().width,
+                   ImGui::GetFontSize() * 18));
+        IMGUI_TEXT("{} v{}.{}.{} commit {}", GAME_NAME, GAME_MAJOR_VERSION,
+                   GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT);
+        IMGUI_TEXT("FPS:{:0.3}", fps);
+        IMGUI_TEXT("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f);
+        IMGUI_TEXT("Frames renderered: {}", g_backend->GetFrameCount());
+        IMGUI_TEXT("Total runtime: {:%T}",
+                   precise_clock::now() - context->startTime);
+        IMGUI_TEXT("Entity count: {}", iter.count());
+        IMGUI_TEXT("System: {}", g_backend->DescribeSystem());
+        IMGUI_TEXT("Backend: {}", g_backend->DescribeBackend());
+        IMGUI_TEXT("Discord: {}, {}",
+                   Discord::Available() ? "available" : "not available",
+                   Discord::Connected() ? "connected" : "not connected");
+        IMGUI_TEXT("Camera position: ({}, {})", context->mainCamera->position.x,
+                   context->mainCamera->position.y);
+        ImGui::Text("Input state:");
+        ImGui::TextWrapped("%s", context->input->DescribeState().c_str());
+        ImGui::End();
+    }
 }
 
 void Systems::KillTimedout(const flecs::entity& entity,

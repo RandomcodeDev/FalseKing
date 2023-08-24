@@ -21,6 +21,7 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
     chrono::time_point<precise_clock> start = precise_clock::now();
     chrono::time_point<precise_clock> now;
     chrono::time_point<precise_clock> last = start;
+    chrono::time_point<precise_clock> lastOverlayCycle = start;
 
     g_backend = backend;
 
@@ -74,7 +75,19 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     Components::Camera camera;
 
-    Systems::Context context{start, &input, &physics, &camera};
+    Systems::Context context = {
+        start,    // start time
+        &input,   // input state
+        &physics, // physics state
+        &camera,  // main camera
+
+    // Whether to enable the debug overlay initially
+#ifdef RETAIL
+        Systems::DebugMode::None,
+#else
+        Systems::DebugMode::TextOverlay,
+#endif
+    };
     Components::Register(world);
     Systems::Register(world, &context);
 
@@ -124,6 +137,14 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
         // Keep inputs within functional range
         input.AdjustSticks();
 
+        // Check if the debug mode was cycled
+        if (input.GetDebugCycled() && now - lastOverlayCycle > Systems::DEBUG_CYCLE_COOLDOWN)
+        {
+            context.debugMode = (Systems::DebugMode)(
+                ((int32_t)context.debugMode + 1) % (int32_t)Systems::DebugMode::Count);
+            lastOverlayCycle = precise_clock::now();
+        }
+
         world.progress();
         Discord::Update(
             chrono::duration_cast<chrono::seconds>(now - start),
@@ -158,8 +179,10 @@ void embraceTheDarkness()
     colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.00f);
     colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
-    colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
-    colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
+    colors[ImGuiCol_Border] =
+        ImVec4(0.0f, 0.0f, 0.0f, 0.0f); // ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
+    colors[ImGuiCol_BorderShadow] =
+        ImVec4(0.0f, 0.0f, 0.0f, 0.0f); // ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
     colors[ImGuiCol_FrameBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
     colors[ImGuiCol_FrameBgActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);

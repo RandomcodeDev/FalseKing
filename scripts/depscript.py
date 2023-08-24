@@ -64,6 +64,7 @@ class DepScript:
             ["$GENARCH$", architecture],
             ["$BLDARCH$", platform],
             ["$CONFIG$", configuration],
+            ["$DCONFIG$", configuration if configuration != 'Retail' else 'Release'],
             ["$PREFIX$", prefix],
             ["$SUFFIX$", suffix],
             ["$SLIBEXT$", slibext],

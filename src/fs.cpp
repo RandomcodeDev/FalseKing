@@ -42,6 +42,8 @@ void Filesystem::Initialize(const std::vector<std::string>& searchPaths)
     {
         AddSearchPath(path);
     }
+
+    // This might be a little wasteful but it's probably fine
     AddSearchPath("");
 
     SPDLOG_INFO("Filesystem initialized");
@@ -93,7 +95,7 @@ void Filesystem::Write(const std::string& path,
         return;
     }
     file.write((const char*)data.data(), data.size());
-    size_t written = file.tellp();
+    size_t written = (size_t)file.tellp();
     if (written < data.size())
     {
         SPDLOG_WARN("Only wrote {}/{} byte(s)", written, data.size());

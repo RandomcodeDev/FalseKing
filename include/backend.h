@@ -32,12 +32,15 @@ union KeyMapping {
         uint32_t rightShoulder;
         uint32_t leftPress;
         uint32_t rightPress;
+        uint32_t debugCycle;
+
+        // These are specially handled
         uint32_t leftUp;
         uint32_t leftDown;
         uint32_t leftLeft;
         uint32_t leftRight;
     };
-    uint32_t values[18];
+    uint32_t values[19];
 };
 
 // Forward declarations
@@ -77,7 +80,7 @@ class Backend
                            uint32_t srcWidth = 0, uint32_t srcHeight = 0,
                            PxVec3 color = PxVec3(1, 1, 1)) = 0;
 
-    // Draw a sprite
+    // Draw a sprite (note: this is in sprite.cpp, which is kind of a little weird)
     void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y, bool center = true);
 
     // Complete rendering
