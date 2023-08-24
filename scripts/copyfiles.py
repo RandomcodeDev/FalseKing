@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import os
 import platform
@@ -23,9 +23,7 @@ def get_default_architecture(system):
 
     if system == "windows":
         return "x86"
-    elif system == "gaming_desktop":
-        return "x86_64"
-    elif system == "scarlett":
+    elif system == "gaming_desktop" or system == "scarlett":
         return "x86_64"
     elif system == "macosx":
         if "arm64" in machine:
@@ -65,7 +63,7 @@ def main():
     parser = argparse.ArgumentParser(description="Copy dependencies to an output directory.")
     parser.add_argument("output_directory", metavar="output_directory", help="Output directory")
     parser.add_argument("depscripts", metavar="depscripts", nargs="+", help="List of dep scripts (see depscripts/, you just need the base name of it)")
-    parser.add_argument("--system", "-s", metavar="system", help="System (see premake5 --os)", default="")
+    parser.add_argument("--system", "-s", metavar="system", help="System (see premake5 --os)", default=get_system())
     parser.add_argument("--platform", "-p", metavar="platform", help="Platform (what the build system sees)", default="")
     parser.add_argument("--architecture", "-a", metavar="architecture", help="Architecture (x86, x86_64, ARM64, Universal)", default="")
     parser.add_argument("--configuration", "-c", metavar="configuration", help="Configuration", default="Debug")
@@ -73,9 +71,9 @@ def main():
     
     args = parser.parse_args()
 
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
     output_dir = os.path.abspath(args.output_directory)
-    system = args.system if args.system else get_system()
+    system = args.system
     platform = args.platform if args.platform else get_default_platform(system)
     architecture = args.architecture if args.architecture else get_default_architecture(system)
     configuration = args.configuration
