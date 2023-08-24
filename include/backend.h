@@ -74,14 +74,16 @@ class Backend
     virtual void BeginRender() = 0;
 
     // Draw an image
-    virtual void DrawImage(const Image& image, uint32_t x, uint32_t y,
+    virtual void DrawImage(Image& image, uint32_t x, uint32_t y,
                            float scaleX = 1.0f, float scaleY = 1.0f,
                            uint32_t srcX = 0, uint32_t srcY = 0,
                            uint32_t srcWidth = 0, uint32_t srcHeight = 0,
                            PxVec3 color = PxVec3(1, 1, 1)) = 0;
 
-    // Draw a sprite (note: this is in sprite.cpp, which is kind of a little weird)
-    void DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y, bool center = true);
+    // Draw a sprite (note: this is in sprite.cpp, which is kind of a little
+    // weird)
+    void DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
+                    bool center = true);
 
     // Complete rendering
     virtual void EndRender() = 0;
@@ -109,6 +111,15 @@ class Backend
 
     // Get a symbol from a library
     virtual Symbol GetSymbol(void* dll, const std::string& path) const = 0;
+
+    // Draw a point
+    virtual void DrawPoint(const PxVec2& point, const PxVec4& color,
+                           float thickness = 0.1f) const = 0;
+
+    // Draw a line
+    virtual void DrawLine(const PxVec2& start, const PxVec2& end,
+                          const PxVec4& color,
+                          float thickness = 0.1f) const = 0;
 };
 
 #ifdef __NX__
@@ -118,7 +129,8 @@ class SdlBackend;
 #endif
 
 // Program entry point
-extern int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths);
+extern int32_t GameMain(Backend* backend,
+                        std::vector<std::string> backendPaths);
 
 // Global backend pointer
 extern Backend* g_backend;

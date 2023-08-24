@@ -97,9 +97,16 @@ template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])
 
 // Get the sign of a number
 // https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
-template <typename T> T SIGN(T val)
+template <typename T> inline T SIGN(T val)
 {
     return (T(0) < val) - (val < T(0));
+}
+
+// Unpack a number from an int into a vec4
+inline PxVec4 UNPACK_COLOR(uint32_t color)
+{
+    return PxVec4(color >> 24 & 0xFF, color >> 16 & 0xFF, color >> 8 & 0xFF,
+                  color >> 0 & 0xFF);
 }
 
 // Exit the program

@@ -23,6 +23,10 @@ void Systems::Register(flecs::world& world, Context* context)
         .multi_threaded()
         .interval(Physics::TIME_STEP)
         .iter(Physics::Update);
+    world.system("PhysicsVisualize")
+        .ctx(context)
+        .kind(flecs::PostUpdate)
+        .iter(Physics::Visualize);
 
     // player.h
     world.system<const Player::LocalPlayer>("PlayerInput")
@@ -75,7 +79,7 @@ void Systems::ShowDebugOverlay(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
 
-    if (context->debugMode >= DebugMode::TextOverlay)
+    if ((uint32_t)context->debugMode & (uint32_t)DebugMode::TextOverlay)
     {
         float fps = 1.0f / iter.delta_time();
         ImGui::Begin("Debug Information", nullptr,
@@ -88,7 +92,7 @@ void Systems::ShowDebugOverlay(flecs::iter& iter)
                    GAME_MINOR_VERSION, GAME_PATCH_VERSION, GAME_COMMIT);
         IMGUI_TEXT("FPS:{:0.3}", fps);
         IMGUI_TEXT("Frame delta: {:0.3} ms", iter.delta_time() * 1000.0f);
-        IMGUI_TEXT("Frames renderered: {}", g_backend->GetFrameCount());
+        IMGUI_TEXT("Frames rendered: {}", g_backend->GetFrameCount());
         IMGUI_TEXT("Total runtime: {:%T}",
                    precise_clock::now() - context->startTime);
         IMGUI_TEXT("Entity count: {}", iter.count());

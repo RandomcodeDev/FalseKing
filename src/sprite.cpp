@@ -5,18 +5,18 @@
 #include "physics.h"
 #include "systems.h"
 
-Sprite::Sprite(const Image& spriteSheet, uint32_t x, uint32_t y)
+Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y)
     : sheet(&spriteSheet), x(x), y(y), width(TILE_SIZE), height(TILE_SIZE)
 {
 }
 
-Sprite::Sprite(const Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
+Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
                uint32_t height)
     : sheet(&spriteSheet), x(x), y(y), width(width), height(height)
 {
 }
 
-void Backend::DrawSprite(const Sprite& sprite, uint32_t x, uint32_t y,
+void Backend::DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
                          bool center)
 {
     if (sprite.sheet)
@@ -32,7 +32,7 @@ void Systems::DrawPhysical(flecs::iter& iter)
     // TODO: Fix flickering
     auto context = iter.ctx<Systems::Context>();
     auto entity = iter.entity(0);
-    auto sprite = entity.get<Sprite>();
+    auto sprite = entity.get_mut<Sprite>();
     auto object = Physics::GetBase(entity);
 
     if (object && context->mainCamera->IsVisible(

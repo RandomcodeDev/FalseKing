@@ -85,7 +85,7 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 #ifdef RETAIL
         Systems::DebugMode::None,
 #else
-        Systems::DebugMode::TextOverlay,
+        Systems::DebugMode::All,
 #endif
     };
     Components::Register(world);
@@ -138,10 +138,16 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
         input.AdjustSticks();
 
         // Check if the debug mode was cycled
-        if (input.GetDebugCycled() && now - lastOverlayCycle > Systems::DEBUG_CYCLE_COOLDOWN)
+        if (input.GetDebugCycled() &&
+            now - lastOverlayCycle > Systems::DEBUG_CYCLE_COOLDOWN)
         {
-            context.debugMode = (Systems::DebugMode)(
-                ((int32_t)context.debugMode + 1) % (int32_t)Systems::DebugMode::Count);
+            context.debugMode =
+                (Systems::DebugMode)(((uint32_t)context.debugMode << 1) %
+                                     (uint32_t)Systems::DebugMode::All);
+            if (context.debugMode > Systems::DebugMode::Count)
+            {
+                context.debugMode = Systems::DebugMode::All;
+            }
             lastOverlayCycle = precise_clock::now();
         }
 

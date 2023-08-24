@@ -47,6 +47,7 @@ class State
 };
 
 void Update(flecs::iter& iter);
+void Visualize(flecs::iter& iter);
 
 // For systems that just need basic information like transform
 struct Base
@@ -69,6 +70,9 @@ struct Body : Base
     Body(State& physics, const PxTransform& transform, PxShape& shape)
     {
         m_body = physics.GetPhysics().createRigidDynamic(transform);
+#ifndef RETAIL
+        m_body->setActorFlag(PxActorFlag::eVISUALIZATION, true);
+#endif
         m_body->attachShape(shape);
         shape.release();
         physics.GetScene().addActor(*m_body);
@@ -111,6 +115,9 @@ struct Controller : Base
     Controller(State& physics, const PxControllerDesc& desc)
     {
         m_controller = physics.GetControllerManager().createController(desc);
+#ifndef RETAIL
+        m_controller->getActor()->setActorFlag(PxActorFlag::eVISUALIZATION, true);
+#endif
     }
 
     PxController& GetController() const

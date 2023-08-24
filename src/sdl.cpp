@@ -32,7 +32,7 @@ class SdlBackend : protected Backend
     void InitializeImGui();
     void ShutdownImGui();
     void BeginRender();
-    void DrawImage(const Image& image, uint32_t x, uint32_t y, float scaleX,
+    void DrawImage(Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
                    uint32_t srcWidth, uint32_t srcHeight, PxVec3 color);
     void EndRender();
@@ -71,6 +71,11 @@ class SdlBackend : protected Backend
         return m_description;
     }
 
+    void DrawPoint(const PxVec2& point, const PxVec4& color,
+                   float thickness) const;
+    void DrawLine(const PxVec2& start, const PxVec2& end, const PxVec4& color,
+                  float thickness) const;
+
   private:
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
@@ -82,6 +87,7 @@ class SdlBackend : protected Backend
     bool m_usingGamepad;
     uint64_t m_frames;
     std::string m_description;
+    bool m_texturesReset;
 
     bool HandleEvent(const SDL_Event& event, Input::State& input);
     void EnumerateGamepads();
@@ -229,6 +235,11 @@ SdlBackend::~SdlBackend()
 
 void SdlBackend::SetupImage(Image& image)
 {
+    if (image.backendData)
+    {
+        SDL_DestroyTexture((SDL_Texture*)image.backendData);
+    }
+
     uint32_t imageWidth;
     uint32_t imageHeight;
     image.GetSize(imageWidth, imageHeight);
@@ -269,6 +280,9 @@ bool SdlBackend::Update(Input::State& input)
     SDL_Event event{};
 
     m_windowInfo.resized = false;
+
+    // It's not easy to do this perfectly as things are currently implemented
+    m_texturesReset = false;
 
     while (SDL_PollEvent(&event))
     {
@@ -348,6 +362,20 @@ void SdlBackend::ShutdownImGui()
 {
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
+}
+
+void SdlBackend::DrawPoint(const PxVec2& point, const PxVec4& color,
+                           float thickness) const
+{
+    SDL_SetRenderDrawColor(m_renderer, color.x, color.y, color.z, color.w);
+    SDL_RenderPoint(m_renderer, point.x, point.y);
+}
+
+void SdlBackend::DrawLine(const PxVec2& start, const PxVec2& end,
+                          const PxVec4& color, float thickness) const
+{
+    SDL_SetRenderDrawColor(m_renderer, color.x, color.y, color.z, color.w);
+    SDL_RenderLine(m_renderer, start.x, start.y, end.x, end.y);
 }
 
 bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
@@ -496,6 +524,11 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
             break;
         }
     }
+    else if (event.type == SDL_EVENT_RENDER_TARGETS_RESET ||
+             event.type == SDL_EVENT_RENDER_DEVICE_RESET)
+    {
+        m_texturesReset = true;
+    }
     else if (event.type == SDL_EVENT_QUIT)
     {
         SPDLOG_INFO("Application quit");
@@ -554,11 +587,17 @@ void SdlBackend::BeginRender()
     return;
 }
 
-void SdlBackend::DrawImage(const Image& image, uint32_t x, uint32_t y,
+void SdlBackend::DrawImage(Image& image, uint32_t x, uint32_t y,
                            float scaleX, float scaleY, uint32_t srcX,
                            uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight,
                            PxVec3 color)
 {
+    if (m_texturesReset)
+    {
+        SetupImage(image);
+        return;
+    }
+    
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
     uint32_t imageHeight;

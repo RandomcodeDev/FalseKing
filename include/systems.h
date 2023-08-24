@@ -25,11 +25,13 @@ namespace Systems
 constexpr chrono::milliseconds DEBUG_CYCLE_COOLDOWN = 200ms;
 
 // Debug view mode
-enum class DebugMode
+enum class DebugMode : uint32_t
 {
-    None, // Nothing
-    TextOverlay, // Text overlay with FPS and other stuff
+    None = 0b0, // Nothing
+    TextOverlay = 0b1, // Text overlay with FPS and other stuff
+    Physics = 0b10, // PhysX visualization
     Count, // Number of modes
+    All = 0xFFFFFFFF, // Everything
 };
 
 // Information systems can use

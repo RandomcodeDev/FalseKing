@@ -9,7 +9,7 @@ class Image;
 // Sprite
 struct Sprite
 {
-    const Image* sheet;
+    Image* sheet;
     uint32_t x;
     uint32_t y;
     uint32_t width;
@@ -21,10 +21,10 @@ struct Sprite
     Sprite() = default;
 
     // Create a sprite
-    Sprite(const Image& spriteSheet, uint32_t x, uint32_t y);
+    Sprite(Image& spriteSheet, uint32_t x, uint32_t y);
 
     // Create a sprite of arbitrary size
-    Sprite(const Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
+    Sprite(Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
            uint32_t height);
 };
 
