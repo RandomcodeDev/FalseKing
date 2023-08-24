@@ -47,7 +47,7 @@ State::State()
 
 #ifndef RETAIL
     m_scene->setVisualizationParameter(PxVisualizationParameter::eSCALE,
-                                       100.0f);
+                                       0.0f);
     m_scene->setVisualizationParameter(
         PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 #endif
@@ -81,6 +81,7 @@ void Update(flecs::iter& iter)
 
 void Visualize(flecs::iter& iter)
 {
+#if 0//ndef RETAIL
     Systems::Context* context = iter.ctx<Systems::Context>();
 
     const PxRenderBuffer& renderBuffer =
@@ -106,6 +107,26 @@ void Visualize(flecs::iter& iter)
                                 UNPACK_COLOR(line.color0));
         }
     }
+
+    for (size_t i = 0; i < renderBuffer.getNbTriangles(); i++)
+    {
+        auto& triangle = renderBuffer.getTriangles()[i];
+        if (context->mainCamera->IsVisible(triangle.pos0, PxVec2(1, 1)) ||
+            context->mainCamera->IsVisible(triangle.pos1, PxVec2(1, 1)) ||
+            context->mainCamera->IsVisible(triangle.pos2, PxVec2(1, 1)))
+        {
+            g_backend->DrawLine(context->mainCamera->Project(triangle.pos0),
+                                context->mainCamera->Project(triangle.pos1),
+                                UNPACK_COLOR(triangle.color0));
+            g_backend->DrawLine(context->mainCamera->Project(triangle.pos1),
+                                context->mainCamera->Project(triangle.pos2),
+                                UNPACK_COLOR(triangle.color1));
+            g_backend->DrawLine(context->mainCamera->Project(triangle.pos2),
+                                context->mainCamera->Project(triangle.pos0),
+                                UNPACK_COLOR(triangle.color2));
+        }
+    }
+#endif
 }
 
 } // namespace Physics
