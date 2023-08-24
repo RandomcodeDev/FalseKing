@@ -21,7 +21,9 @@ See [](DESIGN.md) for an overview of the game's design and plan.
 - An OS that isn't totally cursed
 - A C++ compiler with C++17 support. For Windows, I recommend Visual Studio
   2022, for macOS I recommend Xcode, and for Linux and others I recommend
-  Clang. However, most popular compilers should work.
+  Clang. However, most popular compilers should work. On Linux, you need LLD
+  due to an issue in one of the PhysX static libraries that LLD's default
+  behaviour doesn't cause.
 - Currently, Windows x86 and Gaming.Desktop.x64 are supported, Linux x86-64,
   and macOS Universal are supported
 - To run the game on Windows XP, you need a CPU that can run the latest Visual

@@ -47,7 +47,8 @@ def main():
         for file in files:
             file = os.path.join(root, file)
             print(f"Making {file} executable")
-            os.chmod(file, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            mode = stat.S_IMODE(os.lstat(file).st_mode)
+            os.chmod(file, mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
     print(f"Git results: {results}")
 
