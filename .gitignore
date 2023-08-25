@@ -370,7 +370,6 @@ build/darwin/build/
 deps
 deps-*/
 *.zip
-Game/
 *.msixvc
 imgui.ini
 /build/windows/imgui.ini
