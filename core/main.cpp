@@ -7,9 +7,7 @@
 #include "image.h"
 #include "input.h"
 #include "physics.h"
-#include "player.h"
 #include "sprite.h"
-#include "sprites.h"
 #include "systems.h"
 
 Backend* g_backend;
@@ -59,8 +57,6 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     g_backend->InitializeImGui();
 
-    Sprites::Load();
-
     Input::State input;
     Physics::State physics;
 
@@ -96,8 +92,6 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     PxMaterial* material =
         physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
-
-    Player::Create(world, physics, &context.mainCamera);
 
     const WindowInfo& windowInfo = g_backend->GetWindowInformation();
 
@@ -162,8 +156,6 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
     SPDLOG_INFO("Shutting down game");
 
     world.quit();
-
-    Sprites::Unload();
 
     g_backend->ShutdownImGui();
     ImGui::DestroyContext();

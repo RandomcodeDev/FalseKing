@@ -82,7 +82,7 @@ function default_project_settings()
     filter {}
 
     includedirs {
-        'include',
+        'core',
         '%{cfg.targetdir}'
     }
 

@@ -14,12 +14,12 @@ project 'vpktool'
     default_project_settings()
 
     files {
-        'include/fs.h',
-        'include/game.h',
-        'include/stdafx.h',
-        'include/vpk2.h',
-        'src/fs.cpp',
-        'src/vpk2.cpp',
+        'core/fs.cpp',
+        'core/fs.h',
+        'core/game.h',
+        'core/vpk2.cpp',
+        'core/vpk2.h',
+        'core/stdafx.h',
         'tools/tool.h',
         'tools/toolbase.cpp',
         'tools/vpktool.cpp'

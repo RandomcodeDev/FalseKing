@@ -5,8 +5,7 @@
 #include "discord.h"
 #include "input.h"
 #include "physics.h"
-#include "player.h"
-#include "sprites.h"
+#include "sprite.h"
 
 void Systems::Register(flecs::world& world, Context* context)
 {
@@ -27,16 +26,6 @@ void Systems::Register(flecs::world& world, Context* context)
         .ctx(context)
         .kind(flecs::PostUpdate)
         .iter(Physics::Visualize);
-
-    // player.h
-    world.system<const Player::LocalPlayer>("PlayerInput")
-        .ctx(context)
-        .kind(flecs::OnUpdate)
-        .interval(Physics::TIME_STEP)
-        .iter(Player::HandleInput);
-    world.system<const Player::LocalPlayer>("DrawCursor")
-        .kind(flecs::OnUpdate)
-        .iter(Player::DrawCursor);
 
     // systems.h
     world.system("BeginRender")

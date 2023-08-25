@@ -9,15 +9,17 @@ project 'Game'
     kind 'WindowedApp'
 
     files {
-        'include/**.h',
-        'src/**.cpp',
+        'core/**.h',
+        'core/**.cpp',
+        'game/**.h',
+        'game/**.cpp'
     }
 
     removefiles {
-        'src/sdl.cpp',
+        'core/sdl.cpp',
     }
 
-    filter { 'files:src/**.cpp' }
+    filter { 'files:core/**.cpp' }
         pchheader 'stdafx.h'
         pchsource 'stdafx.cpp'
     filter {}
@@ -37,7 +39,7 @@ project 'Game'
         files {
             'deps-public/src/**',
 
-            'src/sdl.cpp'
+            'core/sdl.cpp'
         }
 
         defines {
