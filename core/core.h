@@ -40,7 +40,8 @@ using namespace physx;
 #define FMT_HEADER_ONLY
 #define SPDLOG_HEADER_ONLY
 #ifdef _DEBUG
-// This only enables the macros, the level of the default level actuall controls it.
+// This only enables the macros, the level of the default level actuall controls
+// it.
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #endif
 #define FMT_NO_EXCEPTIONS
@@ -65,6 +66,9 @@ using namespace physx;
 namespace chrono = std::chrono;
 using namespace std::chrono_literals;
 using precise_clock = chrono::high_resolution_clock;
+
+namespace Core
+{
 
 // Constants
 
@@ -115,6 +119,9 @@ inline PxVec4 UNPACK_COLOR(uint32_t color)
 #define QUIT_CODE(exitCode, ...) Quit(fmt::format(__VA_ARGS__), exitCode)
 
 // ImGui text
-#define IMGUI_TEXT_(Type, ...) ImGui::Text##Type("%s", fmt::format(__VA_ARGS__).c_str())
+#define IMGUI_TEXT_(Type, ...)                                                 \
+    ImGui::Text##Type("%s", fmt::format(__VA_ARGS__).c_str())
 #define IMGUI_TEXT(...) IMGUI_TEXT_(, __VA_ARGS__)
 #define IMGUI_TEXT_WRAPPED(...) IMGUI_TEXT_(Wrapped, __VA_ARGS__)
+
+} // namespace Core

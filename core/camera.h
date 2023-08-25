@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Components
 {
 
@@ -36,3 +38,4 @@ namespace Systems
 void CameraTrack(flecs::entity entity, Components::Camera& camera);
 
 } // namespace Systems
+} // namespace Core

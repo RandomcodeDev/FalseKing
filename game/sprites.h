@@ -2,6 +2,8 @@
 
 #include "sprite.h"
 
+namespace Game
+{
 namespace Sprites
 {
 // Load all sprites
@@ -16,4 +18,5 @@ extern Sprite player;
 extern Sprite cursor;
 extern Sprite fireMelee;
 } // namespace Player
+}
 }

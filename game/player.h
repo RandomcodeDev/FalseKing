@@ -12,6 +12,8 @@ namespace Physics
 class State;
 }
 
+namespace Game
+{
 // Player helper functions
 namespace Player
 {
@@ -41,7 +43,8 @@ struct MeleeCooldown
 };
 
 // Create the player entity
-flecs::entity Create(flecs::world& world, Physics::State& physics, Components::Camera** camera);
+flecs::entity Create(flecs::world& world, Physics::State& physics,
+                     Components::Camera** camera);
 
 // Create a projectile for the player
 flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics,
@@ -56,3 +59,4 @@ PxVec3 GetCursorPosition(flecs::entity player, float distance = 5);
 // Draw the cursor
 void DrawCursor(flecs::iter& iter);
 } // namespace Player
+} // namespace Game

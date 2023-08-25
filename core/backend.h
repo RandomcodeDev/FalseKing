@@ -2,6 +2,9 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
+
 // Window information
 struct WindowInfo
 {
@@ -82,8 +85,7 @@ class Backend
 
     // Draw a sprite (note: this is in sprite.cpp, which is kind of a little
     // weird)
-    void DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
-                    bool center = true);
+    void DrawSprite(Sprite& sprite, uint32_t x, uint32_t y, bool center = true);
 
     // Complete rendering
     virtual void EndRender() = 0;
@@ -134,3 +136,4 @@ extern int32_t GameMain(Backend* backend,
 
 // Global backend pointer
 extern Backend* g_backend;
+} // namespace Core

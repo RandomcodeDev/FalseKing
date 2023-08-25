@@ -7,8 +7,8 @@
 #include "sprites.h"
 #include "systems.h"
 
-flecs::entity Player::Create(flecs::world& world, Physics::State& physics,
-                             Components::Camera** camera)
+flecs::entity Game::Player::Create(flecs::world& world, Physics::State& physics,
+                                   Components::Camera** camera)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
 
@@ -21,7 +21,7 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics,
     flecs::entity player =
         world.entity("Player")
             .set(Physics::Controller(physics, controllerDesc))
-            .set(Sprite(Sprites::Player::player))
+            .set(Sprite(Game::Sprites::Player::player))
             .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
             .set(Components::Health{100.0f, 100.0f})
             .set(Components::Element{Components::Element::None})
@@ -37,9 +37,9 @@ flecs::entity Player::Create(flecs::world& world, Physics::State& physics,
     return player;
 }
 
-flecs::entity Player::CreateProjectile(flecs::entity player,
-                                       Physics::State& physics, float lifespan,
-                                       float speed)
+flecs::entity Game::Player::CreateProjectile(flecs::entity player,
+                                             Physics::State& physics,
+                                             float lifespan, float speed)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
     PxSphereGeometry sphere(1);
@@ -56,9 +56,10 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
             .set(Components::Timeout{lifespan})
             .set(body)
             .set(*player.get<Components::Element>())
-            .set(Sprite(Sprites::Player::fireMelee)) // TODO: make this actually
-                                                     // respect the player's
-                                                     // element and attack type
+            .set(Sprite(
+                Game::Sprites::Player::fireMelee)) // TODO: make this actually
+                                                   // respect the player's
+                                                   // element and attack type
             .is_a<Tags::Projectile>()
             .child_of(player);
     material->release();
@@ -70,7 +71,7 @@ flecs::entity Player::CreateProjectile(flecs::entity player,
     return projectile;
 }
 
-void Player::HandleInput(flecs::iter& iter)
+void Game::Player::HandleInput(flecs::iter& iter)
 {
     auto context = iter.ctx<Systems::Context>();
     auto input = context->input;
@@ -110,7 +111,7 @@ void Player::HandleInput(flecs::iter& iter)
                                      PxControllerFilters());
 }
 
-PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
+PxVec3 Game::Player::GetCursorPosition(flecs::entity player, float distance)
 {
     auto controller = player.get_mut<Physics::Controller>();
     auto cursor = player.get<Cursor>();
@@ -125,12 +126,13 @@ PxVec3 Player::GetCursorPosition(flecs::entity player, float distance)
                   position.z + radius * PxSin(angle));
 }
 
-void Player::DrawCursor(flecs::iter& iter)
+void Game::Player::DrawCursor(flecs::iter& iter)
 {
     auto player = iter.entity(0);
     auto camera = player.get<Components::Camera>();
     PxVec3 cursorPosition(GetCursorPosition(player));
     PxVec2 screenPosition = camera->Project(cursorPosition);
-    g_backend->DrawSprite(Sprites::Player::cursor, (uint32_t)screenPosition.x,
+    g_backend->DrawSprite(Game::Sprites::Player::cursor,
+                          (uint32_t)screenPosition.x,
                           (uint32_t)screenPosition.y);
 }

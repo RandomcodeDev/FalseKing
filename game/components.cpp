@@ -3,7 +3,7 @@
 #include "physics.h"
 #include "player.h"
 
-void Components::Register(flecs::world& world)
+void Game::Components::Register(flecs::world& world)
 {
     world.component<Player::LocalPlayer>()
     //    .is_a(flecs::Private)

@@ -35,18 +35,4 @@ struct MovementSpeed
     float crouch;
     float run;
 };
-
-// Element
-struct Element
-{
-    enum
-    {
-        None,
-        Fire,
-        Water,
-        Air,
-        Earth,
-        Ultimate
-    } value;
-};
 } // namespace Components
