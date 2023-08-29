@@ -1,6 +1,11 @@
 !depscript
 
 :: ~ build/$BLDARCH$/$CONFIG$/MicrosoftGame.config = MicrosoftGame.config
-:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$EXEEXT$ = Game.$BLDARCH$$EXEEXT$
-:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DBGEXT$ = Game.$BLDARCH$$DBGEXT$
 :: ~ build/$BLDARCH$/$CONFIG$/XCurl$DLIBEXT$ = XCurl$DLIBEXT$
+
+:: ~ build/$BLDARCH$/$CONFIG$/Core.$BLDARCH$$DLIBEXT$ = Core.$BLDARCH$$DLIBEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Core.$BLDARCH$$DLIBEXT$ = Core.$BLDARCH$$DBGEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DLIBEXT$ = Game.$BLDARCH$$DLIBEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DLIBEXT$ = Game.$BLDARCH$$DBGEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Launcher.$BLDARCH$$EXEEXT$ = FalseKing.$BLDARCH$$EXEEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/Launcher.$BLDARCH$$EXEEXT$ = FalseKing.$BLDARCH$$DBGEXT$
