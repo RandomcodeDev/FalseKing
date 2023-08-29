@@ -7,7 +7,7 @@
 #include "physics.h"
 #include "sprite.h"
 
-void Systems::Register(flecs::world& world, Context* context)
+void Core::Systems::Register(flecs::world& world, Context* context)
 {
     // camera.h
     world.system<Components::Camera>("CameraTrack")
@@ -51,20 +51,20 @@ void Systems::Register(flecs::world& world, Context* context)
         .iter(DrawPhysical);
 }
 
-void Systems::BeginRender(flecs::iter& iter)
+void Core::Systems::BeginRender(flecs::iter& iter)
 {
     g_backend->BeginRender();
     ImGui::NewFrame();
 }
 
-void Systems::EndRender(flecs::iter& iter)
+void Core::Systems::EndRender(flecs::iter& iter)
 {
     ImGui::Render();
     g_backend->EndRender();
 }
 
 PxVec3 DEBUG_TEXT_COLOR = PxVec3(0, 1, 0);
-void Systems::ShowDebugOverlay(flecs::iter& iter)
+void Core::Systems::ShowDebugOverlay(flecs::iter& iter)
 {
     Context* context = iter.ctx<Context>();
 
@@ -98,8 +98,8 @@ void Systems::ShowDebugOverlay(flecs::iter& iter)
     }
 }
 
-void Systems::KillTimedout(const flecs::entity& entity,
-                           Components::Timeout& timeout)
+void Core::Systems::KillTimedout(const flecs::entity& entity,
+                                 Components::Timeout& timeout)
 {
     timeout.seconds -= entity.world().delta_time();
     if (timeout.seconds <= 0.0f)

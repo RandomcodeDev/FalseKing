@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "physics.h"
 
-PxVec2 Core::Components::Camera::Project(const PxVec3& position) const
+CORE_API PxVec2 Core::Components::Camera::Project(const PxVec3& position) const
 {
     // TODO: Should this be assuming top-left coordinates?
     float x = position.x - this->position.x + GAME_WIDTH / 2.5f;
@@ -10,7 +10,7 @@ PxVec2 Core::Components::Camera::Project(const PxVec3& position) const
     return PxVec2(x, y);
 }
 
-bool Core::Components::Camera::IsVisible(const PxVec3& position,
+CORE_API bool Core::Components::Camera::IsVisible(const PxVec3& position,
                                    const PxVec2& size) const
 {
     PxVec2 screenPosition = Project(position);
@@ -22,7 +22,7 @@ bool Core::Components::Camera::IsVisible(const PxVec3& position,
     return (0 < x) && (x < GAME_WIDTH) && (0 < y) && (y < GAME_HEIGHT);
 }
 
-void Core::Systems::CameraTrack(flecs::entity entity,
+CORE_API void Core::Systems::CameraTrack(flecs::entity entity,
                                 Core::Components::Camera& camera)
 {
     auto object = Physics::GetBase(entity);

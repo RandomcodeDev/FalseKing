@@ -1,5 +1,6 @@
 workspace 'Tools'
 
+    -- Override the specified target and build for the host
     system(os.host())
 
     default_workspace_settings()
@@ -9,18 +10,18 @@ workspace 'Tools'
         toolset 'msc'
     filter {}
 
+include 'core.lua'
+
 project 'vpktool'
 
     default_project_settings()
 
     files {
-        'core/fs.cpp',
-        'core/fs.h',
-        'core/game.h',
-        'core/vpk2.cpp',
-        'core/vpk2.h',
-        'core/stdafx.h',
         'tools/tool.h',
         'tools/toolbase.cpp',
         'tools/vpktool.cpp'
+    }
+
+    links {
+        'Core'
     }

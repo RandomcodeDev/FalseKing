@@ -1,13 +1,13 @@
 #pragma once
 
-#include "stdafx.h"
+#include "game.h"
 
 namespace Game
 {
 namespace Components
 {
 // Register game components
-void Register(const flecs::world& world);
+extern GAME_API void Register(flecs::world& world);
 
 // Element
 struct Element

@@ -82,11 +82,18 @@ function default_project_settings()
     filter {}
 
     includedirs {
-        'core',
+        _MAIN_SCRIPT_DIR,
         '%{cfg.targetdir}'
     }
 
     kind 'ConsoleApp'
+
+    filter { 'toolset:msc' }
+        disablewarnings {
+            4307,
+            4251
+        }
+    filter {}
 
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
         includedirs {

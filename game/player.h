@@ -1,16 +1,19 @@
 #pragma once
 
-#include "stdafx.h"
+#include "game.h"
 
+namespace Core
+{
 namespace Components
 {
-class Camera;
+class CORE_API Camera;
 }
 
 namespace Physics
 {
-class State;
+class CORE_API State;
 }
+} // namespace Core
 
 namespace Game
 {
@@ -43,20 +46,22 @@ struct MeleeCooldown
 };
 
 // Create the player entity
-flecs::entity Create(flecs::world& world, Physics::State& physics,
-                     Components::Camera** camera);
+extern GAME_API flecs::entity Create(flecs::world& world,
+                              Core::Physics::State& physics,
+                              Core::Components::Camera** camera);
 
 // Create a projectile for the player
-flecs::entity CreateProjectile(flecs::entity player, Physics::State& physics,
-                               float lifespan, float speed);
+extern GAME_API flecs::entity CreateProjectile(flecs::entity player,
+                                        Core::Physics::State& physics,
+                                        float lifespan, float speed);
 
 // Handle input
-void HandleInput(flecs::iter& iter);
+extern GAME_API void HandleInput(flecs::iter& iter);
 
 // Get the cursor's position in the world
-PxVec3 GetCursorPosition(flecs::entity player, float distance = 5);
+extern GAME_API PxVec3 GetCursorPosition(flecs::entity player, float distance = 5);
 
 // Draw the cursor
-void DrawCursor(flecs::iter& iter);
+extern GAME_API void DrawCursor(flecs::iter& iter);
 } // namespace Player
 } // namespace Game

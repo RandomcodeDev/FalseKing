@@ -2,20 +2,22 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Components
 {
-class Camera;
+class CORE_API Camera;
 struct Timeout;
 } // namespace Components
 
 namespace Input
 {
-class State;
+class CORE_API State;
 }
 
 namespace Physics
 {
-class State;
+class CORE_API State;
 }
 
 namespace Systems
@@ -27,11 +29,11 @@ constexpr chrono::milliseconds DEBUG_CYCLE_COOLDOWN = 200ms;
 // Debug view mode
 enum class DebugMode : uint32_t
 {
-    None = 0b0, // Nothing
+    None = 0b0,        // Nothing
     TextOverlay = 0b1, // Text overlay with FPS and other stuff
-    Physics = 0b10, // PhysX visualization
-    Count, // Number of modes
-    All = 0xFFFFFFFF, // Everything
+    Physics = 0b10,    // PhysX visualization
+    Count,             // Number of modes
+    All = 0xFFFFFFFF,  // Everything
 };
 
 // Information systems can use
@@ -45,7 +47,7 @@ struct Context
 };
 
 // Register all the systems
-extern void Register(flecs::world& world, Context* context);
+extern CORE_API void Register(flecs::world& world, Context* context);
 
 // Begin rendering
 extern void BeginRender(flecs::iter& iter);
@@ -60,3 +62,4 @@ extern void ShowDebugOverlay(flecs::iter& iter);
 extern void KillTimedout(const flecs::entity& entity,
                          Components::Timeout& timeout);
 } // namespace Systems
+} // namespace Core

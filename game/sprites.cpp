@@ -1,21 +1,26 @@
-#include "image.h"
+#include "core/image.h"
+
+#include "game.h"
 #include "sprites.h"
 
+namespace Game
+{
 namespace Sprites
 {
-static Image* s_sprites;
-void Load()
+
+static Core::Image* s_sprites;
+GAME_API void Load()
 {
     SPDLOG_INFO("Loading sprites");
 
-    s_sprites = new Image("textures/sprites.qoi");
+    s_sprites = new Core::Image("textures/sprites.qoi");
 
-    Player::player = Sprite(*s_sprites, 5, 1, 5, 15);
-    Player::cursor = Sprite(*s_sprites, 5, 22, 5, 5);
-    Player::fireMelee = Sprite(*s_sprites, 20, 4, 9, 9);
+    Player::player = Core::Sprite(*s_sprites, 5, 1, 5, 15);
+    Player::cursor = Core::Sprite(*s_sprites, 5, 22, 5, 5);
+    Player::fireMelee = Core::Sprite(*s_sprites, 20, 4, 9, 9);
 }
 
-void Unload()
+GAME_API void Unload()
 {
     if (s_sprites)
     {
@@ -26,8 +31,10 @@ void Unload()
 
 namespace Player
 {
-Sprite player;
-Sprite cursor;
-Sprite fireMelee;
+GAME_API Core::Sprite player;
+GAME_API Core::Sprite cursor;
+GAME_API Core::Sprite fireMelee;
 } // namespace Player
+
 } // namespace Sprites
+} // namespace Game

@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Input
 {
 // Things that are always binary on controller (the letter buttons are
@@ -200,3 +202,4 @@ class State
 };
 
 } // namespace Input
+} // namespace Core

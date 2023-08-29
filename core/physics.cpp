@@ -3,23 +3,20 @@
 #include "camera.h"
 #include "systems.h"
 
-namespace Physics
-{
-
 class ErrorCallback : public PxErrorCallback
 {
   public:
     virtual void reportError(PxErrorCode::Enum code, const char* message,
                              const char* file, int line)
     {
-        QUIT_CODE(code, "PhysX error at {}:{}: {}", file, line, message);
+        Core::Quit(code, "PhysX error at {}:{}: {}", file, line, message);
     }
 };
 
 static ErrorCallback g_physxErrorCallback;
 static PxDefaultAllocator g_physxAllocator;
 
-State::State()
+CORE_API Core::Physics::State::State()
 {
     SPDLOG_INFO("Initializing physics");
 
@@ -57,7 +54,7 @@ State::State()
     SPDLOG_INFO("Physics initialized");
 }
 
-State::~State()
+CORE_API Core::Physics::State::~State()
 {
     SPDLOG_INFO("Shutting down physics");
     m_controllerManager->release();
@@ -67,19 +64,19 @@ State::~State()
     SPDLOG_INFO("Physics shut down");
 }
 
-void State::Update(float delta)
+CORE_API void Core::Physics::State::Update(float delta)
 {
     m_scene->simulate(delta);
     m_scene->fetchResults(true);
 }
 
-void Update(flecs::iter& iter)
+void Core::Physics::Update(flecs::iter& iter)
 {
     Systems::Context* context = iter.ctx<Systems::Context>();
     context->physics->Update(iter.delta_system_time());
 }
 
-void Visualize(flecs::iter& iter)
+void Core::Physics::Visualize(flecs::iter& iter)
 {
 #if 0//ndef RETAIL
     Systems::Context* context = iter.ctx<Systems::Context>();
@@ -128,5 +125,3 @@ void Visualize(flecs::iter& iter)
     }
 #endif
 }
-
-} // namespace Physics

@@ -1,14 +1,18 @@
-#include "player.h"
-#include "backend.h"
-#include "camera.h"
+#include "core/backend.h"
+#include "core/camera.h"
+#include "core/components.h"
+#include "core/input.h"
+#include "core/physics.h"
+#include "core/systems.h"
+
 #include "components.h"
-#include "input.h"
-#include "physics.h"
+#include "player.h"
 #include "sprites.h"
 #include "systems.h"
 
-flecs::entity Game::Player::Create(flecs::world& world, Physics::State& physics,
-                                   Components::Camera** camera)
+GAME_API flecs::entity Game::Player::Create(flecs::world& world,
+                                   Core::Physics::State& physics,
+                                   Core::Components::Camera** camera)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
 
@@ -20,25 +24,26 @@ flecs::entity Game::Player::Create(flecs::world& world, Physics::State& physics,
 
     flecs::entity player =
         world.entity("Player")
-            .set(Physics::Controller(physics, controllerDesc))
-            .set(Sprite(Game::Sprites::Player::player))
-            .set(Components::MovementSpeed{0.75f, 0.5f, 1.25f})
-            .set(Components::Health{100.0f, 100.0f})
+            .set(Core::Physics::Controller(physics, controllerDesc))
+            .set(Core::Sprite(Game::Sprites::Player::player))
+            .set(Core::Components::MovementSpeed{0.75f, 0.5f, 1.25f})
+            .set(Core::Components::Health{100.0f, 100.0f})
             .set(Components::Element{Components::Element::None})
             .set(Cursor{0.0f, 0.0f})
             .set(MeleeCooldown{0.0f})
             .set(**camera)
             .add<LocalPlayer>();
 
-    *camera = player.get_mut<Components::Camera>();
+    *camera = player.get_mut<Core::Components::Camera>();
 
     material->release();
 
     return player;
 }
 
-flecs::entity Game::Player::CreateProjectile(flecs::entity player,
-                                             Physics::State& physics,
+GAME_API flecs::entity Game::Player::CreateProjectile(
+    flecs::entity player,
+                                             Core::Physics::State& physics,
                                              float lifespan, float speed)
 {
     PxMaterial* material = physics.GetPhysics().createMaterial(0, 0, 0);
@@ -47,20 +52,20 @@ flecs::entity Game::Player::CreateProjectile(flecs::entity player,
 
     PxTransform transform(GetCursorPosition(player));
 
-    Physics::Body body = Physics::Body(physics, transform, *shape);
+    Core::Physics::Body body = Core::Physics::Body(physics, transform, *shape);
     body.GetBody().setMass(0.0f);
 
     const flecs::world& world = player.world();
     flecs::entity projectile =
         world.entity()
-            .set(Components::Timeout{lifespan})
+            .set(Core::Components::Timeout{lifespan})
             .set(body)
             .set(*player.get<Components::Element>())
-            .set(Sprite(
+            .set(Core::Sprite(
                 Game::Sprites::Player::fireMelee)) // TODO: make this actually
                                                    // respect the player's
                                                    // element and attack type
-            .is_a<Tags::Projectile>()
+            .is_a<Core::Tags::Projectile>()
             .child_of(player);
     material->release();
 
@@ -71,14 +76,14 @@ flecs::entity Game::Player::CreateProjectile(flecs::entity player,
     return projectile;
 }
 
-void Game::Player::HandleInput(flecs::iter& iter)
+GAME_API void Game::Player::HandleInput(flecs::iter& iter)
 {
-    auto context = iter.ctx<Systems::Context>();
+    auto context = iter.ctx<Core::Systems::Context>();
     auto input = context->input;
 
     flecs::entity player = iter.entity(0);
-    auto controller = player.get_mut<Physics::Controller>();
-    auto movementSpeed = player.get<Components::MovementSpeed>();
+    auto controller = player.get_mut<Core::Physics::Controller>();
+    auto movementSpeed = player.get<Core::Components::MovementSpeed>();
     auto cursor = player.get_mut<Cursor>();
     auto meleeCooldown = player.get_mut<MeleeCooldown>();
 
@@ -111,9 +116,10 @@ void Game::Player::HandleInput(flecs::iter& iter)
                                      PxControllerFilters());
 }
 
-PxVec3 Game::Player::GetCursorPosition(flecs::entity player, float distance)
+GAME_API PxVec3 Game::Player::GetCursorPosition(flecs::entity player,
+                                                float distance)
 {
-    auto controller = player.get_mut<Physics::Controller>();
+    auto controller = player.get_mut<Core::Physics::Controller>();
     auto cursor = player.get<Cursor>();
 
     float radius =
@@ -126,13 +132,13 @@ PxVec3 Game::Player::GetCursorPosition(flecs::entity player, float distance)
                   position.z + radius * PxSin(angle));
 }
 
-void Game::Player::DrawCursor(flecs::iter& iter)
+GAME_API void Game::Player::DrawCursor(flecs::iter& iter)
 {
     auto player = iter.entity(0);
-    auto camera = player.get<Components::Camera>();
+    auto camera = player.get<Core::Components::Camera>();
     PxVec3 cursorPosition(GetCursorPosition(player));
     PxVec2 screenPosition = camera->Project(cursorPosition);
-    g_backend->DrawSprite(Game::Sprites::Player::cursor,
-                          (uint32_t)screenPosition.x,
-                          (uint32_t)screenPosition.y);
+    Core::g_backend->DrawSprite(Game::Sprites::Player::cursor,
+                                (uint32_t)screenPosition.x,
+                                (uint32_t)screenPosition.y);
 }

@@ -67,6 +67,26 @@ namespace chrono = std::chrono;
 using namespace std::chrono_literals;
 using precise_clock = chrono::high_resolution_clock;
 
+#ifdef _MSC_VER
+#define ATTRIBUTE(x) __declspec(x)
+#else
+#define ATTRIBUTE(x) __attribute__((x))
+#endif
+
+#ifdef CORE
+#ifdef _WIN32
+#define CORE_API ATTRIBUTE(dllexport)
+#else
+#define CORE_API ATTRIBUTE(visibility("default"))
+#endif
+#else
+#ifdef _WIN32
+#define CORE_API ATTRIBUTE(dllimport)
+#else
+#define CORE_API
+#endif
+#endif
+
 namespace Core
 {
 
@@ -84,39 +104,49 @@ constexpr ImGuiWindowFlags ImGuiWindowFlags_DummyWindow =
     ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs;
 #endif
 
-extern const char* GAME_COMMIT;
+extern CORE_API const char* GAME_COMMIT;
 
 // Game screen size
 constexpr uint32_t GAME_WIDTH = 256;
 constexpr uint32_t GAME_HEIGHT = 168;
 
 // Debug font settings
-extern PxVec3 DEBUG_TEXT_COLOR;
+extern CORE_API PxVec3 DEBUG_TEXT_COLOR;
 
 // Get the size of an array
-template <class T, size_t N> constexpr size_t ARRAY_SIZE(T (&)[N])
+template <class T, size_t N> constexpr size_t ArraySize(T (&)[N])
 {
     return N;
 }
 
 // Get the sign of a number
 // https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
-template <typename T> inline T SIGN(T val)
+template <typename T> inline T Sign(T val)
 {
     return (T(0) < val) - (val < T(0));
 }
 
 // Unpack a number from an int into a vec4
-inline PxVec4 UNPACK_COLOR(uint32_t color)
+inline PxVec4 UnpackColor(uint32_t color)
 {
-    return PxVec4(color >> 24 & 0xFF, color >> 16 & 0xFF, color >> 8 & 0xFF,
-                  color >> 0 & 0xFF);
+    return PxVec4((float)(color >> 24 & 0xFF), (float)(color >> 16 & 0xFF),
+                  (float)(color >> 8 & 0xFF), (float)(color >> 0 & 0xFF));
 }
 
 // Exit the program
-[[noreturn]] extern void Quit(const std::string& message, int32_t exitCode = 1);
-#define QUIT(...) Quit(fmt::format(__VA_ARGS__))
-#define QUIT_CODE(exitCode, ...) Quit(fmt::format(__VA_ARGS__), exitCode)
+[[noreturn]] CORE_API void Quit(int32_t exitCode, const std::string& message);
+
+template <typename... Args>
+[[noreturn]] void Quit(int32_t exitCode, const std::string& message,
+                       Args... args)
+{
+    Quit(exitCode, fmt::format(message, args...));
+}
+template <typename... Args>
+[[noreturn]] void Quit(const std::string& message, Args... args)
+{
+    Quit(1, message, args...);
+}
 
 // ImGui text
 #define IMGUI_TEXT_(Type, ...)                                                 \

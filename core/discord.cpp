@@ -40,7 +40,7 @@ DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
     if (!s_discordSdkDll)
     {
         SPDLOG_INFO("Loading Discord SDK");
-        s_discordSdkDll = g_backend->LoadLibrary("discord_game_sdk");
+        s_discordSdkDll = Core::g_backend->LoadLibrary("discord_game_sdk");
         if (!s_discordSdkDll)
         {
             SPDLOG_ERROR("Failed to load Discord SDK");
@@ -48,7 +48,7 @@ DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
             return DiscordResult_InvalidVersion;
         }
 
-        s_DiscordCreate = (DiscordCreatePtr)g_backend->GetSymbol(
+        s_DiscordCreate = (DiscordCreatePtr)Core::g_backend->GetSymbol(
             s_discordSdkDll, "DiscordCreate");
         if (!s_DiscordCreate)
         {
@@ -64,13 +64,13 @@ DiscordCreate(DiscordVersion version, struct DiscordCreateParams* params,
     return s_DiscordCreate(version, params, result);
 }
 
-void Discord::Initialize()
+CORE_API void Core::Discord::Initialize()
 {
 #if DISCORD_ENABLE
     SPDLOG_INFO("Connecting to Discord");
 
-    discord::Result result =
-        discord::Core::Create(APP_ID, DiscordCreateFlags_NoRequireDiscord, &core);
+    discord::Result result = discord::Core::Create(
+        APP_ID, DiscordCreateFlags_NoRequireDiscord, &core);
     if (result != discord::Result::Ok)
     {
         SPDLOG_ERROR("Couldn't connect to Discord: {}", (uint32_t)result);
@@ -165,7 +165,8 @@ static const char* GetCoolString()
 }
 #endif
 
-void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
+CORE_API void Core::Discord::Update(chrono::seconds runtime,
+                                    chrono::milliseconds delta)
 {
 #if DISCORD_ENABLE
     if (!connected)
@@ -178,25 +179,26 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
     std::string state =
         fmt::format("Playing {} for {:%T}", GetCoolString(), runtime);
     activity.SetState(state.c_str());
-    std::string details = fmt::format(
-        "{} {} build on {}",
+    std::string details = fmt::format("{} {} build on {}",
 #ifdef _DEBUG
-        "Debug",
+                                      "Debug",
 #elif defined(NDEBUG)
-        "Release",
+                                       "Release",
+#elif defined(RETAIL)
+                                       "Retail"
 #endif
-#if defined(_WIN32) && WINRT
-        "Universal Windows",
+#if defined(_WIN32) && _GAMING_XBOX_SCARLETT
+                                      "Xbox",
 #elif defined(_WIN32)
-        "Windows",
+                                       "Windows",
 #elif defined(__APPLE__)
-        "macOS",
+                                       "macOS",
 #elif defined(__linux__)
-        "Linux",
+                                       "Linux",
 #else
-        "unknown",
+                                       "unknown",
 #endif
-        g_backend->DescribeSystem());
+                                      g_backend->DescribeSystem());
     activity.SetDetails(details.c_str());
     activity.SetType(discord::ActivityType::Playing);
     activity.GetAssets().SetLargeImage("logo");
@@ -224,7 +226,7 @@ void Discord::Update(chrono::seconds runtime, chrono::milliseconds delta)
 #endif
 }
 
-void Discord::Shutdown()
+CORE_API void Core::Discord::Shutdown()
 {
 #if DISCORD_ENABLE
     if (!connected)
@@ -241,12 +243,12 @@ void Discord::Shutdown()
 #endif
 }
 
-bool Discord::Available()
+CORE_API bool Core::Discord::Available()
 {
     return available;
 }
 
-bool Discord::Connected()
+CORE_API bool Core::Discord::Connected()
 {
     return connected;
 }

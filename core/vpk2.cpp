@@ -47,7 +47,7 @@ static uint32_t s_valveCrc32Table[] = {
     0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
     0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D};
 
-uint32_t Vpk::ValveCrc32(const std::vector<uint8_t>& data)
+CORE_API uint32_t Core::Vpk::ValveCrc32(const std::vector<uint8_t>& data)
 {
     uint32_t crc = 0xFFFFFFFF;
 
@@ -59,7 +59,7 @@ uint32_t Vpk::ValveCrc32(const std::vector<uint8_t>& data)
     return ~crc;
 }
 
-Vpk::Vpk2::Vpk2()
+CORE_API Core::Vpk::Vpk2::Vpk2()
 {
     m_header.signature = VPK2_SIGNATURE;
     m_header.version = VPK2_VERSION;
@@ -77,7 +77,7 @@ Vpk::Vpk2::Vpk2()
     m_currentOffset = 0;
 }
 
-Vpk::Vpk2::Vpk2(const std::string& path, bool create)
+CORE_API Core::Vpk::Vpk2::Vpk2(const std::string& path, bool create)
 {
     m_realPath = path;
 
@@ -110,18 +110,18 @@ Vpk::Vpk2::Vpk2(const std::string& path, bool create)
     std::vector<uint8_t> directory = Filesystem::Read(dirPath);
     if (directory.size() < sizeof(Vpk2Header))
     {
-        QUIT("Failed to read VPK directory {}", dirPath);
+        Quit("Failed to read VPK directory {}", dirPath);
     }
 
     m_header = *(Vpk2Header*)directory.data();
     if (m_header.signature != VPK2_SIGNATURE)
     {
-        QUIT("Invalid signature 0x{:08X}, expected 0x{:08X}",
+        Quit("Invalid signature 0x{:08X}, expected 0x{:08X}",
              m_header.signature, VPK2_SIGNATURE);
     }
     if (m_header.version != VPK2_VERSION)
     {
-        QUIT("Version {} does not match expected version {}", m_header.version,
+        Quit("Version {} does not match expected version {}", m_header.version,
              VPK2_VERSION);
     }
 
@@ -220,7 +220,7 @@ Vpk::Vpk2::Vpk2(const std::string& path, bool create)
     }
 }
 
-std::vector<uint8_t> Vpk::Vpk2::Read(const std::string& path)
+CORE_API std::vector<uint8_t> Core::Vpk::Vpk2::Read(const std::string& path)
 {
     // TODO: maybe it's possible for a file to be in multiple chunks.
     // However, it's unlikely this game will have individual files more than
@@ -241,14 +241,14 @@ std::vector<uint8_t> Vpk::Vpk2::Read(const std::string& path)
     return std::vector<uint8_t>();
 }
 
-bool Vpk::Vpk2::Exists(const std::string& path)
+CORE_API bool Core::Vpk::Vpk2::Exists(const std::string& path)
 {
     return m_files.find(path) != m_files.end();
 }
 
 // TODO: This implementation probably works fine, but it could be improved to do
 // less allocations somehow.
-void Vpk::Vpk2::Write(const std::string& path)
+CORE_API void Core::Vpk::Vpk2::Write(const std::string& path)
 {
     if (!path.length() && !m_realPath.length())
     {
@@ -353,7 +353,7 @@ void Vpk::Vpk2::Write(const std::string& path)
     file.write((const char*)directory.data(), directory.size());
 }
 
-void Vpk::Vpk2::AddFile(const std::string& path,
+CORE_API void Core::Vpk::Vpk2::AddFile(const std::string& path,
                         const std::vector<uint8_t>& data)
 {
     std::string cleanPath = Filesystem::CleanPath(path);
@@ -377,7 +377,7 @@ void Vpk::Vpk2::AddFile(const std::string& path,
     std::ofstream archive(archivePath, std::ios::binary | std::ios::app);
     if (!archive.is_open())
     {
-        QUIT("Failed to open VPK archive {}", archivePath);
+        Quit("Failed to open VPK archive {}", archivePath);
     }
 
     Vpk2DirectoryEntry entry;
@@ -399,7 +399,7 @@ void Vpk::Vpk2::AddFile(const std::string& path,
     m_files[cleanPath] = entry;
 }
 
-uint32_t Vpk::Vpk2::ComputeCrc32(const std::string& path)
+CORE_API uint32_t Core::Vpk::Vpk2::ComputeCrc32(const std::string& path)
 {
     std::vector<uint8_t> data = Read(path);
     return ValveCrc32(data);

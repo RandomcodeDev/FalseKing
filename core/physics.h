@@ -2,13 +2,15 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Physics
 {
 static constexpr float GRAVITY = 9.8f;
 static constexpr float TIME_STEP = 1 / 60.0f;
 
 // Stores physics stuff
-class State
+class CORE_API State
 {
   public:
     // Initialize physics stuff
@@ -50,7 +52,7 @@ void Update(flecs::iter& iter);
 void Visualize(flecs::iter& iter);
 
 // For systems that just need basic information like transform
-struct Base
+struct CORE_API Base
 {
     virtual PxTransform GetTransform() const
     {
@@ -64,7 +66,7 @@ struct Base
 };
 
 // Physics body
-struct Body : Base
+struct CORE_API Body : Base
 {
     Body() = default;
     Body(State& physics, const PxTransform& transform, PxShape& shape)
@@ -106,7 +108,7 @@ struct Body : Base
 };
 
 // Physics controller
-struct Controller : Base
+struct CORE_API Controller : Base
 {
     Controller() : m_controller(nullptr)
     {
@@ -116,7 +118,8 @@ struct Controller : Base
     {
         m_controller = physics.GetControllerManager().createController(desc);
 #ifndef RETAIL
-        m_controller->getActor()->setActorFlag(PxActorFlag::eVISUALIZATION, true);
+        m_controller->getActor()->setActorFlag(PxActorFlag::eVISUALIZATION,
+                                               true);
 #endif
     }
 
@@ -166,3 +169,4 @@ inline const Base* GetBase(flecs::entity& entity)
 }
 
 } // namespace Physics
+} // namespace Core

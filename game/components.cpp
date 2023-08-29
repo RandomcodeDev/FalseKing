@@ -1,11 +1,15 @@
+#include "core/input.h"
+#include "core/physics.h"
+
 #include "components.h"
-#include "input.h"
-#include "physics.h"
+#include "game.h"
 #include "player.h"
 
-void Game::Components::Register(flecs::world& world)
+GAME_API void Game::Components::Register(flecs::world& world)
 {
-    world.component<Player::LocalPlayer>()
-    //    .is_a(flecs::Private)
+    ecs_os_init();
+    world
+        .component<Player::LocalPlayer>()
+  //    .is_a(flecs::Private)
         .is_a<Player::Player>();
 }

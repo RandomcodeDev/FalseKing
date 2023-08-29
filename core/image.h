@@ -2,11 +2,14 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
+
 // Forward declarations
-class Backend;
+class CORE_API Backend;
 
 // Image
-class Image
+class CORE_API Image
 {
   public:
     // Opaque backend information
@@ -58,3 +61,5 @@ class Image
 
     static const uint8_t DEFAULT_PIXELS[16 * 16 * 4 + 1];
 };
+
+} // namespace Core

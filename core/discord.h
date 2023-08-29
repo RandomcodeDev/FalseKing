@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Discord
 {
 constexpr uint64_t APP_ID = 1124873777105346621;
@@ -10,17 +12,18 @@ constexpr chrono::milliseconds ACTIVITY_COOLDOWN =
     chrono::milliseconds(4000); // 5/20 seconds
 
 // Initialize the Discord SDK
-void Initialize();
+extern CORE_API void Initialize();
 
 // Update the status
-void Update(chrono::seconds runtime, chrono::milliseconds delta);
+extern CORE_API void Update(chrono::seconds runtime, chrono::milliseconds delta);
 
 // Shut down the Discord SDK
-void Shutdown();
+extern CORE_API void Shutdown();
 
 // Whether Discord is available
-bool Available();
+extern CORE_API bool Available();
 
 // Whether Discord is connected
-bool Connected();
+extern CORE_API bool Connected();
 } // namespace Discord
+} // namespace Core

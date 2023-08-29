@@ -47,15 +47,15 @@ union KeyMapping {
 };
 
 // Forward declarations
-class Image;
+class CORE_API Image;
 struct Sprite;
 namespace Input
 {
-class State;
+class CORE_API State;
 }
 
 // Abstraction of the platform
-class Backend
+class CORE_API Backend
 {
   public:
     // Set up an image so it can be used
@@ -122,6 +122,10 @@ class Backend
     virtual void DrawLine(const PxVec2& start, const PxVec2& end,
                           const PxVec4& color,
                           float thickness = 0.1f) const = 0;
+
+    // Quit the program
+    [[noreturn]] virtual void Quit(int32_t exitCode,
+                                   const std::string& message) const = 0;
 };
 
 #ifdef __NX__
@@ -130,10 +134,13 @@ class SwitchBackend;
 class SdlBackend;
 #endif
 
-// Program entry point
-extern int32_t GameMain(Backend* backend,
-                        std::vector<std::string> backendPaths);
-
 // Global backend pointer
-extern Backend* g_backend;
+extern CORE_API Backend* g_backend;
 } // namespace Core
+
+namespace Launcher
+{
+// Program entry point
+extern int32_t GameMain(Core::Backend* backend,
+                        std::vector<std::string> backendPaths);
+} // namespace Launcher

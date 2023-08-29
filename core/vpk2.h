@@ -2,6 +2,8 @@
 
 #include "fs.h"
 
+namespace Core
+{
 namespace Vpk
 {
 
@@ -60,9 +62,9 @@ struct Vpk2Signature
 #pragma pack(pop)
 
 // Calculate a CRC32 using the table Valve formats use
-uint32_t ValveCrc32(const std::vector<uint8_t>& data);
+CORE_API uint32_t ValveCrc32(const std::vector<uint8_t>& data);
 
-class Vpk2 : public Filesystem::FileSource
+class CORE_API Vpk2 : public Filesystem::FileSource
 {
   public:
     using container = std::map<std::string, Vpk2DirectoryEntry>;
@@ -156,3 +158,4 @@ class Vpk2 : public Filesystem::FileSource
 };
 
 } // namespace Vpk
+} // namespace Core

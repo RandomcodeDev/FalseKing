@@ -11,42 +11,45 @@
 #endif
 
 #include "SDL3/SDL.h"
+
+#ifndef CORE
 #include "SDL3/SDL_main.h"
+#endif
 
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
 
-#include "backend.h"
-#include "image.h"
-#include "input.h"
-#include "sprite.h"
+#include "core/backend.h"
+#include "core/image.h"
+#include "core/input.h"
+#include "core/sprite.h"
 
-class SdlBackend : protected Backend
+class SdlBackend : protected Core::Backend
 {
   public:
     SdlBackend();
     ~SdlBackend();
-    void SetupImage(Image& image);
-    void CleanupImage(Image& image);
-    bool Update(class Input::State& input);
+    void SetupImage(Core::Image& image);
+    void CleanupImage(Core::Image& image);
+    bool Update(class Core::Input::State& input);
     void InitializeImGui();
     void ShutdownImGui();
     void BeginRender();
-    void DrawImage(Image& image, uint32_t x, uint32_t y, float scaleX,
+    void DrawImage(Core::Image& image, uint32_t x, uint32_t y, float scaleX,
                    float scaleY, uint32_t srcX, uint32_t srcY,
                    uint32_t srcWidth, uint32_t srcHeight, PxVec3 color);
     void EndRender();
-    const WindowInfo& GetWindowInformation() const
+    const inline Core::WindowInfo& GetWindowInformation() const
     {
         return m_windowInfo;
     }
-    KeyMapping& GetKeyMapping()
+    Core::KeyMapping& GetKeyMapping()
     {
         return m_mapping;
     }
     const std::string& DescribeSystem() const;
 
-    void* LoadLibrary(const std::string& path) const
+    inline void* LoadLibrary(const std::string& path) const
     {
         std::string fullPath = path +
 #ifdef _WIN32
@@ -58,15 +61,15 @@ class SdlBackend : protected Backend
 #endif
         return SDL_LoadObject(fullPath.c_str());
     }
-    Symbol GetSymbol(void* dll, const std::string& symbol) const
+    inline Symbol GetSymbol(void* dll, const std::string& symbol) const
     {
         return (Symbol)SDL_LoadFunction(dll, symbol.c_str());
     }
-    uint64_t GetFrameCount() const
+    inline uint64_t GetFrameCount() const
     {
         return m_frames;
     }
-    const std::string& DescribeBackend() const
+    const inline std::string& DescribeBackend() const
     {
         return m_description;
     }
@@ -76,12 +79,23 @@ class SdlBackend : protected Backend
     void DrawLine(const PxVec2& start, const PxVec2& end, const PxVec4& color,
                   float thickness) const;
 
+    [[noreturn]] void Quit(int32_t exitCode, const std::string& message) const
+    {
+        std::string title = exitCode == 1
+                                ? "Error"
+                                : fmt::format("Error {0}/0x{0:X}", exitCode);
+        SPDLOG_CRITICAL("Fatal error {0}/0x{0:X}: {1}", exitCode, message);
+        SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), nullptr);
+        SDL_TriggerBreakpoint();
+        exit(exitCode);
+    }
+
   private:
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
-    WindowInfo m_windowInfo;
+    Core::WindowInfo m_windowInfo;
     uint32_t m_windowId;
-    KeyMapping m_mapping;
+    Core::KeyMapping m_mapping;
     SDL_Gamepad* m_gamepad;
     SDL_JoystickID m_gamepadId;
     bool m_usingGamepad;
@@ -89,10 +103,10 @@ class SdlBackend : protected Backend
     std::string m_description;
     bool m_texturesReset;
 
-    bool HandleEvent(const SDL_Event& event, Input::State& input);
+    bool HandleEvent(const SDL_Event& event, Core::Input::State& input);
     void EnumerateGamepads();
 
-    static const inline KeyMapping DEFAULT_KEYMAP = {
+    static const inline Core::KeyMapping DEFAULT_KEYMAP = {
         SDL_SCANCODE_ESCAPE, SDL_SCANCODE_TAB, SDL_SCANCODE_Q, SDL_SCANCODE_C,
         SDL_SCANCODE_X, SDL_SCANCODE_V, SDL_SCANCODE_SPACE, SDL_SCANCODE_F,
         SDL_SCANCODE_E, SDL_SCANCODE_R, 0, 0, SDL_SCANCODE_LSHIFT,
@@ -124,7 +138,7 @@ class SdlBackend : protected Backend
 extern "C" int main(int argc, char* argv[])
 {
 #ifdef _WIN32
-#ifdef _DEBUG
+#ifndef RETAIL
     if (!AttachConsole(ATTACH_PARENT_PROCESS))
     {
         AllocConsole();
@@ -141,29 +155,21 @@ extern "C" int main(int argc, char* argv[])
 #endif
 
     spdlog::default_logger().get()->sinks().push_back(
-        std::make_shared<spdlog::sinks::basic_file_sink_st>(fmt::format(
-            "{}FalseKing-{:%Y-%m-%d_%H-%M-%S}.log",
-            SDL_GetPrefPath("", GAME_NAME), chrono::system_clock::now())));
+        std::make_shared<spdlog::sinks::basic_file_sink_st>(
+            fmt::format("{}FalseKing-{:%Y-%m-%d_%H-%M-%S}.log",
+                        SDL_GetPrefPath("", Core::GAME_NAME),
+                        chrono::system_clock::now())));
 
     SPDLOG_INFO("Creating backend");
-    Backend* backend = (Backend*)new SdlBackend();
+    Core::Backend* backend = (Core::Backend*)new SdlBackend();
 
     std::vector<std::string> paths;
     std::string baseDir = SDL_GetBasePath();
     paths.push_back(baseDir);
-    int returnCode = GameMain(backend, paths);
+    int returnCode = Launcher::GameMain(backend, paths);
     SPDLOG_INFO("Destroying backend");
     delete (SdlBackend*)backend;
     return returnCode;
-}
-
-[[noreturn]] void Quit(const std::string& message, int32_t exitCode)
-{
-    std::string title =
-        exitCode == 1 ? "Error" : fmt::format("Error {0}/0x{0:X}", exitCode);
-    SDL_ShowSimpleMessageBox(0, title.c_str(), message.c_str(), nullptr);
-    SDL_TriggerBreakpoint();
-    exit(exitCode);
 }
 
 SdlBackend::SdlBackend()
@@ -172,15 +178,15 @@ SdlBackend::SdlBackend()
 
     if (SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_VIDEO) < 0)
     {
-        QUIT("Failed to initialize SDL: {}", SDL_GetError());
+        Core::Quit("Failed to initialize SDL: {}", SDL_GetError());
     }
 
     m_window =
-        SDL_CreateWindow(GAME_NAME, 1024, 576,
+        SDL_CreateWindow(Core::GAME_NAME, 1024, 576,
                          SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);
     if (!m_window)
     {
-        QUIT("Failed to create window: {}", SDL_GetError());
+        Core::Quit("Failed to create window: {}", SDL_GetError());
     }
 
     m_renderer = SDL_CreateRenderer(m_window,
@@ -196,7 +202,7 @@ SdlBackend::SdlBackend()
                                     0);
     if (!m_renderer)
     {
-        QUIT("Failed to create renderer: {}", SDL_GetError());
+        Core::Quit("Failed to create renderer: {}", SDL_GetError());
     }
 
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
@@ -208,9 +214,9 @@ SdlBackend::SdlBackend()
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
-    SDL_Rect clippingRect{Sprite::TILE_SIZE, Sprite::TILE_SIZE,
-                          GAME_WIDTH + Sprite::TILE_SIZE * 2,
-                          GAME_HEIGHT + Sprite::TILE_SIZE * 2};
+    SDL_Rect clippingRect{Core::Sprite::TILE_SIZE, Core::Sprite::TILE_SIZE,
+                          Core::GAME_WIDTH + Core::Sprite::TILE_SIZE * 2,
+                          Core::GAME_HEIGHT + Core::Sprite::TILE_SIZE * 2};
     SDL_SetRenderClipRect(m_renderer, &clippingRect);
 
     EnumerateGamepads();
@@ -233,7 +239,7 @@ SdlBackend::~SdlBackend()
     SDL_Quit();
 }
 
-void SdlBackend::SetupImage(Image& image)
+void SdlBackend::SetupImage(Core::Image& image)
 {
     if (image.backendData)
     {
@@ -250,7 +256,7 @@ void SdlBackend::SetupImage(Image& image)
                           SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
     if (!image.backendData)
     {
-        QUIT("Failed to create texture for image: {}", SDL_GetError());
+        Core::Quit("Failed to create texture for image: {}", SDL_GetError());
     }
 
     SDL_SetTextureScaleMode((SDL_Texture*)image.backendData,
@@ -262,11 +268,12 @@ void SdlBackend::SetupImage(Image& image)
                           image.GetPixels(),
                           image.GetChannels() * imageWidth) < 0)
     {
-        QUIT("Failed to copy pixels to texture for image: {}", SDL_GetError());
+        Core::Quit("Failed to copy pixels to texture for image: {}",
+                   SDL_GetError());
     }
 }
 
-void SdlBackend::CleanupImage(Image& image)
+void SdlBackend::CleanupImage(Core::Image& image)
 {
     if (image.backendData)
     {
@@ -275,7 +282,7 @@ void SdlBackend::CleanupImage(Image& image)
     image.backendData = nullptr;
 }
 
-bool SdlBackend::Update(Input::State& input)
+bool SdlBackend::Update(Core::Input::State& input)
 {
     SDL_Event event{};
 
@@ -332,7 +339,7 @@ bool SdlBackend::Update(Input::State& input)
             }
 
             // There are 4 mappings that aren't bit flags, they're handled above
-            for (uint8_t i = 0; i < ARRAY_SIZE(m_mapping.values) - 4; i++)
+            for (uint8_t i = 0; i < Core::ArraySize(m_mapping.values) - 4; i++)
             {
                 int8_t down = keys[m_mapping.values[i]];
                 // Mapping is in same order as bit flags for state
@@ -367,18 +374,21 @@ void SdlBackend::ShutdownImGui()
 void SdlBackend::DrawPoint(const PxVec2& point, const PxVec4& color,
                            float thickness) const
 {
-    SDL_SetRenderDrawColor(m_renderer, color.x, color.y, color.z, color.w);
-    SDL_RenderPoint(m_renderer, point.x, point.y);
+    SDL_SetRenderDrawColor(m_renderer, (uint8_t)color.x, (uint8_t)color.y,
+                           (uint8_t)color.z, (uint8_t)color.w);
+    SDL_RenderPoint(m_renderer, (uint8_t)point.x, (uint8_t)point.y);
 }
 
 void SdlBackend::DrawLine(const PxVec2& start, const PxVec2& end,
                           const PxVec4& color, float thickness) const
 {
-    SDL_SetRenderDrawColor(m_renderer, color.x, color.y, color.z, color.w);
-    SDL_RenderLine(m_renderer, start.x, start.y, end.x, end.y);
+    SDL_SetRenderDrawColor(m_renderer, (uint8_t)color.x, (uint8_t)color.y,
+                           (uint8_t)color.z, (uint8_t)color.w);
+    SDL_RenderLine(m_renderer, (uint8_t)start.x, (uint8_t)start.y,
+                   (uint8_t)end.x, (uint8_t)end.y);
 }
 
-bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
+bool SdlBackend::HandleEvent(const SDL_Event& event, Core::Input::State& input)
 {
     if ((event.type >= SDL_EVENT_WINDOW_FIRST &&
          event.type <= SDL_EVENT_WINDOW_LAST) &&
@@ -442,10 +452,10 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
     else if (event.type == SDL_EVENT_MOUSE_WHEEL)
     {
         m_usingGamepad = false;
-        uint16_t mask =
-            event.wheel.y > 0 ? Input::LEFT_SHOULDER : Input::RIGHT_SHOULDER;
-        input.state &=
-            event.wheel.y > 0 ? ~Input::LEFT_SHOULDER : ~Input::RIGHT_SHOULDER;
+        uint16_t mask = event.wheel.y > 0 ? Core::Input::LEFT_SHOULDER
+                                          : Core::Input::RIGHT_SHOULDER;
+        input.state &= event.wheel.y > 0 ? ~Core::Input::LEFT_SHOULDER
+                                         : ~Core::Input::RIGHT_SHOULDER;
         input.state |= mask;
         input.scrollAmount = event.wheel.y / 19;
     }
@@ -474,19 +484,19 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
         int8_t down = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
         if (event.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)
         {
-            input.state = (input.state & ~Input::RIGHT_SHOULDER) |
-                          (-down & Input::RIGHT_SHOULDER);
+            input.state = (input.state & ~Core::Input::RIGHT_SHOULDER) |
+                          (-down & Core::Input::RIGHT_SHOULDER);
             input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else if (event.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)
         {
-            input.state = (input.state & ~Input::LEFT_SHOULDER) |
-                          (-down & Input::LEFT_SHOULDER);
+            input.state = (input.state & ~Core::Input::LEFT_SHOULDER) |
+                          (-down & Core::Input::LEFT_SHOULDER);
             input.scrollAmount = down ? -1.0f : 0.0f;
         }
         else
         {
-            for (uint8_t i = 0; i < ARRAY_SIZE(BUTTONS_IN_ORDER); i++)
+            for (uint8_t i = 0; i < Core::ArraySize(BUTTONS_IN_ORDER); i++)
             {
                 if (event.gbutton.button == BUTTONS_IN_ORDER[i])
                 {
@@ -540,7 +550,6 @@ bool SdlBackend::HandleEvent(const SDL_Event& event, Input::State& input)
 
 void SdlBackend::EnumerateGamepads()
 {
-
     SPDLOG_INFO("Enumerating gamepads");
     int32_t gamepadCount = 0;
     SDL_JoystickID* gamepads = SDL_GetGamepads(&gamepadCount);
@@ -575,8 +584,8 @@ void SdlBackend::EnumerateGamepads()
 void SdlBackend::BeginRender()
 {
     // Scale everything to be the right size
-    SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / GAME_WIDTH,
-                       (float)m_windowInfo.height / GAME_HEIGHT);
+    SDL_SetRenderScale(m_renderer, (float)m_windowInfo.width / Core::GAME_WIDTH,
+                       (float)m_windowInfo.height / Core::GAME_HEIGHT);
 
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
@@ -587,7 +596,7 @@ void SdlBackend::BeginRender()
     return;
 }
 
-void SdlBackend::DrawImage(Image& image, uint32_t x, uint32_t y,
+void SdlBackend::DrawImage(Core::Image& image, uint32_t x, uint32_t y,
                            float scaleX, float scaleY, uint32_t srcX,
                            uint32_t srcY, uint32_t srcWidth, uint32_t srcHeight,
                            PxVec3 color)
@@ -597,7 +606,7 @@ void SdlBackend::DrawImage(Image& image, uint32_t x, uint32_t y,
         SetupImage(image);
         return;
     }
-    
+
     SDL_SetRenderTarget(m_renderer, nullptr);
     uint32_t imageWidth;
     uint32_t imageHeight;
@@ -656,14 +665,14 @@ const std::string& SdlBackend::DescribeSystem() const
     HKEY CurrentVersionHandle;
     CHAR EditionId[32] = {};
     CHAR ProductName[32] = {};
-    DWORD Size;
+    DWORD Size = 0;
 
     // Windows 10 and above
     CHAR InstallationType[32] = {};
-    DWORD CurrentMajorVersionNumber;
-    DWORD CurrentMinorVersionNumber;
+    DWORD CurrentMajorVersionNumber = 0;
+    DWORD CurrentMinorVersionNumber = 0;
     CHAR CurrentBuildNumber[8] = {};
-    DWORD UBR;
+    DWORD UBR = 0;
     CHAR DisplayVersion[8] = {};
     CHAR BuildLabEx[64] = {};
 
@@ -716,8 +725,8 @@ const std::string& SdlBackend::DescribeSystem() const
         RegQueryValueExA(CurrentVersionHandle, "DisplayVersion", nullptr,
                          nullptr, (LPBYTE)DisplayVersion, &Size);
 
-        std::string edition(EditionId,
-                            std::min(strlen(EditionId), ARRAY_SIZE(EditionId)));
+        std::string edition(
+            EditionId, std::min(strlen(EditionId), Core::ArraySize(EditionId)));
         Description = fmt::format(
 #ifdef _DEBUG
             "{} {} {}.{}.{} {}",
@@ -726,7 +735,7 @@ const std::string& SdlBackend::DescribeSystem() const
 #endif
             edition == "SystemOS" ? "Xbox System Software" : "Windows",
             (strncmp(InstallationType, "Client",
-                     ARRAY_SIZE(InstallationType)) == 0)
+                     Core::ArraySize(InstallationType)) == 0)
                 ? "Desktop"
                 : InstallationType,
             CurrentMajorVersionNumber, CurrentMinorVersionNumber,

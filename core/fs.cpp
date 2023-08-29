@@ -1,7 +1,7 @@
 #include "fs.h"
 #include "vpk2.h"
 
-class PhysicalFileSource : public Filesystem::FileSource
+class PhysicalFileSource : public Core::Filesystem::FileSource
 {
   public:
     PhysicalFileSource(const std::string& path);
@@ -19,9 +19,9 @@ class PhysicalFileSource : public Filesystem::FileSource
     std::string m_realPath;
 };
 
-static std::vector<Filesystem::FileSource*> s_fileSources;
+static std::vector<Core::Filesystem::FileSource*> s_fileSources;
 
-std::string Filesystem::CleanPath(const std::string& path)
+CORE_API std::string Core::Filesystem::CleanPath(const std::string& path)
 {
     std::string cleanPath = path;
     size_t i = 0;
@@ -34,11 +34,12 @@ std::string Filesystem::CleanPath(const std::string& path)
     return cleanPath;
 }
 
-void Filesystem::Initialize(const std::vector<std::string>& searchPaths)
+CORE_API void Core::Filesystem::Initialize(
+    const std::vector<std::string>& searchPaths)
 {
     SPDLOG_INFO("Initializing filesystem");
 
-    for (auto path : searchPaths)
+    for (const auto& path : searchPaths)
     {
         AddSearchPath(path);
     }
@@ -49,7 +50,7 @@ void Filesystem::Initialize(const std::vector<std::string>& searchPaths)
     SPDLOG_INFO("Filesystem initialized");
 }
 
-void Filesystem::AddSearchPath(const std::string& path)
+CORE_API void Core::Filesystem::AddSearchPath(const std::string& path)
 {
     std::string cleanPath = CleanPath(path);
     SPDLOG_INFO("Adding search path {}", cleanPath);
@@ -57,7 +58,8 @@ void Filesystem::AddSearchPath(const std::string& path)
     s_fileSources.push_back(FileSource::Create(cleanPath));
 }
 
-Filesystem::FileSource* Filesystem::FileSource::Create(const std::string& path)
+CORE_API Core::Filesystem::FileSource* Core::Filesystem::FileSource::Create(
+    const std::string& path)
 {
     if (path.length() > 4 && path.substr(path.length() - 4, path.length()) == ".vpk")
     {
@@ -69,7 +71,7 @@ Filesystem::FileSource* Filesystem::FileSource::Create(const std::string& path)
     }
 }
 
-std::vector<uint8_t> Filesystem::Read(const std::string& path)
+CORE_API std::vector<uint8_t> Core::Filesystem::Read(const std::string& path)
 {
     SPDLOG_INFO("Reading file {}", path);
 
@@ -84,7 +86,7 @@ std::vector<uint8_t> Filesystem::Read(const std::string& path)
     return std::vector<uint8_t>();
 }
 
-void Filesystem::Write(const std::string& path,
+CORE_API void Core::Filesystem::Write(const std::string& path,
                        const std::vector<uint8_t>& data)
 {
     SPDLOG_INFO("Writing {} byte(s) to {}", data.size(), path);
@@ -103,7 +105,7 @@ void Filesystem::Write(const std::string& path,
     file.close();
 }
 
-bool Filesystem::Exists(const std::string& path)
+CORE_API bool Core::Filesystem::Exists(const std::string& path)
 {
     for (auto source : s_fileSources)
     {
@@ -121,7 +123,7 @@ PhysicalFileSource::PhysicalFileSource(const std::string& path)
     m_realPath = path;
 }
 
-std::vector<uint8_t> PhysicalFileSource::Read(const std::string& path)
+ std::vector<uint8_t> PhysicalFileSource::Read(const std::string& path)
 {
     std::string fullPath = m_realPath + (m_realPath.length() ? "/" : "") + path;
     SPDLOG_DEBUG("Trying path {} for {}", fullPath, path);

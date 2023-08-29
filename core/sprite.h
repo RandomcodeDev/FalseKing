@@ -2,12 +2,15 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
+
 // Forward declarations
-class Backend;
-class Image;
+class CORE_API Backend;
+class CORE_API Image;
 
 // Sprite
-struct Sprite
+struct CORE_API Sprite
 {
     Image* sheet;
     uint32_t x;
@@ -33,5 +36,7 @@ namespace Systems
 struct Context;
 
 // Draw a sprite with a physics thing
-void DrawPhysical(flecs::iter& iter);
+CORE_API void DrawPhysical(flecs::iter& iter);
 } // namespace Systems
+
+} // namespace Core

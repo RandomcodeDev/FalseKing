@@ -5,18 +5,19 @@
 #include "physics.h"
 #include "systems.h"
 
-Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y)
+CORE_API Core::Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y)
     : sheet(&spriteSheet), x(x), y(y), width(TILE_SIZE), height(TILE_SIZE)
 {
 }
 
-Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
+CORE_API Core::Sprite::Sprite(Image& spriteSheet, uint32_t x, uint32_t y,
+                              uint32_t width,
                uint32_t height)
     : sheet(&spriteSheet), x(x), y(y), width(width), height(height)
 {
 }
 
-void Backend::DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
+CORE_API void Core::Backend::DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
                          bool center)
 {
     if (sprite.sheet)
@@ -27,7 +28,7 @@ void Backend::DrawSprite(Sprite& sprite, uint32_t x, uint32_t y,
     }
 }
 
-void Systems::DrawPhysical(flecs::iter& iter)
+CORE_API void Core::Systems::DrawPhysical(flecs::iter& iter)
 {
     // TODO: Fix flickering
     auto context = iter.ctx<Systems::Context>();

@@ -4,7 +4,7 @@
 #include "backend.h"
 #include "fs.h"
 
-Image::Image(const std::string& path) : Image()
+CORE_API Core::Image::Image(const std::string& path) : Image()
 {
     std::vector<uint8_t> data = Filesystem::Read(path);
     if (data.size())
@@ -29,14 +29,15 @@ Image::Image(const std::string& path) : Image()
     }
 }
 
-Image::Image(const uint8_t* pixels, uint32_t width, uint32_t height,
+CORE_API Core::Image::Image(const uint8_t* pixels, uint32_t width,
+                            uint32_t height,
              uint8_t channels)
 {
     m_data = calloc(width * height, channels);
     if (!m_data)
     {
-        QUIT_CODE(errno, "Failed to allocate data for image: {}",
-                  strerror(errno));
+        Quit("Failed to allocate data for image: {}",
+                  strerror(errno), errno);
     }
     std::copy(pixels, pixels + width * height * channels, (uint8_t*)m_data);
 
@@ -46,14 +47,14 @@ Image::Image(const uint8_t* pixels, uint32_t width, uint32_t height,
     g_backend->SetupImage(*this);
 }
 
-Image::~Image()
+CORE_API Core::Image::~Image()
 {
     g_backend->CleanupImage(*this);
     free(m_data);
 }
 
 // magenta + black checker like Source/Minecraft/etc, exported from GIMP
-const uint8_t Image::DEFAULT_PIXELS[16 * 16 * 4 + 1] =
+const uint8_t Core::Image::DEFAULT_PIXELS[16 * 16 * 4 + 1] =
     ("\377\000\377\377\377\000\377\377\377\000\377\377\377\000\377\377\377\000"
      "\377\377\377"
      "\000\377\377\377\000\377\377\377\000\377\377\000\000\000\377\000\000\000"

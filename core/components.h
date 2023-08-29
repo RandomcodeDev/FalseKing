@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+namespace Core
+{
 namespace Tags
 {
 // Is a projectile
@@ -13,7 +15,7 @@ struct Projectile
 namespace Components
 {
 // Register components
-void Register(flecs::world& world);
+extern CORE_API void Register(flecs::world& world);
 
 // Timeout in seconds
 struct Timeout
@@ -36,3 +38,4 @@ struct MovementSpeed
     float run;
 };
 } // namespace Components
+} // namespace Core

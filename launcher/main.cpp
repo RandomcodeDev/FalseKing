@@ -1,27 +1,30 @@
-﻿#include "stdafx.h"
-#include "backend.h"
-#include "camera.h"
-#include "components.h"
-#include "discord.h"
-#include "fs.h"
-#include "image.h"
-#include "input.h"
-#include "physics.h"
-#include "sprite.h"
-#include "systems.h"
+﻿#include "core/backend.h"
+#include "core/camera.h"
+#include "core/components.h"
+#include "core/discord.h"
+#include "core/fs.h"
+#include "core/image.h"
+#include "core/input.h"
+#include "core/physics.h"
+#include "core/sprite.h"
+#include "core/stdafx.h"
+#include "core/systems.h"
 
-Backend* g_backend;
+#include "game/components.h"
+#include "game/player.h"
+#include "game/sprites.h"
+#include "game/systems.h"
 
 void embraceTheDarkness();
 
-int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
+int32_t Launcher::GameMain(Core::Backend* backend, std::vector<std::string> backendPaths)
 {
     chrono::time_point<precise_clock> start = precise_clock::now();
     chrono::time_point<precise_clock> now;
     chrono::time_point<precise_clock> last = start;
     chrono::time_point<precise_clock> lastOverlayCycle = start;
 
-    g_backend = backend;
+    Core::g_backend = backend;
 
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
@@ -38,8 +41,8 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
     }
     paths.push_back("assets.vpk");
     paths.push_back("assets");
-    Filesystem::Initialize(paths);
-    Discord::Initialize();
+    Core::Filesystem::Initialize(paths);
+    Core::Discord::Initialize();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -47,7 +50,7 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
     ImGuiStyle style = ImGui::GetStyle();
     ImGuiIO& io = ImGui::GetIO();
 
-    std::vector<uint8_t> font = Filesystem::Read("fonts/monocraft.ttf");
+    std::vector<uint8_t> font = Core::Filesystem::Read("fonts/monocraft.ttf");
 
     ImFontConfig fontConfig;
     fontConfig.FontDataOwnedByAtlas = false;
@@ -55,10 +58,14 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
                                    &fontConfig);
     io.FontGlobalScale = 0.18f;
 
-    g_backend->InitializeImGui();
+    Core::g_backend->InitializeImGui();
 
-    Input::State input;
-    Physics::State physics;
+    ImGui::SetCurrentContext(GImGui);
+
+    Core::Input::State input;
+    Core::Physics::State physics;
+
+    ecs_os_init();
 
     flecs::world world;
 #ifdef _DEBUG
@@ -69,9 +76,9 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 #endif
     // world.set_target_fps(60);
 
-    Components::Camera camera;
+    Core::Components::Camera camera;
 
-    Systems::Context context = {
+    Core::Systems::Context context = {
         start,    // start time
         &input,   // input state
         &physics, // physics state
@@ -81,26 +88,35 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 #ifdef RETAIL
         Systems::DebugMode::None,
 #else
-        Systems::DebugMode::All,
+        Core::Systems::DebugMode::All,
 #endif
     };
-    Components::Register(world);
-    Systems::Register(world, &context);
+
+    Core::Components::Register(world);
+    Core::Systems::Register(world, &context);
+
+    Game::Sprites::Load();
+    Game::Components::Register(world);
+    Game::Systems::Register(world, &context);
+
+    Game::Player::Create(world, physics, &context.mainCamera);
 
     SPDLOG_INFO("Game initialized with backend {} on system {}",
-                g_backend->DescribeBackend(), g_backend->DescribeSystem());
+                Core::g_backend->DescribeBackend(),
+                Core::g_backend->DescribeSystem());
 
     PxMaterial* material =
         physics.GetPhysics().createMaterial(0.0f, 0.0f, 0.0f);
 
-    const WindowInfo& windowInfo = g_backend->GetWindowInformation();
+    const Core::WindowInfo& windowInfo =
+        Core::g_backend->GetWindowInformation();
 
     bool run = true;
     while (run)
     {
         now = precise_clock::now();
 
-        if (!g_backend->Update(input))
+        if (!Core::g_backend->Update(input))
         {
             break;
         }
@@ -133,20 +149,20 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
         // Check if the debug mode was cycled
         if (input.GetDebugCycled() &&
-            now - lastOverlayCycle > Systems::DEBUG_CYCLE_COOLDOWN)
+            now - lastOverlayCycle > Core::Systems::DEBUG_CYCLE_COOLDOWN)
         {
             context.debugMode =
-                (Systems::DebugMode)(((uint32_t)context.debugMode << 1) %
-                                     (uint32_t)Systems::DebugMode::All);
-            if (context.debugMode > Systems::DebugMode::Count)
+                (Core::Systems::DebugMode)(((uint32_t)context.debugMode << 1) %
+                (uint32_t)Core::Systems::DebugMode::All);
+            if (context.debugMode > Core::Systems::DebugMode::Count)
             {
-                context.debugMode = Systems::DebugMode::All;
+                context.debugMode = Core::Systems::DebugMode::All;
             }
             lastOverlayCycle = precise_clock::now();
         }
 
         world.progress();
-        Discord::Update(
+        Core::Discord::Update(
             chrono::duration_cast<chrono::seconds>(now - start),
             chrono::duration_cast<chrono::milliseconds>(now - last));
 
@@ -157,10 +173,12 @@ int32_t GameMain(Backend* backend, std::vector<std::string> backendPaths)
 
     world.quit();
 
-    g_backend->ShutdownImGui();
+    Game::Sprites::Unload();
+
+    Core::g_backend->ShutdownImGui();
     ImGui::DestroyContext();
 
-    Discord::Shutdown();
+    Core::Discord::Shutdown();
 
     SPDLOG_INFO("Game shut down");
     SPDLOG_INFO("Game ran for {:%T}", now - start);
