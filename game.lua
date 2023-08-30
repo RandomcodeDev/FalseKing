@@ -2,6 +2,8 @@ workspace 'Game'
 
     default_workspace_settings()
 
+    startproject 'Launcher'
+
 project 'Launcher'
 
     default_project_settings()
