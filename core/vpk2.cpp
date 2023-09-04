@@ -51,10 +51,9 @@ CORE_API uint32_t Core::Vpk::ValveCrc32(const std::vector<uint8_t>& data)
 {
     uint32_t crc = 0xFFFFFFFF;
 
-    for (uint8_t c : data)
-    {
+    std::for_each(data.begin(), data.end(), [&](uint8_t c) {
         crc = (crc >> 8) ^ s_valveCrc32Table[c ^ (crc & 0xFF)];
-    }
+    });
 
     return ~crc;
 }
@@ -380,7 +379,7 @@ CORE_API void Core::Vpk::Vpk2::AddFile(const std::string& path,
         Quit("Failed to open VPK archive {}", archivePath);
     }
 
-    Vpk2DirectoryEntry entry;
+    Vpk2DirectoryEntry entry{};
     entry.crc = ValveCrc32(data);
     entry.preloadSize = 0;
     entry.archiveIndex = m_currentArchive;

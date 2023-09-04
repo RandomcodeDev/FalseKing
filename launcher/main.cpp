@@ -7,7 +7,7 @@
 #include "core/input.h"
 #include "core/physics.h"
 #include "core/sprite.h"
-#include "core/stdafx.h"
+#include "core/core.h"
 #include "core/systems.h"
 
 #include "game/components.h"

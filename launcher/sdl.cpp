@@ -683,6 +683,11 @@ const std::string& SdlBackend::DescribeSystem() const
 
     PCSTR Name = nullptr;
 
+    BOOL IsWow64 = FALSE;
+#ifdef _M_IX86
+    IsWow64Process(INVALID_HANDLE_VALUE, &IsWow64);
+#endif
+
     RegOpenKeyExA(HKEY_LOCAL_MACHINE,
                   "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0,
                   KEY_QUERY_VALUE, &CurrentVersionHandle);
@@ -729,9 +734,9 @@ const std::string& SdlBackend::DescribeSystem() const
             EditionId, std::min(strlen(EditionId), Core::ArraySize(EditionId)));
         Description = fmt::format(
 #ifdef _DEBUG
-            "{} {} {}.{}.{} {}",
+            "{} {} {}.{}.{} {}{}",
 #else
-            "{} {} {}.{}.{}.{} {}",
+            "{} {} {}.{}.{}.{} {}{}",
 #endif
             edition == "SystemOS" ? "Xbox System Software" : "Windows",
             (strncmp(InstallationType, "Client",
@@ -740,9 +745,9 @@ const std::string& SdlBackend::DescribeSystem() const
                 : InstallationType,
             CurrentMajorVersionNumber, CurrentMinorVersionNumber,
 #ifdef _DEBUG
-            BuildLabEx, edition
+            BuildLabEx, edition, IsWow64 ? " (WoW64)" : ""
 #else
-            CurrentBuildNumber, UBR, edition
+            CurrentBuildNumber, UBR, edition, IsWow64 ? " (WoW64)" : ""
 #endif
         );
     }
@@ -755,8 +760,9 @@ const std::string& SdlBackend::DescribeSystem() const
         RegQueryValueExA(CurrentVersionHandle, "BuildLab", nullptr, nullptr,
                          (LPBYTE)BuildLab, &Size);
 
-        Description = fmt::format("Windows {} {} {} (build lab {})",
-                                  ProductName, EditionId, CSDVersion, BuildLab);
+        Description = fmt::format("Windows {} {} {} (build lab {}{})",
+                                  ProductName, EditionId, CSDVersion, BuildLab,
+                                  IsWow64 ? ", WoW64" : "");
     }
 #elif defined __APPLE__
     std::string osVersion;

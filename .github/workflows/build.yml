@@ -65,13 +65,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          PATH="deps-public/bin:$PATH" make -C build CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
+          PATH="deps-public/bin:$PATH" make -C build -f Game-gmake2.make CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
       - name: Build (macOS Make)
         working-directory: ${{env.GITHUB_WORKSPACE}}
         if: matrix.os == 'macOS-13'
         run: |
           deps-public/bin/premake5 gmake2 --cc=clang
-          PATH="deps-public/bin:$PATH" make -C build CONFIG=${{ matrix.config }}_universal
+          PATH="deps-public/bin:$PATH" make -C build -f Game-gmake2.make CONFIG=${{ matrix.config }}_universal
       #- name: Install the Apple certificate and provisioning profile
       #  working-directory: ${{env.GITHUB_WORKSPACE}}
       #  if: matrix.os == 'macOS-13'

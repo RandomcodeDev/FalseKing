@@ -2,3 +2,4 @@ BasedOnStyle: Microsoft
 ColumnLimit: 80
 PointerAlignment: Left
 ReferenceAlignment: Left
+SortIncludes: false
