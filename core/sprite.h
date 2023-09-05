@@ -12,7 +12,7 @@ class CORE_API Image;
 // Sprite
 struct CORE_API Sprite
 {
-    Image* sheet;
+    std::shared_ptr<Image> sheet;
     uint32_t x;
     uint32_t y;
     uint32_t width;
@@ -24,10 +24,11 @@ struct CORE_API Sprite
     Sprite() = default;
 
     // Create a sprite
-    Sprite(Image& spriteSheet, uint32_t x, uint32_t y);
+    Sprite(std::shared_ptr<Image> spriteSheet, uint32_t x, uint32_t y);
 
     // Create a sprite of arbitrary size
-    Sprite(Image& spriteSheet, uint32_t x, uint32_t y, uint32_t width,
+    Sprite(std::shared_ptr<Image> spriteSheet, uint32_t x, uint32_t y,
+           uint32_t width,
            uint32_t height);
 };
 

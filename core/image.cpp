@@ -6,6 +6,7 @@
 
 CORE_API Core::Image::Image(const std::string& path) : Image()
 {
+    m_source = Filesystem::ResolvePath(path);
     std::vector<uint8_t> data = Filesystem::Read(path);
     if (data.size())
     {
@@ -33,6 +34,7 @@ CORE_API Core::Image::Image(const uint8_t* pixels, uint32_t width,
                             uint32_t height,
              uint8_t channels)
 {
+    m_source = MEMORY_PATH;
     m_data = calloc(width * height, channels);
     if (!m_data)
     {

@@ -39,5 +39,8 @@ extern CORE_API void Write(const std::string& path,
 
 // Check if a file can be opened
 extern CORE_API bool Exists(const std::string& path);
+
+// Resolve a path
+extern CORE_API std::string ResolvePath(const std::string& path);
 } // namespace Filesystem
 } // namespace Core

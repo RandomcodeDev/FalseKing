@@ -118,6 +118,19 @@ CORE_API bool Core::Filesystem::Exists(const std::string& path)
     return false;
 }
 
+CORE_API std::string Core::Filesystem::ResolvePath(const std::string& path)
+{
+    for (auto source : s_fileSources)
+    {
+        if (source->Exists(path))
+        {
+            return source->GetRealPath() + path;
+        }
+    }
+
+    return path;
+}
+
 PhysicalFileSource::PhysicalFileSource(const std::string& path)
 {
     m_realPath = path;

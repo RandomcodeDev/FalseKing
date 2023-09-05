@@ -12,6 +12,9 @@ class CORE_API Backend;
 class CORE_API Image
 {
   public:
+    // This indicates the image was created in memory
+    static constexpr const char* MEMORY_PATH = "<memory>";
+
     // Opaque backend information
     void* backendData;
 
@@ -55,7 +58,14 @@ class CORE_API Image
         height = m_info.height;
     }
 
+    // Get the source of this image
+    const std::string& GetSource() const
+    {
+        return m_source;
+    }
+
   private:
+    std::string m_source;
     void* m_data;
     qoi_desc m_info;
 
