@@ -2,7 +2,11 @@ project 'Core'
 
     default_project_settings()
 
-    kind 'SharedLib'
+    filter { 'system:psp' }
+    	kind 'StaticLib'
+    filter { 'system:not psp' }
+	kind 'SharedLib'
+    filter {}
 
     files {
         'core/**.h',
@@ -11,6 +15,10 @@ project 'Core'
 
     defines {
         'CORE'
+    }
+    
+    prebuildcommands {
+        'python3 %{wks.location}/../scripts/commit.py %{cfg.targetdir}'
     }
 
     filter { 'files:core/**.cpp' }
@@ -23,11 +31,11 @@ project 'Core'
         }
     filter {}
 
-    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
+    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux or psp' }
         files {
             'deps-public/src/**'
         }
-    filter { 'system:gaming_desktop or scarlett or windows or linux' }
+    filter { 'system:gaming_desktop or scarlett or windows or linux or psp' }
         links {
             'SDL3'
         }
@@ -37,7 +45,7 @@ project 'Core'
         }
     filter {}
 
-    filter { 'system:not macosx', 'architecture:not x86' }
+    filter { 'system:not macosx', 'system:not psp', 'architecture:not x86' }
         links {
             'PhysX_static_64',
             'PhysXCharacterKinematic_static_64',
@@ -46,7 +54,7 @@ project 'Core'
             'PhysXFoundation_static_64',
             'PhysXPvdSDK_static_64'
         }
-    filter { 'system:not macosx', 'architecture:x86' }
+    filter { 'system:not macosx', 'system:not psp', 'architecture:x86' }
         links {
             'PhysX_static_32',
             'PhysXCharacterKinematic_static_32',
@@ -55,6 +63,15 @@ project 'Core'
             'PhysXFoundation_static_32',
             'PhysXPvdSDK_static_32'
         }
+    filter { 'system:psp' }
+    	links {
+            'PhysX_static',
+            'PhysXCharacterKinematic_static',
+            'PhysXCommon_static',
+            'PhysXExtensions_static',
+            'PhysXFoundation_static',
+            'PhysXPvdSDK_static'
+	}
     filter { 'system:macosx' }
         links {
             'PhysX-darwin',

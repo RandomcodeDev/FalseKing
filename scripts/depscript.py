@@ -52,6 +52,13 @@ class DepScript:
             dlibext = ".so"
             exeext = ""
             dbgext = ""
+        elif system in ["psp"]:
+            prefix = "lib"
+            suffix = ""
+            slibext = ".a"
+            dlibext = ".so"
+            exeext = ".elf"
+            dbgext = ""
         else:
             prefix = "lib"
             suffix = f"-{system}"

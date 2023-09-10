@@ -2,7 +2,7 @@ require 'premake-consoles/consoles'
 
 function default_workspace_settings()
     location 'build'
-    filename '%{wks.name}-%{_ACTION or \'\'}'
+    filename '%{wks.name}-%{_ACTION or \'\'}-%{_TARGET_OS}-%{os.target() or \'\'}'
 
     configurations { 'Debug', 'Release', 'Retail' }
 
@@ -14,6 +14,8 @@ function default_workspace_settings()
         platforms { 'Gaming.Xbox.Scarlett.x64' }
     filter { 'system:linux' }
         platforms { 'x86_64', 'ARM64' }
+    filter { 'system:psp' }
+    	platforms { 'PSP' }
     filter {}
         
     filter { 'system:windows', 'platforms:x86' }
@@ -42,7 +44,7 @@ end
 
 function default_project_settings()
     location 'build/%{prj.name}'
-    filename '%{prj.name}-%{_ACTION or \'\'}'
+    filename '%{prj.name}-%{_ACTION or \'\'}-%{_TARGET_OS or \'\'}-%{os.target() or \'\'}'
 
     language 'C++'
     cppdialect 'C++17'
@@ -95,7 +97,7 @@ function default_project_settings()
         }
     filter {}
 
-    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
+    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux or psp' }
         includedirs {
             'deps-public/include',
         }
@@ -114,7 +116,7 @@ function default_project_settings()
             'deps-public/lib/Universal/%{cfg.buildcfg}',
             'deps-public/lib/Universal'
         }
-    filter { 'system:gaming_desktop or scarlett or windows or linux' }
+    filter { 'system:gaming_desktop or scarlett or windows or linux or psp' }
         libdirs {
             'deps-public/lib/%{cfg.architecture}/%{cfg.buildcfg}',
             'deps-public/lib/%{cfg.architecture}',

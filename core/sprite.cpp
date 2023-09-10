@@ -5,12 +5,12 @@
 #include "physics.h"
 #include "systems.h"
 
-CORE_API Core::Sprite::Sprite(Image* spriteSheet, uint32_t x, uint32_t y)
+CORE_API Core::Sprite::Sprite(std::shared_ptr<Image> spriteSheet, uint32_t x, uint32_t y)
     : sheet(spriteSheet), x(x), y(y), width(TILE_SIZE), height(TILE_SIZE)
 {
 }
 
-CORE_API Core::Sprite::Sprite(Image* spriteSheet, uint32_t x, uint32_t y,
+CORE_API Core::Sprite::Sprite(std::shared_ptr<Image> spriteSheet, uint32_t x, uint32_t y,
                               uint32_t width,
                uint32_t height)
     : sheet(spriteSheet), x(x), y(y), width(width), height(height)

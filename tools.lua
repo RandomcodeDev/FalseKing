@@ -8,6 +8,8 @@ workspace 'Tools'
     filter { 'system:windows' }
         platforms { 'x86', 'x64', 'ARM64' }
         toolset 'msc'
+    filter { 'system:linux' }
+        platforms { 'x64', 'ARM64' }
     filter {}
 
 include 'core.lua'

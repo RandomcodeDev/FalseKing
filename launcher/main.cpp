@@ -86,7 +86,7 @@ int32_t Launcher::GameMain(Core::Backend* backend, std::vector<std::string> back
 
     // Whether to enable the debug overlay initially
 #ifdef RETAIL
-        Systems::DebugMode::None,
+        Core::Systems::DebugMode::None,
 #else
         Core::Systems::DebugMode::All,
 #endif

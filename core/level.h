@@ -21,6 +21,7 @@ class Level
         Sprite sprite;
         PxShape* shape;
 
+	Shape() = default;
         Shape(Level& level, const Sprite& sprite, PxShape* shape);
     };
 

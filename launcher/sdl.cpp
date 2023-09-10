@@ -5,6 +5,7 @@
 #undef LoadLibrary
 #elif defined(__APPLE__)
 #include <sys/sysctl.h>
+#elif defined(PSP)
 #else
 #include <sys/utsname.h>
 #include <unistd.h>
@@ -812,6 +813,9 @@ const std::string& SdlBackend::DescribeSystem() const
                                       versionNames[0x0A00 | major]);
         }
     }
+#elif defined PSP
+    // TODO: figure out how the fuck to get the version for this
+    Description = fmt::format("PSP Firmware");
 #else
     struct utsname utsName = {};
     uname(&utsName);

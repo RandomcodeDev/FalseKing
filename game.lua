@@ -36,7 +36,7 @@ project 'Launcher'
         }
     filter {}
 
-    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux' }
+    filter { 'system:gaming_desktop or scarlett or windows or macosx or linux or psp' }
         files {
             'launcher/sdl.cpp'
         }
@@ -44,7 +44,28 @@ project 'Launcher'
         defines {
             'USE_SDL'
         }
-    filter { 'system:gaming_desktop or scarlett or windows or linux' }
+    filter { 'system:psp' }
+    	links {
+            'GL',
+	    'pspvram',
+            'pspaudio',
+            'pspvfpu',
+            'pspdisplay',
+            'pspgu',
+            'pspge',
+            'psphprm',
+            'pspctrl',
+            'psppower',
+	    'cglue',
+	    'atomic',
+            'PhysX_static',
+            'PhysXCharacterKinematic_static',
+            'PhysXCommon_static',
+            'PhysXExtensions_static',
+            'PhysXFoundation_static',
+            'PhysXPvdSDK_static'
+        }
+    filter { 'system:gaming_desktop or scarlett or windows or linux or psp' }
         links {
             'SDL3'
         }
@@ -54,17 +75,11 @@ project 'Launcher'
         }
     filter {}
 
-    filter { 'system:gaming_desktop or scarlett or windows or linux' }
-        prebuildcommands {
-            'python3 %{wks.location}/../scripts/commit.py %{cfg.targetdir}'
-        }
+    filter { 'system:gaming_desktop or scarlett or windows or linux or psp' }
         prelinkcommands {
             'python3 %{wks.location}/../scripts/copyfiles.py --system %{cfg.system} --platform %{cfg.platform} --architecture %{cfg.architecture} --configuration %{cfg.buildcfg} %{cfg.targetdir} build'
         }
     filter { 'system:macosx' }
-        prebuildcommands {
-            '%{wks.location}/../scripts/commit.py %{cfg.targetdir}'
-        }
         prelinkcommands {
             'python3 %{wks.location}/../scripts/copyfiles.py --system %{cfg.system} --configuration %{cfg.buildcfg} %{cfg.targetdir} build'
         }
@@ -76,7 +91,11 @@ project 'Game'
 
     default_project_settings()
 
-    kind 'SharedLib'
+    filter { 'system:psp' }
+    	kind 'StaticLib'
+    filter { 'system:not psp' }
+	kind 'SharedLib'
+    filter {}
 
     files {
         'game/**.h',
