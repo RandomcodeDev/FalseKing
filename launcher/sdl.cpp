@@ -168,8 +168,7 @@ extern "C" int main(int argc, char* argv[])
     std::string baseDir = SDL_GetBasePath();
     paths.push_back(baseDir);
     int returnCode = Launcher::GameMain(backend, paths);
-    SPDLOG_INFO("Destroying backend");
-    delete (SdlBackend*)backend;
+    // backed is leaked because libraries, should be fine
     return returnCode;
 }
 

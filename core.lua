@@ -3,9 +3,9 @@ project 'Core'
     default_project_settings()
 
     filter { 'system:psp' }
-    	kind 'StaticLib'
+        kind 'StaticLib'
     filter { 'system:not psp' }
-	kind 'SharedLib'
+        kind 'SharedLib'
     filter {}
 
     files {

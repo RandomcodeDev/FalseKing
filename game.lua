@@ -45,9 +45,15 @@ project 'Launcher'
             'USE_SDL'
         }
     filter { 'system:psp' }
-    	links {
+        links {
             'GL',
-	    'pspvram',
+            'PhysX_static',
+            'PhysXCharacterKinematic_static',
+            'PhysXCommon_static',
+            'PhysXExtensions_static',
+            'PhysXFoundation_static',
+            'PhysXPvdSDK_static',
+            'pspvram',
             'pspaudio',
             'pspvfpu',
             'pspdisplay',
@@ -56,14 +62,8 @@ project 'Launcher'
             'psphprm',
             'pspctrl',
             'psppower',
-	    'cglue',
-	    'atomic',
-            'PhysX_static',
-            'PhysXCharacterKinematic_static',
-            'PhysXCommon_static',
-            'PhysXExtensions_static',
-            'PhysXFoundation_static',
-            'PhysXPvdSDK_static'
+            'cglue',
+            'atomic',
         }
     filter { 'system:gaming_desktop or scarlett or windows or linux or psp' }
         links {
@@ -92,9 +92,9 @@ project 'Game'
     default_project_settings()
 
     filter { 'system:psp' }
-    	kind 'StaticLib'
+        kind 'StaticLib'
     filter { 'system:not psp' }
-	kind 'SharedLib'
+        kind 'SharedLib'
     filter {}
 
     files {
