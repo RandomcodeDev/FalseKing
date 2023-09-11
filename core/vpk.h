@@ -139,21 +139,25 @@ class CORE_API Vpk2 : public Filesystem::FileSource
     uint16_t m_currentArchive;
     uint32_t m_currentOffset;
 
+    std::string GetBaseName()
+    {
+        return m_realPath.find(VPK_EXTENSION) > m_realPath.length()
+                   ? m_realPath
+                   : m_realPath.substr(0, m_realPath.length() -
+                                              VPK_EXTENSION_LENGTH);
+    }
+
     std::string GetDirectoryPath()
     {
-        return fmt::format(
-            "{}_dir{}",
-            m_realPath.substr(0, m_realPath.length() - VPK_EXTENSION_LENGTH),
-            VPK_EXTENSION);
+        return fmt::format("{}_dir{}", GetBaseName(), VPK_EXTENSION);
     }
 
     std::string GetArchivePath(uint32_t archiveIndex = UINT32_MAX)
     {
-        return fmt::format(
-            "{}_{:03}{}",
-            m_realPath.substr(0, m_realPath.length() - VPK_EXTENSION_LENGTH),
-            archiveIndex == UINT32_MAX ? m_currentArchive : archiveIndex,
-            VPK_EXTENSION);
+        return fmt::format("{}_{:03}{}", GetBaseName(),
+                           archiveIndex == UINT32_MAX ? m_currentArchive
+                                                      : archiveIndex,
+                           VPK_EXTENSION);
     }
 };
 

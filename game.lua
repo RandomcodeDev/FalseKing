@@ -36,6 +36,10 @@ project 'Launcher'
         }
     filter {}
 
+    filter { 'files:gdk/MicrosoftGameConfig.mgc' }
+        buildaction 'MGCCompile'
+    filter {}
+
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux or psp' }
         files {
             'launcher/sdl.cpp'
@@ -85,7 +89,8 @@ project 'Launcher'
         }
     filter {}
 
-include 'core.lua'
+isTools = nil
+dofile 'core.lua'
 
 project 'Game'
 

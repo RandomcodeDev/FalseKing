@@ -1,6 +1,7 @@
-#include "fs.h"
+#include "core/fs.h"
+#include "core/vpk.h"
+
 #include "tool.h"
-#include "vpk2.h"
 
 bool g_verbose;
 bool g_debug;
@@ -40,7 +41,7 @@ class CreateCommand : public Subcommand
             outputVpk = fmt::format("{}.vpk", outputVpk);
         }
 
-        Vpk::Vpk2 vpk(outputVpk, true);
+        Core::Vpk::Vpk2 vpk(outputVpk, true);
 
         fmt::print("Creating VPK file {} from directory {}\n", outputVpk,
                    directory.string());
@@ -50,7 +51,7 @@ class CreateCommand : public Subcommand
             {
                 std::string innerPath =
                     fs::relative(entry.path(), directory).string();
-                vpk.AddFile(innerPath, Filesystem::Read(entry.path().string()));
+                vpk.AddFile(innerPath, Core::Filesystem::Read(entry.path().string()));
             }
         }
 
@@ -69,26 +70,26 @@ class ExtractCommand : public Subcommand
         Initialize();
 
         // 4 is length of _dir
-        if (inputVpk.length() > 4 + Vpk::VPK_EXTENSION_LENGTH &&
-            inputVpk.substr(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH,
+        if (inputVpk.length() > 4 + Core::Vpk::VPK_EXTENSION_LENGTH &&
+            inputVpk.substr(inputVpk.length() - 4 - Core::Vpk::VPK_EXTENSION_LENGTH,
                             4) == "_dir")
         {
-            inputVpk.resize(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH);
-            inputVpk += Vpk::VPK_EXTENSION;
+            inputVpk.resize(inputVpk.length() - 4 - Core::Vpk::VPK_EXTENSION_LENGTH);
+            inputVpk += Core::Vpk::VPK_EXTENSION;
         }
         fs::path vpkPath = fs::absolute(inputVpk);
         if (!outputDirectory.length())
         {
             outputDirectory = vpkPath.string();
             outputDirectory.resize(outputDirectory.length() -
-                                   Vpk::VPK_EXTENSION_LENGTH);
+                                   Core::Vpk::VPK_EXTENSION_LENGTH);
         }
         fs::path directoryPath(outputDirectory);
 
         fmt::print("Extracting VPK file {} to directory {}\n", vpkPath.string(),
                    directoryPath.string());
 
-        Vpk::Vpk2 vpk(vpkPath.string());
+        Core::Vpk::Vpk2 vpk(vpkPath.string());
         for (const auto& entry : vpk)
         {
             fs::path path(entry.first);
@@ -98,7 +99,7 @@ class ExtractCommand : public Subcommand
             {
                 fmt::print("Writing file {}\n", path.string());
             }
-            Filesystem::Write(path.string(), vpk.Read(entry.first));
+            Core::Filesystem::Write(path.string(), vpk.Read(entry.first));
         }
     }
 };
@@ -114,20 +115,20 @@ class ListCommand : public Subcommand
         Initialize();
 
         // 4 is length of _dir
-        if (inputVpk.length() > 4 + Vpk::VPK_EXTENSION_LENGTH &&
-            inputVpk.substr(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH,
+        if (inputVpk.length() > 4 + Core::Vpk::VPK_EXTENSION_LENGTH &&
+            inputVpk.substr(inputVpk.length() - 4 - Core::Vpk::VPK_EXTENSION_LENGTH,
                             4) == "_dir")
         {
-            inputVpk.resize(inputVpk.length() - 4 - Vpk::VPK_EXTENSION_LENGTH);
-            inputVpk += Vpk::VPK_EXTENSION;
+            inputVpk.resize(inputVpk.length() - 4 - Core::Vpk::VPK_EXTENSION_LENGTH);
+            inputVpk += Core::Vpk::VPK_EXTENSION;
         }
         fs::path vpkPath = fs::absolute(inputVpk);
 
-        Vpk::Vpk2 vpk(vpkPath.string());
+        Core::Vpk::Vpk2 vpk(vpkPath.string());
         const auto& header = vpk.GetHeader();
         fmt::print("Header:\n");
         fmt::print("\tSignature: {:08X} (should be {:08X})\n", header.signature,
-                   Vpk::VPK2_SIGNATURE);
+                   Core::Vpk::VPK2_SIGNATURE);
         fmt::print("\tVersion: {}\n", header.version);
         fmt::print("\tTree size: {}\n", header.treeSize);
         fmt::print("\tSize of file data in directory: {}\n",
@@ -164,10 +165,10 @@ class ListCommand : public Subcommand
 
 int32_t ToolMain()
 {
-    CLI::App app(fmt::format("{} Valve Pack File (VPK) Tool", GAME_NAME));
+    CLI::App app(fmt::format("{} Valve Pack File (VPK) Tool", Core::GAME_NAME));
     app.set_version_flag("--version",
-                         fmt::format("v{}.{}.{}", GAME_MAJOR_VERSION,
-                                     GAME_MINOR_VERSION, GAME_PATCH_VERSION));
+                         fmt::format("v{}.{}.{}", Core::GAME_MAJOR_VERSION,
+                                     Core::GAME_MINOR_VERSION, Core::GAME_PATCH_VERSION));
     app.set_help_all_flag("--help-all", "Extra help");
     app.require_subcommand();
 
@@ -215,7 +216,7 @@ int32_t ToolMain()
                    "Check the hashes of files where possible");
     listData.Register(list);
 
-    Filesystem::Initialize();
+    Core::Filesystem::Initialize();
 
     CLI11_PARSE(app);
 

@@ -30,6 +30,8 @@
 #include "CLI11.hpp"
 
 #include "foundation/Px.h"
+#include "foundation/PxMath.h"
+#include "foundation/PxVecMath.h"
 using namespace physx;
 
 #include "metrohash.h"

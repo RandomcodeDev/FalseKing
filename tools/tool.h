@@ -5,7 +5,7 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include "game.h"
+#include "core/core.h"
 
 // Tool entry point
 extern int32_t ToolMain();

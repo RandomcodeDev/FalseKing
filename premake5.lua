@@ -74,13 +74,16 @@ function default_project_settings()
     filter { 'configurations:Debug' }
         defines '_DEBUG'
         symbols 'On'
+        runtime 'Debug'
     filter { 'configurations:Release' }
         defines 'NDEBUG'
         optimize 'On'
         symbols 'On'
+        runtime 'Release'
     filter { 'configurations:Retail' }
         defines { 'NDEBUG', 'RETAIL' }
         optimize 'On'
+        runtime 'Release'
     filter {}
 
     includedirs {
@@ -125,5 +128,5 @@ function default_project_settings()
     filter {}
 end
 
-include 'game.lua'
 include 'tools.lua'
+include 'game.lua'

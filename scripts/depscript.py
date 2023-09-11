@@ -27,7 +27,8 @@ class DepScript:
     def __init__(self, path: os.PathLike[any], system: AnyStr,
                  platform: AnyStr, architecture: AnyStr,
                  configuration: AnyStr):
-        with open(path, "r") as f:
+        self.path: str = path
+        with open(self.path, "r") as f:
             script = f.read()
 
         # TODO: Maybe replace this with something better

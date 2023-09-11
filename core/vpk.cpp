@@ -290,6 +290,7 @@ CORE_API void Core::Vpk::Vpk2::Write(const std::string& path)
         std::string name =
             filePath.substr(lastSlash < filePath.length() ? lastSlash + 1 : 0,
                             lastDot - lastSlash - 1);
+        name = name.length() ? name : " ";
 
         SPDLOG_DEBUG(
             "Adding file {} to the directory tree as \"{}\" \"{}\" \"{}\"",
@@ -322,8 +323,6 @@ CORE_API void Core::Vpk::Vpk2::Write(const std::string& path)
                                  {});
                 std::copy(name.begin(), name.begin() + name.size(),
                           directory.begin() + oldSize);
-                // TODO: figure out where these 4 bytes come from and annihilate
-                // them
                 std::copy((uint8_t*)&directoryEntry,
                           (uint8_t*)(&directoryEntry + 1),
                           directory.begin() + oldSize + name.size() + 1);

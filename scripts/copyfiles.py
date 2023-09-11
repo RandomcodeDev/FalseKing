@@ -89,12 +89,12 @@ def main():
             ), system, architecture
         )
         print(f"Processing depscript {script}")
-        deps += depscript.DepScript(script, system, platform, architecture,
-                                    configuration).deps
+        deps.append(depscript.DepScript(script, system, platform, architecture,
+                                    configuration))
 
     def copy_deps(deps):
-        print(f"Copying {len(deps)} dependencies")
-        for dep in deps:
+        print(f"Copying {len(deps.deps)} dependenc(ies) of {deps.path}")
+        for dep in deps.deps:
             if isinstance(dep, depscript.DepScript.Dependency):
                 if dep.matches(system, platform, configuration):
                     source = os.path.normpath(os.path.join(root_dir, dep.source))
@@ -105,9 +105,10 @@ def main():
                     if args.dirty and os.path.exists(destination):
                         print(f"Skipping {source} -> {destination}")
             elif isinstance(dep, depscript.DepScript):
-                copy_deps(dep.deps)
+                copy_deps(dep)
 
-    copy_deps(deps)
+    for dep in deps:
+        copy_deps(dep)
 
     print("Done")
 
