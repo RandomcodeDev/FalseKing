@@ -1,10 +1,10 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by FalseKing.rc
+// Used by Launcher.rc
 //
-#include <winres.h>
-
+#define VS_VERSION_INFO                 1
 #define IDI_ICON1                       101
+#define IDC_STATIC                      -1
 
 // Next default values for new objects
 // 

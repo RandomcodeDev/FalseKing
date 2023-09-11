@@ -12,7 +12,8 @@ project 'Launcher'
 
     files {
         'launcher/**.h',
-        'launcher/**.cpp'
+        'launcher/**.cpp',
+        'launcher/Launcher.rc'
     }
 
     filter { 'files:core/**.cpp' }
@@ -104,7 +105,8 @@ project 'Game'
 
     files {
         'game/**.h',
-        'game/**.cpp'
+        'game/**.cpp',
+        'game/Game.rc'
     }
 
     defines {

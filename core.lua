@@ -21,7 +21,8 @@ project 'Core'
             'core/fs.*',
             'core/globals.cpp',
             'core/stdafx.*',
-            'core/vpk.*'
+            'core/vpk.*',
+            'core/Core.rc'
         }
 
         defines {
@@ -30,7 +31,8 @@ project 'Core'
     else
         files {
             'core/**.h',
-            'core/**.cpp'
+            'core/**.cpp',
+            'core/Core.rc'
         }
     end
 

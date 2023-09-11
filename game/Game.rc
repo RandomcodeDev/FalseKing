@@ -5,7 +5,7 @@
 // English (United Kingdom) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+LANGUAGE 1033, 0
 #pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
@@ -35,16 +35,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_ICON1               ICON                    "logo.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Version
 //
 
@@ -58,7 +48,7 @@ VS_VERSION_INFO VERSIONINFO
  FILEFLAGS 0x0L
 #endif
  FILEOS 0x40004L
- FILETYPE 0x1L
+ FILETYPE 0x2L
  FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
@@ -68,9 +58,9 @@ BEGIN
             VALUE "CompanyName", "MobSlicer152"
             VALUE "FileDescription", "False King"
             VALUE "FileVersion", "0.0.0.0"
-            VALUE "InternalName", "Game.exe"
+            VALUE "InternalName", "Game.dll"
             VALUE "LegalCopyright", "Copyright (C) MobSlicer152 2023"
-            VALUE "OriginalFilename", "Game.exe"
+            VALUE "OriginalFilename", "Game.dll"
             VALUE "ProductName", "False King"
             VALUE "ProductVersion", "0.0.0.0"
         END
