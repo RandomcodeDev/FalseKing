@@ -1,4 +1,4 @@
-#include "vpk2.h"
+#include "vpk.h"
 
 // Taken from here:
 // https://github.com/ValveResourceFormat/ValvePak/blob/master/ValvePak/ValvePak/Utilities/Crc32.cs

@@ -1,5 +1,5 @@
 #include "fs.h"
-#include "vpk2.h"
+#include "vpk.h"
 
 class PhysicalFileSource : public Core::Filesystem::FileSource
 {
