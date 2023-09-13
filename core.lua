@@ -18,10 +18,13 @@ project 'Core'
     if isTools ~= nil then
         files {
             'core/core.h',
-            'core/fs.*',
+            'core/fs.cpp',
+            'core/fs.h',
             'core/globals.cpp',
-            'core/stdafx.*',
-            'core/vpk.*',
+            'core/stdafx.cpp',
+            'core/stdafx.h',
+            'core/vpk.cpp',
+            'core/vpk.h',
             'core/Core.rc'
         }
 
@@ -30,8 +33,8 @@ project 'Core'
         }
     else
         files {
-            'core/**.h',
-            'core/**.cpp',
+            'core/*.h',
+            'core/*.cpp',
             'core/Core.rc'
         }
     end
