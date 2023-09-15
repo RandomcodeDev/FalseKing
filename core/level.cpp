@@ -11,6 +11,37 @@ Core::Level::Shape::Shape(Level& level, const Sprite& sprite, PxShape* shape)
     this->shape->acquireReference();
 }
 
+void Core::Level::Shape::Write(std::ofstream& file) const
+{
+    // Sprites are basically like a reference to a region of an image, so
+    // they're just 4 uint32_t's
+    file.write((const char*)&sprite.x, sizeof(uint32_t));
+    file.write((const char*)&sprite.y, sizeof(uint32_t));
+    file.write((const char*)&sprite.width, sizeof(uint32_t));
+    file.write((const char*)&sprite.height, sizeof(uint32_t));
+
+    PxGeometryType::Enum type = shape->getGeometryType();
+    file.write((const char*)&type, sizeof(uint32_t));
+    switch (type)
+    {
+    case PxGeometryType::eCAPSULE:
+        PxCapsuleGeometry capsule;
+        shape->getCapsuleGeometry(capsule);
+        file.write((const char*)&capsule.radius, sizeof(float));
+        file.write((const char*)&capsule.halfHeight, sizeof(float));
+        break;
+    case PxGeometryType::eBOX:
+        PxBoxGeometry box;
+        shape->getBoxGeometry(box);
+        file.write((const char*)&box.halfExtents.x, sizeof(float));
+        file.write((const char*)&box.halfExtents.y, sizeof(float));
+        file.write((const char*)&box.halfExtents.z, sizeof(float));
+        break;
+    }
+
+
+}
+
 Core::Level::Level(std::shared_ptr<Image> spriteSheet,
                    const std::vector<Shape>& shapes, Physics::State& physics)
     : m_spriteSheet(spriteSheet), m_shapes(shapes)
@@ -26,7 +57,7 @@ Core::Level::Level(const std::string& path, flecs::world& world)
 {
 }
 
-void Core::Level::Save(const std::string& path)
+void Core::Level::Save(const std::string& path) const
 {
     std::ofstream file(path, std::ios::binary | std::ios::trunc);
     if (!file.is_open())
@@ -41,6 +72,14 @@ void Core::Level::Save(const std::string& path)
     }
     // NUL terminator for spritesheet path
     file.write(0, 1);
+
+    uint64_t shapeCount = m_shapes.size();
+    file.write((const char*)&shapeCount, sizeof(uint64_t));
+
+    for (const auto& shape : m_shapes)
+    {
+        shape.Write(file);
+    }
 }
 
 void Core::Level::AddShape(const Shape& shape)

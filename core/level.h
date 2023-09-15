@@ -18,11 +18,17 @@ class Level
   public:
     struct Shape
     {
+        friend class Level;
+
         Sprite sprite;
         PxShape* shape;
 
         Shape() = default;
         Shape(Level& level, const Sprite& sprite, PxShape* shape);
+
+      protected:
+        Shape(std::ofstream& file);
+        void Write(std::ofstream& file) const;
     };
 
     // 'FKLEVEL\0' in little endian
@@ -34,8 +40,9 @@ class Level
     // 0: LEVEL_SIGNATURE
     // 8: sprite sheet path
     // 8 + path length: NUL terminator
-    // 9 + path length: shapes
-    // 9 + path length + shapes size: entity data
+    // 9 + path length: shape count
+    // 17 + path length: shapes
+    // 17 + path length + shapes size: entity data
 
     // Create a level
     Level(std::shared_ptr<Image> spriteSheet, const std::vector<Shape>& shapes,
@@ -45,7 +52,7 @@ class Level
     Level(const std::string& path, flecs::world& world);
 
     // Save a level
-    void Save(const std::string& path);
+    void Save(const std::string& path) const;
 
     // Add a shape
     void AddShape(const Shape& shape);
