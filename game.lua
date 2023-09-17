@@ -13,7 +13,6 @@ project 'Launcher'
     files {
         'launcher/**.h',
         'launcher/**.cpp',
-        'launcher/Launcher.rc'
     }
 
     filter { 'files:core/**.cpp' }
@@ -34,6 +33,10 @@ project 'Launcher'
     filter { 'system:gaming_desktop or scarlett' }
         files {
             'gdk/**'
+        }
+    filter { 'system:gaming_desktop or scarlett or windows' }
+        files {
+             'launcher/Launcher.rc'
         }
     filter {}
 
@@ -106,7 +109,6 @@ project 'Game'
     files {
         'game/**.h',
         'game/**.cpp',
-        'game/Game.rc'
     }
 
     defines {
@@ -126,3 +128,8 @@ project 'Game'
             _MAIN_SCRIPT_DIR
         }
     filter {}
+
+    filter { 'system:gaming_desktop or scarlett or windows' }
+        files {
+             'game/Game.rc'
+        }

@@ -25,7 +25,6 @@ project 'Core'
             'core/stdafx.h',
             'core/vpk.cpp',
             'core/vpk.h',
-            'core/Core.rc'
         }
 
         defines {
@@ -35,7 +34,6 @@ project 'Core'
         files {
             'core/*.h',
             'core/*.cpp',
-            'core/Core.rc'
         }
     end
 
@@ -56,7 +54,13 @@ project 'Core'
             _MAIN_SCRIPT_DIR
         }
     filter {}
-    
+
+    filter { 'system:gaming_desktop or scarlett or windows' }
+        files {
+            'core/Core.rc'
+        }
+    filter {}
+
     filter { 'system:gaming_desktop or scarlett or windows or macosx or linux or psp' }
         files {
             'deps-public/src/*.h',
