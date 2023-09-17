@@ -25,17 +25,23 @@ void Core::Level::Shape::Write(std::ofstream& file) const
     switch (type)
     {
     case PxGeometryType::eCAPSULE:
+    {
         PxCapsuleGeometry capsule;
         shape->getCapsuleGeometry(capsule);
         file.write((const char*)&capsule.radius, sizeof(float));
         file.write((const char*)&capsule.halfHeight, sizeof(float));
         break;
+    }
     case PxGeometryType::eBOX:
+    {
         PxBoxGeometry box;
         shape->getBoxGeometry(box);
         file.write((const char*)&box.halfExtents.x, sizeof(float));
         file.write((const char*)&box.halfExtents.y, sizeof(float));
         file.write((const char*)&box.halfExtents.z, sizeof(float));
+        break;
+    }
+    default:
         break;
     }
 

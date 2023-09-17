@@ -109,11 +109,6 @@ function default_project_settings()
             'deps-public/Frameworks/%{cfg.buildcfg}',
             'deps-public/Frameworks'
         }
-
-        files {
-            'deps-public/include/**',
-            'deps-public/src/*',
-        }
     filter { 'system:macosx' }
         libdirs {
             'deps-public/lib/Universal/%{cfg.buildcfg}',

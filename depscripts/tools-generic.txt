@@ -1,6 +1,6 @@
 !depscript
 
-:: ~ build/$GENARCH$/$CONFIG$/Core.Tools.$GENARCH$$DLIBEXT$ = tools/Core.Tools.$GENARCH$$DLIBEXT$
-:: ~ build/$GENARCH$/$CONFIG$/Core.Tools.$GENARCH$$DLIBEXT$ = tools/Core.Tools.$GENARCH$$DBGEXT$
+:: ~ build/$GENARCH$/$CONFIG$/$PREFIX$Core.Tools.$GENARCH$$DLIBEXT$ = tools/$PREFIX$Core.Tools.$GENARCH$$DLIBEXT$
+:: ~ build/$GENARCH$/$CONFIG$/$PREFIX$Core.Tools.$GENARCH$$DLIBEXT$ = tools/$PREFIX$Core.Tools.$GENARCH$$DBGEXT$
 :: ~ build/$GENARCH$/$CONFIG$/vpktool.$GENARCH$$EXEEXT$ = tools/vpktool.$GENARCH$$EXEEXT$
 :: ~ build/$GENARCH$/$CONFIG$/vpktool.$GENARCH$$DBGEXT$ = tools/vpktool.$GENARCH$$DBGEXT$

@@ -4,8 +4,9 @@
 CORE_API PxVec2 Core::Components::Camera::Project(const PxVec3& position) const
 {
     // TODO: Should this be assuming top-left coordinates?
-    float x = position.x - this->position.x + GAME_WIDTH / 2.5f;
-    float y = position.z - position.y + this->position.y + GAME_HEIGHT / 2.5f;
+    // TODO: Fix scaling
+    float x = position.x - this->position.x + GAME_WIDTH / 2.0f;
+    float y = position.z - position.y + this->position.y + GAME_HEIGHT / 2.0f;
 
     return PxVec2(x, y);
 }

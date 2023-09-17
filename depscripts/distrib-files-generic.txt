@@ -3,9 +3,9 @@
 gaming_desktop:: ~ build/$BLDARCH$/$CONFIG$/MicrosoftGame.config = MicrosoftGame.config
 gaming_desktop:: ~ build/$BLDARCH$/$CONFIG$/XCurl$DLIBEXT$ = XCurl$DLIBEXT$
 
-:: ~ build/$BLDARCH$/$CONFIG$/Core.Game.$BLDARCH$$DLIBEXT$ = Core.Game.$BLDARCH$$DLIBEXT$
-:: ~ build/$BLDARCH$/$CONFIG$/Core.Game.$BLDARCH$$DLIBEXT$ = Core.Game.$BLDARCH$$DBGEXT$
-:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DLIBEXT$ = Game.$BLDARCH$$DLIBEXT$
-:: ~ build/$BLDARCH$/$CONFIG$/Game.$BLDARCH$$DLIBEXT$ = Game.$BLDARCH$$DBGEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/$PREFIX$Core.Game.$BLDARCH$$DLIBEXT$ = $PREFIX$Core.Game.$BLDARCH$$DLIBEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/$PREFIX$Core.Game.$BLDARCH$$DLIBEXT$ = $PREFIX$Core.Game.$BLDARCH$$DBGEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/$PREFIX$Game.$BLDARCH$$DLIBEXT$ = $PREFIX$Game.$BLDARCH$$DLIBEXT$
+:: ~ build/$BLDARCH$/$CONFIG$/$PREFIX$Game.$BLDARCH$$DLIBEXT$ = $PREFIX$Game.$BLDARCH$$DBGEXT$
 :: ~ build/$BLDARCH$/$CONFIG$/Launcher.$BLDARCH$$EXEEXT$ = FalseKing.$BLDARCH$$EXEEXT$
 :: ~ build/$BLDARCH$/$CONFIG$/Launcher.$BLDARCH$$EXEEXT$ = FalseKing.$BLDARCH$$DBGEXT$
