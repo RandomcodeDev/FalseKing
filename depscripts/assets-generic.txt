@@ -1,6 +1,0 @@
-!depscript
-
-gaming_desktop:: ~ gdk/Assets = Assets
-scarlett:: ~ gdk/Assets = Assets
-:: ~ assets_000.vpk =
-:: ~ assets_dir.vpk =

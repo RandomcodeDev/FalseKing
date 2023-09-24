@@ -1,4 +1,0 @@
-!deplist
-
-assets
-libs

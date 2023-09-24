@@ -1,5 +1,0 @@
-!depscript
-
-:: ~ deps-public/lib/$GENARCH$/discord_game_sdk$DLIBEXT$ = discord_game_sdk$DLIBEXT$
-windows:: ~ deps-public/lib/$GENARCH$/libzstd$DLIBEXT$ = libzstd$DLIBEXT$
-:: ~ deps-public/lib/$GENARCH$/$DCONFIG$/$PREFIX$SDL3$SUFFIX$$DLIBEXT$ = $PREFIX$SDL3$SUFFIX$$DLIBEXT$
