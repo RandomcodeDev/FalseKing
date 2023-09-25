@@ -1,5 +1,7 @@
 #[cfg(windows)]
 pub mod win32;
+#[cfg(unix)]
+pub mod unix;
 
 pub trait PlatformBackend {
     // Clean up the backend
@@ -17,7 +19,7 @@ pub trait PlatformBackend {
 
 pub fn get_backend_for_platform() -> impl PlatformBackend {
     #[cfg(windows)]
-    return win32::Win32Backend::new();
+    win32::Win32Backend::new()
     #[cfg(unix)]
-    return unix::UnixBackend::new();
+    unix::UnixBackend::new()
 }

@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 windows = { version = "0.51.1", features = ["Win32_UI_WindowsAndMessaging", "Win32_UI_Input"] }
+xcb = "1.2.2"
