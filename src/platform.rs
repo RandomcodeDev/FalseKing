@@ -10,16 +10,22 @@ pub trait PlatformBackend {
     // Handle events
     fn update(&mut self) -> bool;
 
+    // Has the window been resized
+    fn has_resized(&self) -> bool;
+
     // Get the width of the screen
     fn get_width(&self) -> u32;
 
     // Get the height of the screen
     fn get_height(&self) -> u32;
+
+    // Is the game focused
+    fn is_focused(&self) -> bool;
 }
 
-pub fn get_backend_for_platform() -> impl PlatformBackend {
+pub fn get_backend_for_platform() -> Option<impl PlatformBackend> {
     #[cfg(windows)]
-    win32::Win32Backend::new()
+    return win32::Win32Backend::new();
     #[cfg(unix)]
-    unix::UnixBackend::new()
+    return unix::UnixBackend::new().ok();
 }

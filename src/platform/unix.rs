@@ -73,7 +73,7 @@ impl UnixBackend {
             window,
             property: x::ATOM_WM_NAME,
             r#type: x::ATOM_STRING,
-            data: b"False King",
+            data: crate::GAME_NAME.as_bytes(),
         });
         connection.check_request(cookie)?;
 
