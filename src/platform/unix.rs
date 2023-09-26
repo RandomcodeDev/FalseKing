@@ -1,18 +1,22 @@
+use log::{info};
 use std::ffi;
-
-use xcb::{x, Xid};
-
 use super::PlatformBackend;
+use xcb::{x, Xid};
 
 pub struct UnixBackend {
     connection: xcb::Connection,
     window: x::Window,
-    width: u32,
-    height: u32,
+    width: u16,
+    height: u16,
+    closed: bool,
+    resized: bool,
+    focused: bool
 }
 
 impl UnixBackend {
     pub fn new() -> xcb::Result<Self> {
+        info!("Initializing Unix backend");
+
         let (connection, screen_number) = xcb::Connection::connect(None)?;
 
         let setup = connection.get_setup();
@@ -20,8 +24,10 @@ impl UnixBackend {
 
         let window: x::Window = connection.generate_id();
 
-        let width = 1024;
-        let height = 576;
+        let width: u16 = 1024;
+        let height: u16 = 576;
+
+        info!("Creating {}x{} window {}", width, height, crate::GAME_NAME);
 
         let window_cookie = connection.send_request_checked(&x::CreateWindow {
             depth: x::COPY_FROM_PARENT as u8,
@@ -79,22 +85,57 @@ impl UnixBackend {
 
         connection.send_request(&x::MapWindow { window });
 
-        Self {}
+        let wm_protocols = Self::get_intern_atom(&connection, "WM_PROTOCOLS")?;
+        let wm_delete_window = Self::get_intern_atom(&connection, "WM_DELETE_WINDOW")?;
+        let wm_state = Self::get_intern_atom(&connection, "_NET_WM_STATE")?;
+        let wm_state_maximized_width = Self::get_intern_atom(&connection, "_NET_WM_STATE_MAXIMIZED_HORZ")?;
+        let wm_state_maximized_height = Self::get_intern_atom(&connection, "_NET_WM_STATE_MAXIMIZED_VERT")?;
+
+        
+
+        Ok(Self {
+            connection,
+            window,
+            width,
+            height,
+            closed: false,
+            resized: false,
+            focused: false
+        })
+    }
+
+    fn get_intern_atom(connection: &xcb::Connection, name: &str) -> xcb::Result<x::Atom> {
+        let cookie = connection.send_request(&x::InternAtom {
+            only_if_exists: true,
+            name: name.as_bytes()
+        });
+
+        Ok(connection.wait_for_reply(cookie)?.atom())
     }
 }
 
 impl PlatformBackend for UnixBackend {
-    fn shutdown(mut self) {}
+    fn shutdown(self) {
+        info!("Shutting down Unix backend");
+    }
 
     fn update(&mut self) -> bool {
-        return true;
+        self.closed
+    }
+
+    fn has_resized(&self) -> bool {
+        self.resized
     }
 
     fn get_width(&self) -> u32 {
-        self.width
+        self.width as u32
     }
 
     fn get_height(&self) -> u32 {
-        self.height
+        self.height as u32
+    }
+
+    fn is_focused(&self) -> bool {
+        self.focused
     }
 }
