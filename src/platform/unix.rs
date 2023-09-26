@@ -1,7 +1,7 @@
-use log::{info};
-use std::ffi;
+use log::info;
+use std::mem;
 use super::PlatformBackend;
-use xcb::{x, Xid};
+use xcb::x;
 
 pub struct UnixBackend {
     connection: xcb::Connection,
@@ -87,11 +87,14 @@ impl UnixBackend {
 
         let wm_protocols = Self::get_intern_atom(&connection, "WM_PROTOCOLS")?;
         let wm_delete_window = Self::get_intern_atom(&connection, "WM_DELETE_WINDOW")?;
-        let wm_state = Self::get_intern_atom(&connection, "_NET_WM_STATE")?;
-        let wm_state_maximized_width = Self::get_intern_atom(&connection, "_NET_WM_STATE_MAXIMIZED_HORZ")?;
-        let wm_state_maximized_height = Self::get_intern_atom(&connection, "_NET_WM_STATE_MAXIMIZED_VERT")?;
 
-        
+        let _ = connection.check_request(connection.send_request_checked(&x::ChangeProperty {
+            mode: x::PropMode::Replace,
+            window,
+            property: wm_protocols,
+            r#type: x::ATOM_ATOM,
+            data: &[wm_delete_window]
+        }));
 
         Ok(Self {
             connection,
@@ -117,10 +120,51 @@ impl UnixBackend {
 impl PlatformBackend for UnixBackend {
     fn shutdown(self) {
         info!("Shutting down Unix backend");
+
+        self.connection.send_request(&x::DestroyWindow {
+            window: self.window
+        });
     }
 
     fn update(&mut self) -> bool {
-        self.closed
+        if let Ok(Some(xcb::Event::X(event))) = self.connection.poll_for_event() {
+            match event {
+                x::Event::ConfigureNotify(ev) => {
+                    let new_width = ev.width();
+                    let new_height = ev.height();
+
+                    if new_width != self.width || new_height != self.height {
+                        self.resized = true;
+                        info!(
+                            "Window resized from {}x{} to {}x{}",
+                            self.width, self.height, new_width, new_height
+                        );
+                        self.width = new_width;
+                        self.height = new_height;
+                    }
+                }
+                x::Event::FocusIn(_) => {
+                    info!("Window focused");
+                    self.focused = true;
+                }
+                x::Event::FocusOut(_) => {
+                    info!("Window unfocused");
+                    self.focused = false;
+                }
+                x::Event::ClientMessage(ev) => {
+                    if let x::ClientMessageData::Data32(atom) = ev.data() {
+                        info!("Window closed");
+                        if let Ok(delete_atom) = Self::get_intern_atom(&self.connection, "WM_DELETE_WINDOW") {
+                            let atom = unsafe { mem::transmute::<u32, x::Atom>(atom[0]) };
+                            self.closed = atom == delete_atom;
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        !self.closed
     }
 
     fn has_resized(&self) -> bool {

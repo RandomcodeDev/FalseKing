@@ -12,6 +12,7 @@ use platform::PlatformBackend;
 use std::io;
 
 pub const GAME_NAME: &str = "False King";
+pub const GAME_EXECUTABLE_NAME: &str = "false_king";
 
 fn main() {
     setup_logger().expect("Failed to set up logger");
@@ -50,7 +51,7 @@ fn setup_logger() -> Result<(), fern::InitError> {
             ))
         })
         .chain(fern::log_file(
-            String::from(crate::GAME_NAME) + " " + &dt + ".log",
+            String::from(crate::GAME_EXECUTABLE_NAME) + "-" + &dt + ".log",
         )?);
 
     #[cfg(build = "debug")]
