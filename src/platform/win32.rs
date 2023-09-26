@@ -1,6 +1,6 @@
 use super::PlatformBackend;
-use log::{info};
-use std::{mem, ptr};
+use log::info;
+use std::{ffi, mem, ptr};
 use windows::Win32::{
     Foundation::*, Graphics::Gdi::*, System::LibraryLoader::*, UI::WindowsAndMessaging::*,
 };
@@ -24,7 +24,7 @@ impl Win32Backend {
                 .unwrap_or(HMODULE(0))
                 .into()
         };
-        let class_name = PCSTR("FalseKingWindowClass".as_ptr());
+        let class_name = PCSTR("FalseKingWindowClass\0".as_ptr());
 
         let wndclass = WNDCLASSEXA {
             cbSize: mem::size_of::<WNDCLASSEXA>() as u32,
@@ -46,12 +46,14 @@ impl Win32Backend {
         let height = 576;
 
         info!("Creating {}x{} window {}", width, height, crate::GAME_NAME);
+        
+        let title = ffi::CString::new(crate::GAME_NAME).unwrap();
 
         let window = unsafe {
             CreateWindowExA(
                 WINDOW_EX_STYLE(0),
                 wndclass.lpszClassName,
-                PCSTR(crate::GAME_NAME.as_ptr()),
+                PCSTR(title.as_ptr() as *const u8),
                 WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,

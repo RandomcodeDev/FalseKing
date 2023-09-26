@@ -1,9 +1,15 @@
+#![cfg_attr(
+    all(windows, not(any(build = "debug", feature = "release_log"))),
+    windows_subsystem = "windows"
+)]
+
 mod platform;
 
 use chrono::Local;
 use fern::colors::{Color, ColoredLevelConfig};
+use legion;
 use platform::PlatformBackend;
-use std::{io};
+use std::io;
 
 pub const GAME_NAME: &str = "False King";
 
@@ -12,8 +18,10 @@ fn main() {
 
     let mut backend = platform::get_backend_for_platform().unwrap();
 
-    while backend.update() {
+    
 
+    while backend.update() {
+        
     }
 
     backend.shutdown();
