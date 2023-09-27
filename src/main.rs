@@ -4,26 +4,42 @@
 )]
 
 mod platform;
+mod renderer;
 
 use chrono::Local;
+use clap::Parser;
 use fern::colors::{Color, ColoredLevelConfig};
-use legion;
+//use legion::*;
 use platform::PlatformBackend;
 use std::io;
 
 pub const GAME_NAME: &str = "False King";
 pub const GAME_EXECUTABLE_NAME: &str = "false_king";
 
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Graphics API
+    #[arg(short, long, value_name = "RENDER_API")]
+    render_api: Option<renderer::BackendType>
+}
+
 fn main() {
     setup_logger().expect("Failed to set up logger");
 
     let mut backend = platform::get_backend_for_platform().unwrap();
 
-    
+    let mut renderer = renderer::get_renderer(None);
+
+    //let world = World::default();
 
     while backend.update() {
-        
+        renderer.begin_frame();
+
+        renderer.end_frame();
     }
+
+    renderer.shutdown();
 
     backend.shutdown();
 }

@@ -4,22 +4,25 @@ pub mod win32;
 pub mod unix;
 
 pub trait PlatformBackend {
-    // Clean up the backend
+    /// Clean up the backend
     fn shutdown(self);
 
-    // Handle events
+    /// Handle events
     fn update(&mut self) -> bool;
 
-    // Has the window been resized
+    /// Get the native window handle
+    fn get_handle(&self) -> usize;
+
+    /// Has the window been resized
     fn has_resized(&self) -> bool;
 
-    // Get the width of the screen
+    /// Get the width of the screen
     fn get_width(&self) -> u32;
 
-    // Get the height of the screen
+    /// Get the height of the screen
     fn get_height(&self) -> u32;
 
-    // Is the game focused
+    /// Is the game focused
     fn is_focused(&self) -> bool;
 }
 

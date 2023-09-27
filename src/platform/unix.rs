@@ -167,6 +167,10 @@ impl PlatformBackend for UnixBackend {
         !self.closed
     }
 
+    fn get_handle(&self) -> usize {
+        self.window as usize
+    }
+
     fn has_resized(&self) -> bool {
         self.resized
     }

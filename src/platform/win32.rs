@@ -186,6 +186,10 @@ impl PlatformBackend for Win32Backend {
         return !self.closed;
     }
 
+    fn get_handle(&self) -> usize {
+        self.window.0 as usize
+    }
+
     fn has_resized(&self) -> bool {
         self.resized
     }
