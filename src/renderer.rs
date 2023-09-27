@@ -37,6 +37,7 @@ pub trait Renderer {
     fn shutdown(&mut self);
 }
 
+/// Creates an instance of the requested backend, or the first one that initializes successfully
 pub fn get_renderer(api: Option<BackendType>) -> Box<dyn Renderer> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
@@ -61,12 +62,22 @@ pub fn get_renderer(api: Option<BackendType>) -> Box<dyn Renderer> {
         }
     } else {
         #[cfg(windows)]
-        return Box::new(dx12::Dx12Renderer::new().ok().unwrap());
+        if let Ok(dx12) = dx12::Dx12Renderer::new() {
+            return Box::new(dx12);
+        }
         #[cfg(not(apple))]
-        return Box::new(vulkan::VkRenderer::new().ok().unwrap());
+        if let Ok(vk) = vulkan::VkRenderer::new() {
+            return Box::new(vk);
+        }
         #[cfg(apple)]
-        return Box::new(metal::MtlRenderer::new().ok().unwrap());
+        if let Ok(metal) = metal::MtlRenderer::new() {
+            return Box::new(metal);
+        }
         #[cfg(not(apple))]
-        return Box::new(opengl::GLRenderer::new().ok().unwrap());
+        if let Ok(opengl) = opengl::GLRenderer::new() {
+            return Box::new(opengl);
+        }
+
+        panic!("Failed to initialize any renderer backend");
     }
 }

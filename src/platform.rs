@@ -26,6 +26,7 @@ pub trait PlatformBackend {
     fn is_focused(&self) -> bool;
 }
 
+/// Creates an instance of the appropriate backend for the platform
 pub fn get_backend_for_platform() -> Option<impl PlatformBackend> {
     #[cfg(windows)]
     return win32::Win32Backend::new();

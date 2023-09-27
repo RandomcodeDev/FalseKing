@@ -168,7 +168,7 @@ impl PlatformBackend for UnixBackend {
     }
 
     fn get_handle(&self) -> usize {
-        self.window as usize
+        unsafe { mem::transmute::<x::Window, u32>(self.window) as usize }
     }
 
     fn has_resized(&self) -> bool {

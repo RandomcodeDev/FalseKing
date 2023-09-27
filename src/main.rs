@@ -3,8 +3,10 @@
     windows_subsystem = "windows"
 )]
 
+mod fs;
 mod platform;
 mod renderer;
+mod vpk;
 
 use chrono::Local;
 use clap::Parser;
