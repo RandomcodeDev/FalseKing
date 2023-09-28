@@ -20,10 +20,6 @@ pub enum BackendType {
     /// Metal (gonna be a long time)
     #[cfg(apple)]
     Metal,
-
-    /// OpenGL (might be soon)
-    #[cfg(not(apple))]
-    OpenGL,
 }
 
 pub trait Renderer {
@@ -38,44 +34,49 @@ pub trait Renderer {
 }
 
 /// Creates an instance of the requested backend, or the first one that initializes successfully
-pub fn get_renderer(api: Option<BackendType>) -> Box<dyn Renderer> {
+pub fn get_renderer(api: Option<BackendType>) -> Option<Box<dyn Renderer>> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
     if let Some(api) = api {
         match api {
             #[cfg(windows)]
             BackendType::DirectX12 => {
-                return Box::new(dx12::Dx12Renderer::new().ok().unwrap());
+                match dx12::Dx12Renderer::new() {
+                    Ok(dx12) => Some(Box::new(dx12)),
+                    Err(err) => None
+                }
             }
             #[cfg(not(apple))]
             BackendType::Vulkan => {
-                return Box::new(vulkan::VkRenderer::new().ok().unwrap());
+                match vulkan::VkRenderer::new() {
+                    Ok(vk) => Some(Box::new(vk)),
+                    Err(err) => None
+                }
             }
             #[cfg(apple)]
             BackendType::Metal => {
-                return Box::new(metal::MtlRenderer::new().ok().unwrap());
-            }
-            #[cfg(not(apple))]
-            BackendType::OpenGL => {
-                return Box::new(opengl::GLRenderer::new().ok().unwrap());
+                match metal::MtlRenderer::new() {
+                    Ok(mtl) => Some(Box::new(mtl)),
+                    Err(err) => None
+                }
             }
         }
     } else {
+        
         #[cfg(windows)]
-        if let Ok(dx12) = dx12::Dx12Renderer::new() {
-            return Box::new(dx12);
+        match dx12::Dx12Renderer::new() {
+            Ok(dx12) => {return Some(Box::new(dx12));}
+            Err(err) => {return None;}
         }
         #[cfg(not(apple))]
-        if let Ok(vk) = vulkan::VkRenderer::new() {
-            return Box::new(vk);
+        match vulkan::VkRenderer::new() {
+            Ok(vk) => {return Some(Box::new(vk));}
+            Err(err) => {return None;}
         }
         #[cfg(apple)]
-        if let Ok(metal) = metal::MtlRenderer::new() {
-            return Box::new(metal);
-        }
-        #[cfg(not(apple))]
-        if let Ok(opengl) = opengl::GLRenderer::new() {
-            return Box::new(opengl);
+        match metal::MtlRenderer::new() {
+            Ok(mtl) => {return Some(Box::new(mtl));}
+            Err(err) => {return None;}
         }
 
         panic!("Failed to initialize any renderer backend");

@@ -95,8 +95,7 @@ impl Win32Backend {
             WM_SIZE => {
                 let mut client_area: RECT = unsafe { mem::zeroed() };
 
-                unsafe { GetClientRect(window, ptr::addr_of_mut!(client_area)) }
-                    .expect("Failed to get window client area");
+                let _ = unsafe { GetClientRect(window, ptr::addr_of_mut!(client_area)) };
                 let new_width = client_area.right - client_area.left;
                 let new_height = client_area.bottom - client_area.top;
 
@@ -168,7 +167,7 @@ impl PlatformBackend for Win32Backend {
         info!("Shutting down Windows backend");
 
         unsafe {
-            DestroyWindow(self.window).expect("Failed to destroy window");
+            let _ = DestroyWindow(self.window);
         }
     }
 

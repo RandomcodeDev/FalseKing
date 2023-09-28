@@ -150,7 +150,7 @@ pub trait FileSystem {
     fn read<P: AsRef<Path>>(path: P) -> io::Result<Vec<u8>>;
 
     /// Directory iterator
-    fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<Box<dyn Iterator<Item = DirEntry>>>;
+    fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>>;
 
     /// Get the path a symlink points to
     fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf>;
@@ -227,7 +227,7 @@ impl FileSystem for StdFileSystem {
     }
 
     fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
-        
+        Err(io::Error::new(io::ErrorKind::Unsupported, "read_dir is not implemented here yet"))
     }
 
     fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
@@ -259,6 +259,17 @@ impl FileSystem for StdFileSystem {
     }
 
     fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()> {
+        #[cfg(windows)]
+        match Self::metadata(from) {
+            Ok(metadata) => {
+                if metadata.is_dir {
+                    std::os::windows::fs::symlink_dir(from, to)
+                } else {
+                    std::os::windows::fs::symlink_file(from, to)
+                }
+            }
+            Err(err) => Err(err)
+        }
         #[cfg(unix)]
         std::os::unix::fs::symlink(from, to)
     }
