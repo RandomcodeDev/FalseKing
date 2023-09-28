@@ -23,7 +23,7 @@ pub const GAME_EXECUTABLE_NAME: &str = "false_king";
 struct Args {
     /// Graphics API
     #[arg(short, long, value_name = "RENDER_API")]
-    render_api: Option<renderer::BackendType>
+    render_api: Option<renderer::BackendType>,
 }
 
 fn main() {
@@ -31,7 +31,8 @@ fn main() {
 
     let mut backend = platform::get_backend_for_platform().unwrap();
 
-    let mut renderer = renderer::get_renderer(None);
+    let mut renderer =
+        renderer::get_renderer(None).expect("get_renderer should panic if none can be created");
 
     //let world = World::default();
 

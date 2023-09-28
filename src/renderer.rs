@@ -3,8 +3,6 @@ mod dx12;
 #[cfg(apple)]
 mod metal;
 #[cfg(not(apple))]
-mod opengl;
-#[cfg(not(apple))]
 mod vulkan;
 
 #[derive(Clone, clap::ValueEnum)]
@@ -40,43 +38,42 @@ pub fn get_renderer(api: Option<BackendType>) -> Option<Box<dyn Renderer>> {
     if let Some(api) = api {
         match api {
             #[cfg(windows)]
-            BackendType::DirectX12 => {
-                match dx12::Dx12Renderer::new() {
-                    Ok(dx12) => Some(Box::new(dx12)),
-                    Err(err) => None
-                }
-            }
+            BackendType::DirectX12 => match dx12::Dx12Renderer::new() {
+                Ok(dx12) => Some(Box::new(dx12)),
+                Err(err) => None,
+            },
             #[cfg(not(apple))]
-            BackendType::Vulkan => {
-                match vulkan::VkRenderer::new() {
-                    Ok(vk) => Some(Box::new(vk)),
-                    Err(err) => None
-                }
-            }
+            BackendType::Vulkan => match vulkan::VkRenderer::new() {
+                Ok(vk) => Some(Box::new(vk)),
+                Err(err) => None,
+            },
             #[cfg(apple)]
-            BackendType::Metal => {
-                match metal::MtlRenderer::new() {
-                    Ok(mtl) => Some(Box::new(mtl)),
-                    Err(err) => None
-                }
-            }
+            BackendType::Metal => match metal::MtlRenderer::new() {
+                Ok(mtl) => Some(Box::new(mtl)),
+                Err(err) => None,
+            },
         }
     } else {
-        
         #[cfg(windows)]
         match dx12::Dx12Renderer::new() {
-            Ok(dx12) => {return Some(Box::new(dx12));}
-            Err(err) => {return None;}
+            Ok(dx12) => {
+                return Some(Box::new(dx12));
+            }
+            Err(err) => {}
         }
         #[cfg(not(apple))]
         match vulkan::VkRenderer::new() {
-            Ok(vk) => {return Some(Box::new(vk));}
-            Err(err) => {return None;}
+            Ok(vk) => {
+                return Some(Box::new(vk));
+            }
+            Err(err) => {}
         }
         #[cfg(apple)]
         match metal::MtlRenderer::new() {
-            Ok(mtl) => {return Some(Box::new(mtl));}
-            Err(err) => {return None;}
+            Ok(mtl) => {
+                return Some(Box::new(mtl));
+            }
+            Err(err) => {}
         }
 
         panic!("Failed to initialize any renderer backend");

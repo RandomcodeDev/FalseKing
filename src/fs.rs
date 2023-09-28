@@ -84,9 +84,9 @@ impl From<std::fs::Metadata> for Metadata {
             is_symlink: value.is_symlink(),
             len: value.len(),
             permissions: value.permissions(),
-            modified: value.modified(),
-            accessed: value.accessed(),
-            created: value.created(),
+            modified: value.modified().unwrap(),
+            accessed: value.accessed().unwrap(),
+            created: value.created().unwrap(),
         }
     }
 }
@@ -193,6 +193,10 @@ impl StdFileSystem {
 }
 
 impl FileSystem for StdFileSystem {
+    fn try_exists<P: AsRef<Path>>(&self, path: P) -> io::Result<bool> {
+        std::fs::try_exists(path)
+    }
+
     fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
         std::fs::canonicalize(path)
     }
@@ -272,5 +276,9 @@ impl FileSystem for StdFileSystem {
         }
         #[cfg(unix)]
         std::os::unix::fs::symlink(from, to)
+    }
+
+    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> io::Result<()> {
+        std::fs::write(path, contents)
     }
 }
