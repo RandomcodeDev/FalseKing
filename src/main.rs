@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+#![feature(fs_try_exists)]
+
 mod fs;
 mod platform;
 mod renderer;
@@ -23,16 +25,18 @@ pub const GAME_EXECUTABLE_NAME: &str = "false_king";
 struct Args {
     /// Graphics API
     #[arg(short, long, value_name = "RENDER_API")]
-    render_api: Option<renderer::BackendType>,
+    render_api: Option<renderer::RenderApi>,
 }
 
 fn main() {
     setup_logger().expect("Failed to set up logger");
 
+    let args = Args::parse();
+
     let mut backend = platform::get_backend_for_platform().unwrap();
 
     let mut renderer =
-        renderer::get_renderer(None).expect("get_renderer should panic if none can be created");
+        renderer::get_renderer(&backend, args.render_api);
 
     //let world = World::default();
 

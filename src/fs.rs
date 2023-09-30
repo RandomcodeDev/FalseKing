@@ -97,15 +97,15 @@ pub struct DirEntry(PathBuf, Metadata, FileType);
 
 impl DirEntry {
     pub fn path(&self) -> PathBuf {
-        self.0
+        self.0.clone()
     }
 
     pub fn metadata(&self) -> io::Result<Metadata> {
-        Ok(self.1)
+        Ok(self.1.clone())
     }
 
     pub fn file_type(&self) -> io::Result<FileType> {
-        Ok(self.2)
+        Ok(self.2.clone())
     }
 
     pub fn file_name(&self) -> OsString {
@@ -230,7 +230,7 @@ impl FileSystem for StdFileSystem {
         std::fs::read(path)
     }
 
-    fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
+    fn read_dir<P: AsRef<Path>>(_path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
         Err(io::Error::new(io::ErrorKind::Unsupported, "read_dir is not implemented here yet"))
     }
 
@@ -264,7 +264,7 @@ impl FileSystem for StdFileSystem {
 
     fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()> {
         #[cfg(windows)]
-        match Self::metadata(from) {
+        match Self::metadata(&from) {
             Ok(metadata) => {
                 if metadata.is_dir {
                     std::os::windows::fs::symlink_dir(from, to)
@@ -276,6 +276,15 @@ impl FileSystem for StdFileSystem {
         }
         #[cfg(unix)]
         std::os::unix::fs::symlink(from, to)
+    }
+
+    fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
+        match std::fs::symlink_metadata(path) {
+            Ok(path) => {
+                Ok(path.into())
+            }
+            Err(err) => Err(err)
+        }
     }
 
     fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> io::Result<()> {
