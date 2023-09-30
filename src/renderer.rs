@@ -5,19 +5,37 @@ mod metal;
 #[cfg(not(apple))]
 mod vulkan;
 
-#[derive(Clone, clap::ValueEnum)]
-pub enum BackendType {
-    /// DirectX 12
-    #[cfg(windows)]
-    DirectX12,
+use std::fmt::Display;
 
-    /// Vulkan (not implemented yet)
+use crate::platform::PlatformBackend;
+use log::{error, info};
+
+#[derive(Clone, clap::ValueEnum)]
+pub enum RenderApi {
+    /// DirectX 12 (not implemented yet)
+    #[cfg(windows)]
+    Dx12,
+
+    /// Vulkan
     #[cfg(not(apple))]
     Vulkan,
 
     /// Metal (gonna be a long time)
     #[cfg(apple)]
     Metal,
+}
+
+impl Display for RenderApi {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            #[cfg(windows)]
+            Self::Dx12 => "DirectX 12",
+            #[cfg(not(apple))]
+            Self::Vulkan => "Vulkan",
+            #[cfg(apple)]
+            Self::Metal => "Metal",
+        })
+    }
 }
 
 pub trait Renderer {
@@ -32,50 +50,64 @@ pub trait Renderer {
 }
 
 /// Creates an instance of the requested backend, or the first one that initializes successfully
-pub fn get_renderer(api: Option<BackendType>) -> Option<Box<dyn Renderer>> {
+pub fn get_renderer(backend: &dyn PlatformBackend, api: Option<RenderApi>) -> Box<dyn Renderer> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
     if let Some(api) = api {
         match api {
             #[cfg(windows)]
-            BackendType::DirectX12 => match dx12::Dx12Renderer::new() {
-                Ok(dx12) => Some(Box::new(dx12)),
-                Err(err) => None,
+            RenderApi::Dx12 => match dx12::Dx12Renderer::new(backend) {
+                Some(dx12) => {
+                    return dx12;
+                }
+                None => {
+                    panic!("Failed to create DirectX 12 renderer");
+                }
             },
             #[cfg(not(apple))]
-            BackendType::Vulkan => match vulkan::VkRenderer::new() {
-                Ok(vk) => Some(Box::new(vk)),
-                Err(err) => None,
+            RenderApi::Vulkan => match vulkan::VkRenderer::new(backend) {
+                Some(vk) => return vk,
+                None => {
+                    panic!("Failed to create Vulkan renderer");
+                }
             },
             #[cfg(apple)]
-            BackendType::Metal => match metal::MtlRenderer::new() {
-                Ok(mtl) => Some(Box::new(mtl)),
-                Err(err) => None,
+            RenderApi::Metal => match metal::MtlRenderer::new(backend) {
+                Some(mtl) => return mtl,
+                None => {
+                    panic!("Failed to create Metal renderer");
+                }
             },
         }
     } else {
-        #[cfg(windows)]
-        match dx12::Dx12Renderer::new() {
-            Ok(dx12) => {
-                return Some(Box::new(dx12));
+        /*#[cfg(windows)]
+        match dx12::Dx12Renderer::new(backend) {
+            Some(dx12) => {
+                return dx12;
             }
-            Err(err) => {}
-        }
+            None => {
+                error!("Failed to create DirectX 12 renderer");
+            }
+        }*/
         #[cfg(not(apple))]
-        match vulkan::VkRenderer::new() {
-            Ok(vk) => {
-                return Some(Box::new(vk));
+        match vulkan::VkRenderer::new(backend) {
+            Some(vk) => {
+                return vk;
             }
-            Err(err) => {}
+            None => {
+                error!("Failed to create Vulkan renderer");
+            }
         }
         #[cfg(apple)]
-        match metal::MtlRenderer::new() {
-            Ok(mtl) => {
-                return Some(Box::new(mtl));
+        match metal::MtlRenderer::new(backend) {
+            Some(mtl) => {
+                return mtl;
             }
-            Err(err) => {}
+            None => {
+                error!("Failed to create Metal renderer");
+            }
         }
-
-        panic!("Failed to initialize any renderer backend");
     }
+
+    panic!("Failed to create any renderer!");
 }

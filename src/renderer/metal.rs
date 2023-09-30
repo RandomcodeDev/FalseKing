@@ -1,15 +1,11 @@
-use metal::*;
 use super::Renderer;
+use metal::*;
 
-pub struct MtlRenderer {
-
-}
+pub struct MtlRenderer {}
 
 impl MtlRenderer {
-    pub fn new() -> Result<Self, str> {
-        Ok(Self {
-        
-        })
+    pub fn new(backend: &dyn PlatformBackend) -> Option<Box<Self>> {
+        Some(Box::new(Self {}))
     }
 }
 
@@ -18,5 +14,5 @@ impl Renderer for MtlRenderer {
 
     fn end_frame(&mut self) {}
 
-    fn shutdown(self) {}
+    fn shutdown(&mut self) {}
 }

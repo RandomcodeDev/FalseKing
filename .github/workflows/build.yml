@@ -1,157 +1,42 @@
----
-name: Build
+name: Rust
+
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
-permissions:
-  contents: read
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   build:
-    name: ${{matrix.config}}-${{matrix.target}} build on ${{matrix.os}}
-    runs-on: ${{matrix.os}}
-    if: ${{ !contains(github.event.head_commit.message, 'skip_ci') }}
+    name: ${{ matrix.build-type }} build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        config:
-          - Debug
-          - Release
-        target:
-          - x86_64
-        os:
-          #- windows-latest
-          - macOS-13
-          - ubuntu-latest
+        build-type: [dev, release]
+        os: [
+            windows-latest,
+#           macOS-latest,
+            ubuntu-latest
+        ]
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: chmod scripts
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os != 'windows-latest'
-        run: chmod a+x scripts/*
-      #- name: Download dependencies (Windows)
-      #  if: matrix.os == 'windows-latest'
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  run: cmd /c scripts\pulldeps.bat public
-      - name: Download dependencies
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          python3 scripts/pulldeps.py --dependency-kind public
-      #- name: Install Windows XP toolchain
-      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  shell: cmd
-      #  run: |
-      #    "C:/Program Files (x86)/Microsoft Visual Studio/Installer/setup.exe" modify --installPath "C:/Program Files/Microsoft Visual Studio/2022/Enterprise" --add Microsoft.VisualStudio.Component.WinXP
-      #- name: Add MSBuild to PATH
-      #  if: matrix.os == 'windows-latest'
-      #  uses: microsoft/setup-msbuild@v1.0.2
-      #- name: Build (MSBuild)
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  if: matrix.os == 'windows-latest'
-      #  run: msbuild /m /p:Configuration=${{matrix.config}}
-      #    /p:Platform=${{matrix.target}} build\winrt\Game.sln /t:"Build;Publish"
-      #- name: Build (MSBuild Legacy)
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-      #  run: msbuild /m /p:Configuration=${{matrix.config}} /p:Platform=x86
-      #    build\winxp\Game.sln /t:"Build"
-      - name: Build (Make)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          deps-public/bin/premake5 gmake2 --cc=clang
-          PATH="deps-public/bin:$PATH" make -C build -f Game-gmake2-linux-linux.make CONFIG=$(echo ${{ matrix.config }} | tr '[:upper:]' '[:lower:]')_${{ matrix.target }} LDFLAGS=-fuse-ld=lld
-      - name: Build (macOS Make)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'macOS-13'
-        run: |
-          deps-public/bin/premake5 gmake2 --cc=clang
-          PATH="deps-public/bin:$PATH" make -C build -f Game-gmake2-macosx-macosx.make CONFIG=${{ matrix.config }}_universal
-      #- name: Install the Apple certificate and provisioning profile
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  if: matrix.os == 'macOS-13'
-      #  env:
-      #    BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-      #    P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-      #    KEYCHAIN_PASSWORD: password
-      #  run: |
-      #    # create variables
-      #    CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-      #    KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-      #
-      #    # import certificate and provisioning profile from secrets
-      #    echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-      #
-      #    # create temporary keychain
-      #    security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #    security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-      #    security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #
-      #    # import certificate to keychain
-      #    security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-      #    security list-keychain -d user -s $KEYCHAIN_PATH
-      #
-      #- name: Build (Xcode)
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  if: matrix.os == 'macOS-13'
-      #  run: xcodebuild -project build/darwin/False\ King.xcodeproj -config
-      #    ${{matrix.config}}
-      #- name: Distrib (Windows Legacy)
-      #  working-directory: ${{env.GITHUB_WORKSPACE}}
-      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-      #  run: scripts\distrib.bat FalseKing-${{matrix.config}}-${{matrix.os}}-x86 x86
-      #    ${{matrix.config}} Game
-      - name: Distrib (Make)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'ubuntu-latest'
-        run: python3 scripts/copyfiles.py
-          --configuration ${{matrix.config}}
-          --architecture ${{matrix.target}}
-          FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-          distrib
-      - name: Distrib (macOS)
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        if: matrix.os == 'macOS-13'
-        run: scripts/copyfiles.py
-          --configuration ${{matrix.config}}
-          FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
-          distrib
-      #- name: Upload a Build Artifact (MSBuild Debug)
-      #  uses: actions/upload-artifact@v3.1.2
-      #  if: matrix.os == 'windows-latest' && matrix.config == 'Debug'
-      #  with:
-      #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-      #    path: build/winrt/AppPackages/Game/Game_1.0.0.0_Debug_Test
-      #- name: Upload a Build Artifact (MSBuild Release)
-      #  uses: actions/upload-artifact@v3.1.2
-      #  if: matrix.os == 'windows-latest' && matrix.config == 'Release'
-      #  with:
-      #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-      #    path: build/winrt/AppPackages/Game/Game_1.0.0.0_Test
-      #- name: Upload a Build Artifact (MSBuild Legacy)
-      #  uses: actions/upload-artifact@v3.1.2
-      #  if: matrix.os == 'windows-latest' && matrix.target == 'x64'
-      #  with:
-      #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-x86
-      #    path: Game.zip
-      #- name: Upload a Build Artifact (Xcode)
-      #  uses: actions/upload-artifact@v3.1.2
-      #  if: matrix.os == 'macOS-13'
-      #  with:
-      #    name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-      #    path: build/darwin/build/${{matrix.config}}
-      - name: Upload a Build Artifact (Make)
-        uses: actions/upload-artifact@v3.1.2
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          name: FalseKing-${{matrix.config}}-${{matrix.os}}-${{matrix.target}}
-      - name: Upload a Build Artifact (macOS)
-        uses: actions/upload-artifact@v3.1.2
-        if: matrix.os == 'macOS-13'
-        with:
-          name: FalseKing-${{matrix.config}}-${{matrix.os}}-Universal
+    - uses: actions/checkout@v3
+    - name: Set up nightly Rust
+      run: |
+           rustup toolchain add nightly
+           rustup default nightly
+
+#    - name: Install fleet
+#      run: cargo install fleet-rs sccache
+
+    - name: Build
+      run: cargo build --profile ${{ matrix.build-type }} --verbose --out-dir out
+      
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: false_king-${{ matrix.build-type }}-${{ matrix.os }}
+        path: out

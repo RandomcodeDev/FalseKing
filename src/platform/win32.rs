@@ -1,12 +1,14 @@
 use super::PlatformBackend;
-use log::info;
-use std::{ffi, mem, ptr};
+use log::{error, info};
+use std::{ffi, mem, ptr, sync::Arc};
+use vulkano as vk;
 use windows::Win32::{
     Foundation::*, Graphics::Gdi::*, System::LibraryLoader::*, UI::WindowsAndMessaging::*,
 };
 use windows_core::*;
 
 pub struct Win32Backend {
+    hinstance: HINSTANCE,
     window: HWND,
     width: i32,
     height: i32,
@@ -46,7 +48,7 @@ impl Win32Backend {
         let height = 576;
 
         info!("Creating {}x{} window {}", width, height, crate::GAME_NAME);
-        
+
         let title = ffi::CString::new(crate::GAME_NAME).unwrap();
 
         let window = unsafe {
@@ -69,6 +71,7 @@ impl Win32Backend {
         unsafe { ShowWindow(window, SW_SHOWNORMAL) };
 
         Some(Self {
+            hinstance,
             window,
             width,
             height,
@@ -203,5 +206,33 @@ impl PlatformBackend for Win32Backend {
 
     fn is_focused(&self) -> bool {
         self.focused
+    }
+
+    fn enable_vulkan_extensions(&self, extensions: &mut vulkano::instance::InstanceExtensions) {
+        extensions.khr_win32_surface = true;
+    }
+
+    fn check_vulkan_present_support(
+        &self,
+        device: Arc<vk::device::physical::PhysicalDevice>,
+        device_name: &String,
+        queue_family_index: u32,
+    ) -> Option<bool> {
+        device.win32_presentation_support(queue_family_index).ok()
+    }
+
+    fn create_vulkan_surface(
+        &self,
+        instance: std::sync::Arc<vulkano::instance::Instance>,
+    ) -> std::result::Result<Arc<vulkano::swapchain::Surface>, vk::swapchain::SurfaceCreationError>
+    {
+        unsafe {
+            vk::swapchain::Surface::from_win32(
+                instance,
+                self.hinstance.0 as *const ffi::c_void,
+                self.window.0 as *const ffi::c_void,
+                None,
+            )
+        }
     }
 }
