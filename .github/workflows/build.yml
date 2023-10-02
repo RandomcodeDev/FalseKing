@@ -33,7 +33,7 @@ jobs:
 #      run: cargo install fleet-rs sccache
 
     - name: Build
-      run: cargo build --profile ${{ matrix.build-type }} --verbose --out-dir out
+      run: cargo build --profile ${{ matrix.build-type }} --verbose --out-dir out -Z unstable-options
       
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
