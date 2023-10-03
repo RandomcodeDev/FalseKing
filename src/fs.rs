@@ -141,46 +141,46 @@ pub trait FileSystem {
     fn create_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
 
     /// Create a hard link
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(original: P, link: Q) -> io::Result<()>;
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, original: P, link: Q) -> io::Result<()>;
 
     /// Get the metadata of a path
-    fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata>;
+    fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
 
     /// Read a file into a vector
-    fn read<P: AsRef<Path>>(path: P) -> io::Result<Vec<u8>>;
+    fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>>;
 
     /// Directory iterator
-    fn read_dir<P: AsRef<Path>>(path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>>;
+    fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>>;
 
     /// Get the path a symlink points to
-    fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf>;
+    fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf>;
 
     /// Read a file into a string
-    fn read_to_string<P: AsRef<Path>>(path: P) -> io::Result<String>;
+    fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String>;
 
     /// Remove an empty directory
-    fn remove_dir<P: AsRef<Path>>(path: P) -> io::Result<()>;
+    fn remove_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
 
     /// Annihilate a directory tree
-    fn remove_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()>;
+    fn remove_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
 
     /// Remove a file
-    fn remove_file<P: AsRef<Path>>(path: P) -> io::Result<()>;
+    fn remove_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
 
     /// Rename a file
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(to: P, from: Q) -> io::Result<()>;
+    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&self, to: P, from: Q) -> io::Result<()>;
 
     /// Change permissions
-    fn set_permissions<P: AsRef<Path>>(path: P, permissions: Permissions) -> io::Result<()>;
+    fn set_permissions<P: AsRef<Path>>(&self, path: P, permissions: Permissions) -> io::Result<()>;
 
     /// Create a symlink (not deprecated)
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()>;
+    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<()>;
 
     /// Get metadata of a file, not following symlinks
-    fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata>;
+    fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
 
     /// Write a slice to a file
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> io::Result<()>;
+    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&self, path: P, contents: C) -> io::Result<()>;
 }
 
 /// FileSystem using std::fs
@@ -213,11 +213,11 @@ impl FileSystem for StdFileSystem {
         std::fs::create_dir_all(path)
     }
 
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(original: P, link: Q) -> io::Result<()> {
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, original: P, link: Q) -> io::Result<()> {
         std::fs::hard_link(original, link)
     }
 
-    fn metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
+    fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata> {
         match std::fs::metadata(path) {
             Ok(path) => {
                 Ok(path.into())
@@ -226,43 +226,43 @@ impl FileSystem for StdFileSystem {
         }
     }
 
-    fn read<P: AsRef<Path>>(path: P) -> io::Result<Vec<u8>> {
+    fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>> {
         std::fs::read(path)
     }
 
-    fn read_dir<P: AsRef<Path>>(_path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
+    fn read_dir<P: AsRef<Path>>(&self, _path: P) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
         Err(io::Error::new(io::ErrorKind::Unsupported, "read_dir is not implemented here yet"))
     }
 
-    fn read_link<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
+    fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
         std::fs::read_link(path)
     }
 
-    fn read_to_string<P: AsRef<Path>>(path: P) -> io::Result<String> {
+    fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String> {
         std::fs::read_to_string(path)
     }
 
-    fn remove_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {
+    fn remove_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
         std::fs::remove_dir(path)
     }
 
-    fn remove_dir_all<P: AsRef<Path>>(path: P) -> io::Result<()> {
+    fn remove_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
         std::fs::remove_dir_all(path)
     }
 
-    fn remove_file<P: AsRef<Path>>(path: P) -> io::Result<()> {
+    fn remove_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
         std::fs::remove_file(path)
     }
 
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(to: P, from: Q) -> io::Result<()> {
+    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&self, to: P, from: Q) -> io::Result<()> {
         std::fs::rename(from, to)
     }
 
-    fn set_permissions<P: AsRef<Path>>(path: P, perm: Permissions) -> io::Result<()> {
+    fn set_permissions<P: AsRef<Path>>(&self, path: P, perm: Permissions) -> io::Result<()> {
         std::fs::set_permissions(path, perm)
     }
 
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> io::Result<()> {
+    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<()> {
         #[cfg(windows)]
         match Self::metadata(&from) {
             Ok(metadata) => {
@@ -278,7 +278,7 @@ impl FileSystem for StdFileSystem {
         std::os::unix::fs::symlink(from, to)
     }
 
-    fn symlink_metadata<P: AsRef<Path>>(path: P) -> io::Result<Metadata> {
+    fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata> {
         match std::fs::symlink_metadata(path) {
             Ok(path) => {
                 Ok(path.into())
@@ -287,7 +287,7 @@ impl FileSystem for StdFileSystem {
         }
     }
 
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> io::Result<()> {
+    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&self, path: P, contents: C) -> io::Result<()> {
         std::fs::write(path, contents)
     }
 }

@@ -47,7 +47,7 @@ impl Win32Backend {
         let width = 1024;
         let height = 576;
 
-        info!("Creating {}x{} window {}", width, height, crate::GAME_NAME);
+        info!("Creating {width}x{height} window {}", crate::GAME_NAME);
 
         let title = ffi::CString::new(crate::GAME_NAME).unwrap();
 

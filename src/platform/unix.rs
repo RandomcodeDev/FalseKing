@@ -27,7 +27,7 @@ impl UnixBackend {
         let width: u16 = 1024;
         let height: u16 = 576;
 
-        info!("Creating {}x{} window {}", width, height, crate::GAME_NAME);
+        info!("Creating {width}x{height} window {}", crate::GAME_NAME);
 
         let window_cookie = connection.send_request_checked(&x::CreateWindow {
             depth: x::COPY_FROM_PARENT as u8,
