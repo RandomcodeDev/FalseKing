@@ -199,6 +199,7 @@ impl PlatformBackend for UnixBackend {
         device_name: &String,
         queue_family_index: u32,
     ) -> Option<bool> {
+        info!("Checking if device {device_name} supports XCB presentation");
         unsafe { device.xcb_presentation_support(queue_family_index, self.connection.get_raw_conn(), self.window.resource_id()).ok() }
     }
 
@@ -206,6 +207,7 @@ impl PlatformBackend for UnixBackend {
         &self,
         instance: Arc<vulkano::instance::Instance>,
     ) -> Result<Arc<vulkano::swapchain::Surface>, vulkano::swapchain::SurfaceCreationError> {
+        info!("Creating XCB surface");
         unsafe { vulkano::swapchain::Surface::from_xcb(instance, self.connection.get_raw_conn(), self.window.resource_id(), None) }
     }
 }

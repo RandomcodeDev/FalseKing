@@ -10,14 +10,14 @@ use vulkano::{
 pub struct VkRenderer {}
 
 impl VkRenderer {
-    pub fn new(_backend: &dyn PlatformBackend) -> Option<Box<Self>> {
+    pub fn new(backend: &dyn PlatformBackend) -> Option<Box<Self>> {
         info!("Initializing Vulkan renderer");
 
         let mut instance_extensions = InstanceExtensions {
             khr_surface: true,
             ..Default::default()
         };
-        _backend.enable_vulkan_extensions(&mut instance_extensions);
+        backend.enable_vulkan_extensions(&mut instance_extensions);
 
         let instance = match Self::create_instance(instance_extensions) {
             Ok(instance) => instance,
@@ -26,6 +26,16 @@ impl VkRenderer {
                 return None;
             }
         };
+
+        let surface = match backend.create_vulkan_surface(instance.clone()) {
+            Ok(surface) => surface,
+            Err(err) => {
+                error!("Failed to create surface: {err}");
+                return None;
+            }
+        };
+
+        
 
         Some(Box::new(Self {}))
     }

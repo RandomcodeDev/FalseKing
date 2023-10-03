@@ -217,6 +217,7 @@ impl PlatformBackend for Win32Backend {
         device_name: &String,
         queue_family_index: u32,
     ) -> Option<bool> {
+        info!("Checking if device {device_name} supports Windows presentation");
         device.win32_presentation_support(queue_family_index).ok()
     }
 
@@ -227,6 +228,7 @@ impl PlatformBackend for Win32Backend {
         Arc<vulkano::swapchain::Surface>,
         vulkano::swapchain::SurfaceCreationError,
     > {
+        info!("Creating Windows surface");
         unsafe {
             vulkano::swapchain::Surface::from_win32(
                 instance,
