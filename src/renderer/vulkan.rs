@@ -7,9 +7,9 @@ use vulkano::{
     instance::InstanceExtensions, Version, VulkanLibrary,
 };
 
-pub struct VulkanRenderer {}
+pub struct VkRenderer {}
 
-impl VulkanRenderer {
+impl VkRenderer {
     pub fn new(_backend: &dyn PlatformBackend) -> Option<Box<Self>> {
         info!("Initializing Vulkan renderer");
 
@@ -33,7 +33,7 @@ impl VulkanRenderer {
     fn create_instance(
         extensions: InstanceExtensions,
     ) -> Result<Arc<Instance>, InstanceCreationError> {
-        info!("Creating instance with extensions {extensions:?}");;
+        info!("Creating instance with extensions {extensions:?}");
 
         let library = match VulkanLibrary::new() {
             Ok(library) => library,
@@ -50,7 +50,7 @@ impl VulkanRenderer {
     }
 }
 
-impl Renderer for VulkanRenderer {
+impl Renderer for VkRenderer {
     fn begin_frame(&mut self) {}
 
     fn end_frame(&mut self) {}

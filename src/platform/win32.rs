@@ -1,7 +1,6 @@
 use super::PlatformBackend;
 use log::{error, info};
 use std::{ffi, mem, ptr, sync::Arc};
-use vulkano as vk;
 use windows::Win32::{
     Foundation::*, Graphics::Gdi::*, System::LibraryLoader::*, UI::WindowsAndMessaging::*,
 };
@@ -214,7 +213,7 @@ impl PlatformBackend for Win32Backend {
 
     fn check_vulkan_present_support(
         &self,
-        device: Arc<vk::device::physical::PhysicalDevice>,
+        device: Arc<vulkano::device::physical::PhysicalDevice>,
         device_name: &String,
         queue_family_index: u32,
     ) -> Option<bool> {
@@ -224,10 +223,12 @@ impl PlatformBackend for Win32Backend {
     fn create_vulkan_surface(
         &self,
         instance: std::sync::Arc<vulkano::instance::Instance>,
-    ) -> std::result::Result<Arc<vulkano::swapchain::Surface>, vk::swapchain::SurfaceCreationError>
-    {
+    ) -> std::result::Result<
+        Arc<vulkano::swapchain::Surface>,
+        vulkano::swapchain::SurfaceCreationError,
+    > {
         unsafe {
-            vk::swapchain::Surface::from_win32(
+            vulkano::swapchain::Surface::from_win32(
                 instance,
                 self.hinstance.0 as *const ffi::c_void,
                 self.window.0 as *const ffi::c_void,

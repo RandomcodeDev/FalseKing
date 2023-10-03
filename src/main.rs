@@ -2,7 +2,6 @@
     all(windows, not(any(build = "debug", feature = "release_log"))),
     windows_subsystem = "windows"
 )]
-
 #![feature(fs_try_exists)]
 
 mod fs;
@@ -35,8 +34,7 @@ fn main() {
 
     let mut backend = platform::get_backend_for_platform().unwrap();
 
-    let mut renderer =
-        renderer::get_renderer(&backend, args.render_api);
+    let mut renderer = renderer::get_renderer(&backend, args.render_api);
 
     //let world = World::default();
 

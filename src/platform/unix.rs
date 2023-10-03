@@ -1,7 +1,7 @@
-use log::info;
-use std::mem;
 use super::PlatformBackend;
-use xcb::x;
+use log::info;
+use std::{mem, sync::Arc};
+use xcb::{x, Xid, XidNew};
 
 pub struct UnixBackend {
     connection: xcb::Connection,
@@ -10,7 +10,7 @@ pub struct UnixBackend {
     height: u16,
     closed: bool,
     resized: bool,
-    focused: bool
+    focused: bool,
 }
 
 impl UnixBackend {
@@ -93,7 +93,7 @@ impl UnixBackend {
             window,
             property: wm_protocols,
             r#type: x::ATOM_ATOM,
-            data: &[wm_delete_window]
+            data: &[wm_delete_window],
         }));
 
         Ok(Self {
@@ -103,14 +103,14 @@ impl UnixBackend {
             height,
             closed: false,
             resized: false,
-            focused: false
+            focused: false,
         })
     }
 
     fn get_intern_atom(connection: &xcb::Connection, name: &str) -> xcb::Result<x::Atom> {
         let cookie = connection.send_request(&x::InternAtom {
             only_if_exists: true,
-            name: name.as_bytes()
+            name: name.as_bytes(),
         });
 
         Ok(connection.wait_for_reply(cookie)?.atom())
@@ -122,7 +122,7 @@ impl PlatformBackend for UnixBackend {
         info!("Shutting down Unix backend");
 
         self.connection.send_request(&x::DestroyWindow {
-            window: self.window
+            window: self.window,
         });
     }
 
@@ -154,8 +154,10 @@ impl PlatformBackend for UnixBackend {
                 x::Event::ClientMessage(ev) => {
                     if let x::ClientMessageData::Data32(atom) = ev.data() {
                         info!("Window closed");
-                        if let Ok(delete_atom) = Self::get_intern_atom(&self.connection, "WM_DELETE_WINDOW") {
-                            let atom = unsafe { mem::transmute::<u32, x::Atom>(atom[0]) };
+                        if let Ok(delete_atom) =
+                            Self::get_intern_atom(&self.connection, "WM_DELETE_WINDOW")
+                        {
+                            let atom = unsafe { x::Atom::new(atom[0]) };
                             self.closed = atom == delete_atom;
                         }
                     }
@@ -185,5 +187,25 @@ impl PlatformBackend for UnixBackend {
 
     fn is_focused(&self) -> bool {
         self.focused
+    }
+
+    fn enable_vulkan_extensions(&self, extensions: &mut vulkano::instance::InstanceExtensions) {
+        extensions.khr_xcb_surface = true;
+    }
+
+    fn check_vulkan_present_support(
+        &self,
+        device: Arc<vulkano::device::physical::PhysicalDevice>,
+        device_name: &String,
+        queue_family_index: u32,
+    ) -> Option<bool> {
+        unsafe { device.xcb_presentation_support(queue_family_index, self.connection.get_raw_conn(), self.window.resource_id()).ok() }
+    }
+
+    fn create_vulkan_surface(
+        &self,
+        instance: Arc<vulkano::instance::Instance>,
+    ) -> Result<Arc<vulkano::swapchain::Surface>, vulkano::swapchain::SurfaceCreationError> {
+        unsafe { vulkano::swapchain::Surface::from_xcb(instance, self.connection.get_raw_conn(), self.window.resource_id(), None) }
     }
 }
