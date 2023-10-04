@@ -34,8 +34,13 @@ impl VkRenderer {
                 return None;
             }
         };
-
         
+        let device_extensions = DeviceExtensions {
+            khr_swapchain: true,
+            ..Default::default()
+        };
+
+        let (physical_device, 
 
         Some(Box::new(Self {}))
     }
