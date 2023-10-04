@@ -271,7 +271,7 @@ impl FileSystem for StdFileSystem {
 
     fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<()> {
         #[cfg(windows)]
-        match Self::metadata(&from) {
+        match self.metadata(&from) {
             Ok(metadata) => {
                 if metadata.is_dir {
                     std::os::windows::fs::symlink_dir(from, to)
