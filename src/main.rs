@@ -32,8 +32,8 @@ fn main() {
 
     let args = Args::parse();
 
+    //let filesystem = fs::StdFileSystem::new();
     let mut backend = platform::get_backend_for_platform().unwrap();
-
     let mut renderer = renderer::get_renderer(&backend, args.render_api);
 
     //let world = World::default();
@@ -45,7 +45,6 @@ fn main() {
     }
 
     renderer.shutdown();
-
     backend.shutdown();
 }
 

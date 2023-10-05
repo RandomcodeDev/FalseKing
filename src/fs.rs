@@ -7,6 +7,7 @@ use std::{
 };
 
 /// std::fs::Metadata but transparent
+#[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub struct Metadata {
     file_type: FileType,
@@ -20,6 +21,7 @@ pub struct Metadata {
     created: SystemTime,
 }
 
+#[allow(dead_code)]
 impl Metadata {
     pub fn new(
         file_type: FileType,
@@ -95,6 +97,7 @@ impl From<std::fs::Metadata> for Metadata {
 #[derive(Debug)]
 pub struct DirEntry(PathBuf, Metadata, FileType);
 
+#[allow(dead_code)]
 impl DirEntry {
     pub fn path(&self) -> PathBuf {
         self.0.clone()
@@ -190,7 +193,7 @@ pub trait FileSystem {
 pub struct StdFileSystem(());
 
 impl StdFileSystem {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self(())
     }
 }

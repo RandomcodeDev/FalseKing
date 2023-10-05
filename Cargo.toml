@@ -13,6 +13,7 @@ clap = { version = "4.4.5", features = ["derive"] }
 fern = { version = "0.6.2", features = ["colored"] }
 legion = "0.4.0"
 log = "0.4.20"
+pci-ids = "0.2.5"
 
 [target.'cfg(target_family = "windows")'.dependencies]
 windows = { version = "0.51.1", features = ["Win32_Foundation", "Win32_Graphics_Gdi", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input", "Win32_System", "Win32_System_LibraryLoader"] }
@@ -22,7 +23,6 @@ windows-core = "0.51.1"
 metal = "0.26.0"
 
 [target.'cfg(not(target_family = "apple"))'.dependencies]
-azul_glium = "0.22.0"
 vulkano = "0.33.0"
 vulkano-shaders = "0.33.0"
 
