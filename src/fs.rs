@@ -238,10 +238,7 @@ impl FileSystem for StdFileSystem {
         &self,
         _path: P,
     ) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
-        Err(io::Error::new(
-            io::ErrorKind::Unsupported,
-            "read_dir is not implemented here yet",
-        ))
+        todo!()
     }
 
     fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {

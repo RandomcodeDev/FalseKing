@@ -1,75 +1,30 @@
-use super::Renderer;
+use super::{Gpu, VkRenderer};
 use crate::platform::PlatformBackend;
 use log::{error, info};
 use pci_ids::FromId;
 use std::sync::Arc;
 use vulkano::{
-    device::physical::PhysicalDevice, device::physical::PhysicalDeviceError,
-    device::physical::PhysicalDeviceType, device::Device, device::DeviceCreateInfo,
-    device::DeviceCreationError, device::DeviceExtensions, device::Queue, device::QueueFlags,
-    instance::Instance, instance::InstanceCreateInfo, instance::InstanceCreationError,
-    instance::InstanceExtensions, swapchain::Surface, Version, VulkanLibrary,
+    device::physical::PhysicalDevice,
+    device::physical::PhysicalDeviceError,
+    device::physical::PhysicalDeviceType,
+    device::Device,
+    device::DeviceCreateInfo,
+    device::DeviceCreationError,
+    device::DeviceExtensions,
+    device::Queue,
+    device::QueueCreateInfo,
+    device::QueueFlags,
+    image::SwapchainImage,
+    instance::Instance,
+    instance::InstanceCreateInfo,
+    instance::InstanceCreationError,
+    instance::InstanceExtensions,
+    swapchain::{Surface, Swapchain, SwapchainCreationError},
+    Version, VulkanLibrary,
 };
 
-struct Gpu {
-    device: Arc<PhysicalDevice>,
-    queue_family_index: u32,
-}
-
-pub struct VkRenderer {}
-
 impl VkRenderer {
-    pub fn new(backend: &dyn PlatformBackend) -> Option<Box<Self>> {
-        info!("Initializing Vulkan renderer");
-
-        let mut instance_extensions = InstanceExtensions {
-            khr_surface: true,
-            ..Default::default()
-        };
-        backend.enable_vulkan_extensions(&mut instance_extensions);
-
-        let instance = match Self::create_instance(instance_extensions) {
-            Ok(instance) => instance,
-            Err(err) => {
-                error!("Failed to create instance: {err}");
-                return None;
-            }
-        };
-
-        let surface = match backend.create_vulkan_surface(instance.clone()) {
-            Ok(surface) => surface,
-            Err(err) => {
-                error!("Failed to create surface: {err}");
-                return None;
-            }
-        };
-
-        let device_extensions = DeviceExtensions {
-            khr_swapchain: true,
-            ..Default::default()
-        };
-
-        let (gpus, gpu_index) =
-            match Self::choose_gpu(instance.clone(), &device_extensions, surface.clone()) {
-                Ok(pair) => pair,
-                Err(err) => {
-                    error!("Failed to find usable GPU: {err}");
-                    return None;
-                }
-            };
-
-        let (device, mut queues) = match Self::create_device(&gpus[0], device_extensions) {
-            Ok(pair) => pair,
-            Err(err) => {
-                error!("Failed to create device: {err}");
-                return None;
-            }
-        };
-
-        Some(Box::new(Self {}))
-    }
-
-    fn create_instance(
+    pub(super) fn create_instance(
         extensions: InstanceExtensions,
     ) -> Result<Arc<Instance>, InstanceCreationError> {
         info!("Creating instance with extensions {extensions:?}");
@@ -88,14 +43,12 @@ impl VkRenderer {
         Instance::new(library, create_info)
     }
 
-    fn choose_gpu(
+    pub(super) fn choose_gpu(
         instance: Arc<Instance>,
         device_extensions: &DeviceExtensions,
         surface: Arc<Surface>,
     ) -> Result<(Vec<Gpu>, u64), PhysicalDeviceError> {
         info!("Finding usable GPUs");
-
-        let mut gpus = Vec::new();
 
         let mut devices: Vec<Gpu> = instance
             .enumerate_physical_devices()?
@@ -142,22 +95,22 @@ impl VkRenderer {
                 properties.device_id,
                 match pci_ids::Vendor::from_id(properties.vendor_id as u16) {
                     Some(vendor) => vendor.name(),
-                    None => "unknown"
+                    None => "unknown",
                 },
                 match pci_ids::Device::from_vid_pid(
                     properties.vendor_id as u16,
                     properties.device_id as u16
                 ) {
                     Some(device) => device.name(),
-                    None => "unknown"
+                    None => "unknown",
                 }
             );
         });
 
-        Ok((gpus, 0))
+        Ok((devices, 0))
     }
 
-    fn create_device(
+    pub(super) fn create_device(
         gpu: &Gpu,
         device_extensions: DeviceExtensions,
     ) -> Result<
@@ -167,14 +120,39 @@ impl VkRenderer {
         ),
         DeviceCreationError,
     > {
-        Device::new(gpu.device.clone(), DeviceCreateInfo::default())
+        info!("Creating device from GPU {}", gpu);
+
+        Device::new(
+            gpu.device.clone(),
+            DeviceCreateInfo {
+                enabled_extensions: device_extensions,
+                queue_create_infos: vec![QueueCreateInfo {
+                    queue_family_index: gpu.queue_family_index,
+                    ..Default::default()
+                }],
+                ..Default::default()
+            },
+        )
     }
-}
 
-impl Renderer for VkRenderer {
-    fn begin_frame(&mut self) {}
+    pub(super) fn create_swapchain(
+        backend: &dyn PlatformBackend,
+        device: Device,
+        surface: Arc<Surface>,
+    ) -> Result<(Arc<Swapchain>, Vec<Arc<SwapchainImage>>), SwapchainCreationError> {
+        let capabilities = match device
+            .physical_device()
+            .surface_capabilities(surface.as_ref(), Default::default())
+        {
+            Ok(capabilities) => capabilities,
+            Err(err) => {
+                error!("Failed to get capabilities for device: {err}");
+                return Err(SwapchainCreationError::DeviceLost); // close enough
+            }
+        };
 
-    fn end_frame(&mut self) {}
-
-    fn shutdown(&mut self) {}
+        let usage = capabilities.supported_usage_flags;
+        let alpha = capabilities.supported_composite_alpha.clone().into_iter().next();
+        Swapchain::new()
+    }
 }
