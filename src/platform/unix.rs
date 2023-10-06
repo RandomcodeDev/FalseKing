@@ -193,16 +193,6 @@ impl PlatformBackend for UnixBackend {
         extensions.khr_xcb_surface = true;
     }
 
-    fn check_vulkan_present_support(
-        &self,
-        device: Arc<vulkano::device::physical::PhysicalDevice>,
-        device_name: &String,
-        queue_family_index: u32,
-    ) -> Option<bool> {
-        info!("Checking if device {device_name} supports XCB presentation");
-        unsafe { device.xcb_presentation_support(queue_family_index, self.connection.get_raw_conn(), self.window.resource_id()).ok() }
-    }
-
     fn create_vulkan_surface(
         &self,
         instance: Arc<vulkano::instance::Instance>,

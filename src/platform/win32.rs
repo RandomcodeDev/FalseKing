@@ -46,6 +46,21 @@ impl Win32Backend {
         let width = 1024;
         let height = 576;
 
+        // Make the window 1024x576 internally
+        let mut client_area = RECT {
+            left: 0,
+            right: width,
+            top: 0,
+            bottom: height,
+        };
+        unsafe {
+            AdjustWindowRect(
+                ptr::addr_of_mut!(client_area),
+                WS_OVERLAPPEDWINDOW,
+                BOOL(false as i32),
+            )
+        };
+
         info!("Creating {width}x{height} window {}", crate::GAME_NAME);
 
         let title = ffi::CString::new(crate::GAME_NAME).unwrap();
@@ -58,8 +73,8 @@ impl Win32Backend {
                 WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
-                width,
-                height,
+                client_area.right - client_area.left,
+                client_area.bottom - client_area.top,
                 HWND(0),
                 HMENU(0),
                 hinstance,
@@ -209,16 +224,6 @@ impl PlatformBackend for Win32Backend {
 
     fn enable_vulkan_extensions(&self, extensions: &mut vulkano::instance::InstanceExtensions) {
         extensions.khr_win32_surface = true;
-    }
-
-    fn check_vulkan_present_support(
-        &self,
-        device: Arc<vulkano::device::physical::PhysicalDevice>,
-        device_name: &String,
-        queue_family_index: u32,
-    ) -> Option<bool> {
-        info!("Checking if device {device_name} supports Windows presentation");
-        device.win32_presentation_support(queue_family_index).ok()
     }
 
     fn create_vulkan_surface(
