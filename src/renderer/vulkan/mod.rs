@@ -1,8 +1,11 @@
 use super::Renderer;
 use crate::platform::PlatformBackend;
 use log::{error, info};
-use vulkano::{device::{physical::PhysicalDevice, DeviceExtensions}, instance::InstanceExtensions};
 use std::{fmt::Display, sync::Arc};
+use vulkano::{
+    device::{physical::PhysicalDevice, DeviceExtensions},
+    instance::InstanceExtensions,
+};
 
 // boilerplate stuff
 mod stuff;
@@ -70,13 +73,14 @@ impl VkRenderer {
 
         let queue = queues.next();
 
-        let (mut swapchain, images) = match Self::create_swapchain(backend, device.clone()) {
-            Ok(pair) => pair,
-            Err(err) => {
-                error!("Failed to create swapchain: {err}");
-                return None;
-            }
-        };
+        let (mut swapchain, images) =
+            match Self::create_swapchain(backend, device.clone(), surface.clone()) {
+                Ok(pair) => pair,
+                Err(err) => {
+                    error!("Failed to create swapchain: {err}");
+                    return None;
+                }
+            };
 
         Some(Box::new(Self {}))
     }

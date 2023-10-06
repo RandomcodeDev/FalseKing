@@ -19,7 +19,7 @@ use vulkano::{
     instance::InstanceCreateInfo,
     instance::InstanceCreationError,
     instance::InstanceExtensions,
-    swapchain::{Surface, Swapchain, SwapchainCreationError},
+    swapchain::{Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError},
     Version, VulkanLibrary,
 };
 
@@ -137,9 +137,11 @@ impl VkRenderer {
 
     pub(super) fn create_swapchain(
         backend: &dyn PlatformBackend,
-        device: Device,
+        device: Arc<Device>,
         surface: Arc<Surface>,
     ) -> Result<(Arc<Swapchain>, Vec<Arc<SwapchainImage>>), SwapchainCreationError> {
+        info!("Creating swapchain");
+
         let capabilities = match device
             .physical_device()
             .surface_capabilities(surface.as_ref(), Default::default())
@@ -151,8 +153,37 @@ impl VkRenderer {
             }
         };
 
-        let usage = capabilities.supported_usage_flags;
-        let alpha = capabilities.supported_composite_alpha.clone().into_iter().next();
-        Swapchain::new()
+        let image_usage = capabilities.supported_usage_flags;
+        let composite_alpha = match capabilities
+            .supported_composite_alpha
+            .clone()
+            .into_iter()
+            .next() {
+                Some(alpha) => alpha,
+                None => {
+                    error!("Failed to get composite alpha for swapchain");
+                    return Err(SwapchainCreationError::DeviceLost); // not close enough
+                }
+            };
+
+        let image_format = Some(
+            device
+                .physical_device()
+                .surface_formats(&surface, Default::default())
+                .unwrap()[0]
+                .0,
+        );
+
+        let handle = backend.get_handle();
+        let image_extent: [u32; 2] = [backend.get_width(), backend.get_height()];
+
+        Swapchain::new(device.clone(), surface.clone(), SwapchainCreateInfo {
+            min_image_count: capabilities.min_image_count,
+            image_format,
+            image_extent,
+            image_usage,
+            composite_alpha,
+            ..Default::default()
+        })
     }
 }
