@@ -23,6 +23,8 @@ pub struct Metadata {
 
 #[allow(dead_code)]
 impl Metadata {
+    // This is for parity with std::fs
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         file_type: FileType,
         is_dir: bool,
@@ -108,7 +110,7 @@ impl DirEntry {
     }
 
     pub fn file_type(&self) -> io::Result<FileType> {
-        Ok(self.2.clone())
+        Ok(self.2)
     }
 
     pub fn file_name(&self) -> OsString {

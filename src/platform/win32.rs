@@ -1,6 +1,6 @@
 use super::PlatformBackend;
-use log::{error, info};
-use std::{ffi, mem, ptr, sync::Arc};
+use log::info;
+use std::{ffi, mem, ptr, sync::{Arc, Mutex}};
 use windows::Win32::{
     Foundation::*, Graphics::Gdi::*, System::LibraryLoader::*, UI::WindowsAndMessaging::*,
 };
@@ -17,7 +17,7 @@ pub struct Win32Backend {
 }
 
 impl Win32Backend {
-    pub fn new() -> Option<Self> {
+    pub fn new() -> Option<Arc<Mutex<Self>>> {
         info!("Initializing Windows backend");
 
         let hinstance = unsafe {
@@ -53,7 +53,7 @@ impl Win32Backend {
             top: 0,
             bottom: height,
         };
-        unsafe {
+        let _ = unsafe {
             AdjustWindowRect(
                 ptr::addr_of_mut!(client_area),
                 WS_OVERLAPPEDWINDOW,
@@ -84,7 +84,7 @@ impl Win32Backend {
 
         unsafe { ShowWindow(window, SW_SHOWNORMAL) };
 
-        Some(Self {
+        Some(Arc::new(Mutex::new(Self {
             hinstance,
             window,
             width,
@@ -92,7 +92,7 @@ impl Win32Backend {
             closed: false,
             resized: false,
             focused: false,
-        })
+        })))
     }
 
     extern "system" fn window_procedure(
@@ -154,7 +154,7 @@ impl Win32Backend {
     unsafe fn get_self_ptr<'a>(window: HWND) -> Option<&'a mut Self> {
         match GetWindowLongPtrA(window, GWLP_USERDATA) {
             0 => {
-                return None;
+                None
             }
             addr => (addr as *mut Self).as_mut(),
         }
@@ -180,7 +180,7 @@ impl Win32Backend {
 }
 
 impl PlatformBackend for Win32Backend {
-    fn shutdown(self) {
+    fn shutdown(&mut self) {
         info!("Shutting down Windows backend");
 
         unsafe {
@@ -199,7 +199,7 @@ impl PlatformBackend for Win32Backend {
             }
         }
 
-        return !self.closed;
+        !self.closed
     }
 
     fn get_handle(&self) -> usize {

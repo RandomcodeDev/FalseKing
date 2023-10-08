@@ -33,19 +33,19 @@ fn main() {
     let args = Args::parse();
 
     //let filesystem = fs::StdFileSystem::new();
-    let mut backend = platform::get_backend_for_platform().unwrap();
-    let mut renderer = renderer::get_renderer(&backend, args.render_api);
+    let backend = platform::get_backend_for_platform().unwrap();
+    let renderer = renderer::get_renderer(backend.clone(), args.render_api);
 
     //let world = World::default();
 
-    while backend.update() {
-        renderer.begin_frame();
+    while backend.try_lock().unwrap().update() {
+        renderer.try_lock().unwrap().begin_frame();
 
-        renderer.end_frame();
+        renderer.try_lock().unwrap().end_frame();
     }
 
-    renderer.shutdown();
-    backend.shutdown();
+    renderer.try_lock().unwrap().shutdown();
+    backend.try_lock().unwrap().shutdown();
 }
 
 fn setup_logger() -> Result<(), fern::InitError> {
@@ -63,7 +63,7 @@ fn setup_logger() -> Result<(), fern::InitError> {
             let dt = Local::now();
             out.finish(format_args!(
                 "[{} \x1B[{}m{}\x1B[0m {}] {}",
-                dt.format("%Y-%m-%d %H:%M:%S"),
+                dt.format("%Y/%m/%d %H:%M:%S"),
                 colors_line.get_color(&record.level()).to_fg_str(),
                 record.level(),
                 record.target(),

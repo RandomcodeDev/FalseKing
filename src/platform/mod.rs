@@ -3,11 +3,11 @@ mod unix;
 #[cfg(windows)]
 mod win32;
 
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 pub trait PlatformBackend {
     /// Clean up the backend
-    fn shutdown(self);
+    fn shutdown(&mut self);
 
     /// Handle events
     fn update(&mut self) -> bool;
@@ -40,7 +40,7 @@ pub trait PlatformBackend {
 }
 
 /// Creates an instance of the appropriate backend for the platform
-pub fn get_backend_for_platform() -> Option<impl PlatformBackend> {
+pub fn get_backend_for_platform() -> Option<Arc<Mutex<impl PlatformBackend>>> {
     #[cfg(windows)]
     return win32::Win32Backend::new();
     #[cfg(unix)]

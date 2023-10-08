@@ -1,3 +1,5 @@
+use std::sync::{Arc, Mutex};
+
 use super::Renderer;
 use crate::platform::PlatformBackend;
 //use windows::core::Result;
@@ -5,8 +7,8 @@ use crate::platform::PlatformBackend;
 pub struct Dx12Renderer {}
 
 impl Dx12Renderer {
-    pub fn new(_backend: &dyn PlatformBackend) -> Option<Box<Self>> {
-        Some(Box::new(Self {}))
+    pub fn new(_backend: Arc<Mutex<dyn PlatformBackend>>) -> Option<Arc<Mutex<Self>>> {
+        Some(Arc::new(Mutex::new(Self {})))
     }
 }
 

@@ -5,10 +5,10 @@ mod metal;
 #[cfg(not(apple))]
 mod vulkan;
 
-use std::fmt::Display;
+use std::{fmt::Display, sync::{Arc, Mutex}};
 
 use crate::platform::PlatformBackend;
-use log::{error, info};
+use log::error;
 
 #[derive(Clone, clap::ValueEnum)]
 pub enum RenderApi {
@@ -50,7 +50,7 @@ pub trait Renderer {
 }
 
 /// Creates an instance of the requested backend, or the first one that initializes successfully
-pub fn get_renderer(backend: &dyn PlatformBackend, api: Option<RenderApi>) -> Box<dyn Renderer> {
+pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<RenderApi>) -> Arc<Mutex<dyn Renderer>> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
     if let Some(api) = api {

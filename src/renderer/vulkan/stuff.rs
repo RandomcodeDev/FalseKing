@@ -2,9 +2,8 @@ use super::{Gpu, VkRenderer};
 use crate::platform::PlatformBackend;
 use log::{error, info};
 use pci_ids::FromId;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use vulkano::{
-    device::physical::PhysicalDevice,
     device::physical::PhysicalDeviceError,
     device::physical::PhysicalDeviceType,
     device::Device,
@@ -14,13 +13,15 @@ use vulkano::{
     device::Queue,
     device::QueueCreateInfo,
     device::QueueFlags,
-    image::SwapchainImage,
+    image::{ImageAccess, SwapchainImage, view::ImageView},
     instance::Instance,
     instance::InstanceCreateInfo,
     instance::InstanceCreationError,
     instance::InstanceExtensions,
+    pipeline::graphics::viewport::Viewport,
+    render_pass::{Framebuffer, FramebufferCreationError, RenderPass, FramebufferCreateInfo},
     swapchain::{Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError},
-    Version, VulkanLibrary,
+    Version, VulkanLibrary, OomError,
 };
 
 impl VkRenderer {
@@ -47,12 +48,12 @@ impl VkRenderer {
         instance: Arc<Instance>,
         device_extensions: &DeviceExtensions,
         surface: Arc<Surface>,
-    ) -> Result<(Vec<Gpu>, u64), PhysicalDeviceError> {
+    ) -> Result<(Vec<Gpu>, usize), PhysicalDeviceError> {
         info!("Finding usable GPUs");
 
         let mut devices: Vec<Gpu> = instance
             .enumerate_physical_devices()?
-            .filter(|device| device.supported_extensions().contains(&device_extensions))
+            .filter(|device| device.supported_extensions().contains(device_extensions))
             .filter_map(|device| {
                 device
                     .queue_family_properties()
@@ -136,7 +137,7 @@ impl VkRenderer {
     }
 
     pub(super) fn create_swapchain(
-        backend: &dyn PlatformBackend,
+        backend: Arc<Mutex<dyn PlatformBackend>>,
         device: Arc<Device>,
         surface: Arc<Surface>,
     ) -> Result<(Arc<Swapchain>, Vec<Arc<SwapchainImage>>), SwapchainCreationError> {
@@ -149,22 +150,22 @@ impl VkRenderer {
             Ok(capabilities) => capabilities,
             Err(err) => {
                 error!("Failed to get capabilities for device: {err}");
-                return Err(SwapchainCreationError::DeviceLost); // close enough
+                return Err(SwapchainCreationError::DeviceLost);
             }
         };
 
         let image_usage = capabilities.supported_usage_flags;
         let composite_alpha = match capabilities
             .supported_composite_alpha
-            .clone()
             .into_iter()
-            .next() {
-                Some(alpha) => alpha,
-                None => {
-                    error!("Failed to get composite alpha for swapchain");
-                    return Err(SwapchainCreationError::DeviceLost); // not close enough
-                }
-            };
+            .next()
+        {
+            Some(alpha) => alpha,
+            None => {
+                error!("Failed to get composite alpha for swapchain");
+                return Err(SwapchainCreationError::DeviceLost); // not close enough
+            }
+        };
 
         let image_format = Some(
             device
@@ -174,16 +175,59 @@ impl VkRenderer {
                 .0,
         );
 
-        let handle = backend.get_handle();
+        let backend = backend.try_lock().unwrap();
         let image_extent: [u32; 2] = [backend.get_width(), backend.get_height()];
 
-        Swapchain::new(device.clone(), surface.clone(), SwapchainCreateInfo {
-            min_image_count: capabilities.min_image_count,
-            image_format,
-            image_extent,
-            image_usage,
-            composite_alpha,
-            ..Default::default()
-        })
+        Swapchain::new(
+            device.clone(),
+            surface.clone(),
+            SwapchainCreateInfo {
+                min_image_count: capabilities.min_image_count,
+                image_format,
+                image_extent,
+                image_usage,
+                composite_alpha,
+                ..Default::default()
+            },
+        )
+    }
+
+    // this one is a little ugly
+    pub(super) fn create_framebuffers(
+        images: &[Arc<SwapchainImage>],
+        render_pass: Arc<RenderPass>,
+        viewport: &mut Viewport,
+    ) -> Result<Vec<Arc<Framebuffer>>, FramebufferCreationError> {
+        let dimensions = images[0].dimensions().width_height();
+        viewport.dimensions = [dimensions[0] as f32, dimensions[1] as f32];
+
+        info!("Creating {} {}x{} framebuffers", images.len(), viewport.dimensions[0], viewport.dimensions[1]);
+
+        let framebuffers: Vec<Result<Arc<Framebuffer>, FramebufferCreationError>> = images.iter().enumerate().map(|(index, image)| {
+            let view = match ImageView::new_default(image.clone()) {
+                Ok(view) => view,
+                Err(err) => {
+                    error!("Failed to create image view {index}: {err}");
+                    return Err(FramebufferCreationError::OomError(OomError::OutOfHostMemory));
+                }
+            };
+
+            Framebuffer::new(render_pass.clone(), FramebufferCreateInfo {attachments: vec![view], ..Default::default()})
+        }).collect::<Vec<_>>();
+
+        // in order to return a Result, so other renderers get a chance if Vulkan can't be initialized
+        let mut unwrapped_framebuffers = Vec::new();
+        for (index, result) in framebuffers.iter().enumerate() {
+            let framebuffer = match result {
+                Ok(framebuffer) => framebuffer,
+                Err(err) => {
+                    error!("Failed to create framebuffer {index}: {err}");
+                    return Err(*err);
+                }
+            };
+            unwrapped_framebuffers.push(framebuffer.clone());
+        };
+
+        Ok(unwrapped_framebuffers)
     }
 }

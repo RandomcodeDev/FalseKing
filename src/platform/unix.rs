@@ -1,6 +1,6 @@
 use super::PlatformBackend;
 use log::info;
-use std::{mem, sync::Arc};
+use std::{mem, sync::{Arc, Mutex}};
 use xcb::{x, Xid, XidNew};
 
 pub struct UnixBackend {
@@ -14,7 +14,7 @@ pub struct UnixBackend {
 }
 
 impl UnixBackend {
-    pub fn new() -> xcb::Result<Self> {
+    pub fn new() -> xcb::Result<Arc<Mutex<Self>>> {
         info!("Initializing Unix backend");
 
         let (connection, screen_number) = xcb::Connection::connect(None)?;
@@ -96,7 +96,7 @@ impl UnixBackend {
             data: &[wm_delete_window],
         }));
 
-        Ok(Self {
+        Ok(Arc::new(Mutex::new(Self {
             connection,
             window,
             width,
@@ -104,7 +104,7 @@ impl UnixBackend {
             closed: false,
             resized: false,
             focused: false,
-        })
+        })))
     }
 
     fn get_intern_atom(connection: &xcb::Connection, name: &str) -> xcb::Result<x::Atom> {
@@ -118,7 +118,7 @@ impl UnixBackend {
 }
 
 impl PlatformBackend for UnixBackend {
-    fn shutdown(self) {
+    fn shutdown(&mut self) {
         info!("Shutting down Unix backend");
 
         self.connection.send_request(&x::DestroyWindow {

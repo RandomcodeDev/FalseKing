@@ -1,11 +1,12 @@
 use super::Renderer;
 use metal::*;
+use std::sync::{Arc, Mutex};
 
 pub struct MtlRenderer {}
 
 impl MtlRenderer {
-    pub fn new(backend: &dyn PlatformBackend) -> Option<Box<Self>> {
-        Some(Box::new(Self {}))
+    pub fn new(backend: Arc<Mutex<dyn PlatformBackend>>) -> Option<Arc<Mutex<Self>>> {
+        Some(Arc::new(Mutex::new(Self {})))
     }
 }
 
