@@ -1,14 +1,22 @@
 #[cfg(windows)]
 mod dx12;
-#[cfg(apple)]
-mod metal;
 #[cfg(not(apple))]
 mod vulkan;
+#[cfg(windows)]
+mod dx9;
+#[cfg(apple)]
+mod metal;
 
 use std::{fmt::Display, sync::{Arc, Mutex}};
 
 use crate::platform::PlatformBackend;
 use log::error;
+
+/// Background colour
+const CLEAR_COLOR_R: u8 = 135;
+const CLEAR_COLOR_G: u8 = 0;
+const CLEAR_COLOR_B: u8 = 255;
+const CLEAR_COLOR_A: u8 = 255;
 
 #[derive(Clone, clap::ValueEnum)]
 pub enum RenderApi {
@@ -19,6 +27,10 @@ pub enum RenderApi {
     /// Vulkan
     #[cfg(not(apple))]
     Vulkan,
+
+    /// DirectX 9 (for Windows XP)
+    #[cfg(windows)]
+    Dx9,
 
     /// Metal (gonna be a long time)
     #[cfg(apple)]
@@ -32,6 +44,8 @@ impl Display for RenderApi {
             Self::Dx12 => "DirectX 12",
             #[cfg(not(apple))]
             Self::Vulkan => "Vulkan",
+            #[cfg(windows)]
+            Self::Dx9 => "DirectX 9",
             #[cfg(apple)]
             Self::Metal => "Metal",
         })
@@ -45,7 +59,7 @@ pub trait Renderer {
     /// Send rendering commands to the GPU and swap buffers or whatever
     fn end_frame(&mut self);
 
-    /// Shut down rendering
+    /// Shut down rendering (TODO: is this actually necessary when using safe-ish high-level-ish bindings?)
     fn shutdown(&mut self);
 }
 
@@ -56,7 +70,7 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
     if let Some(api) = api {
         match api {
             #[cfg(windows)]
-            RenderApi::Dx12 => match dx12::Dx12Renderer::new(backend) {
+            RenderApi::Dx12 => match dx12::Dx12Renderer::new(backend.clone()) {
                 Some(dx12) => {
                     return dx12;
                 }
@@ -65,14 +79,23 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
                 }
             },
             #[cfg(not(apple))]
-            RenderApi::Vulkan => match vulkan::VkRenderer::new(backend) {
+            RenderApi::Vulkan => match vulkan::VkRenderer::new(backend.clone()) {
                 Some(vk) => return vk,
                 None => {
                     panic!("Failed to create Vulkan renderer");
                 }
             },
+            #[cfg(windows)]
+            RenderApi::Dx9 => match dx9::Dx9Renderer::new(backend.clone()) {
+                Some(dx9) => {
+                    return dx9;
+                }
+                None => {
+                    panic!("Failed to create DirectX 9 renderer");
+                }
+            },
             #[cfg(apple)]
-            RenderApi::Metal => match metal::MtlRenderer::new(backend) {
+            RenderApi::Metal => match metal::MtlRenderer::new(backend.clone()) {
                 Some(mtl) => return mtl,
                 None => {
                     panic!("Failed to create Metal renderer");
@@ -81,7 +104,7 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
         }
     } else {
         /*#[cfg(windows)]
-        match dx12::Dx12Renderer::new(backend) {
+        match dx12::Dx12Renderer::new(backend.clone()) {
             Some(dx12) => {
                 return dx12;
             }
@@ -90,7 +113,7 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
             }
         }*/
         #[cfg(not(apple))]
-        match vulkan::VkRenderer::new(backend) {
+        match vulkan::VkRenderer::new(backend.clone()) {
             Some(vk) => {
                 return vk;
             }
@@ -98,8 +121,17 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
                 error!("Failed to create Vulkan renderer");
             }
         }
+        #[cfg(windows)]
+        match dx9::Dx9Renderer::new(backend.clone()) {
+            Some(dx9) => {
+                return dx9;
+            }
+            None => {
+                error!("Failed to create DirectX 9 renderer");
+            }
+        }
         #[cfg(apple)]
-        match metal::MtlRenderer::new(backend) {
+        match metal::MtlRenderer::new(backend.clone()) {
             Some(mtl) => {
                 return mtl;
             }

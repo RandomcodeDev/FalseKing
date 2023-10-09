@@ -11,16 +11,15 @@ use vulkano::{
         RenderPassBeginInfo, SubpassContents,
     },
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
-    image::SwapchainImage,
-    instance::{Instance, InstanceExtensions},
+    instance::InstanceExtensions,
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, RenderPass},
     swapchain::{
-        self, AcquireError, Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError,
+        self, AcquireError, Swapchain, SwapchainCreateInfo, SwapchainCreationError,
         SwapchainPresentInfo,
     },
-    sync::{self, FlushError},
     sync::GpuFuture,
+    sync::{self, FlushError},
 };
 
 // boilerplate stuff
@@ -40,14 +39,11 @@ impl Display for Gpu {
 pub struct VkRenderer {
     backend: Arc<Mutex<dyn PlatformBackend>>,
 
-    instance: Arc<Instance>,
-    surface: Arc<Surface>,
     gpus: Vec<Gpu>,
     gpu_index: usize,
     device: Arc<Device>,
     queue: Arc<Queue>,
     swapchain: Arc<Swapchain>,
-    swapchain_images: Vec<Arc<SwapchainImage>>,
     command_buffer_allocator: StandardCommandBufferAllocator,
     render_pass: Arc<RenderPass>,
     viewport: Viewport,
@@ -182,14 +178,11 @@ impl VkRenderer {
         Some(Arc::new(Mutex::new(Self {
             backend: backend.clone(),
 
-            instance,
-            surface,
             gpus,
             gpu_index,
             device,
             queue,
             swapchain,
-            swapchain_images,
             command_buffer_allocator,
             render_pass,
             viewport,
@@ -212,10 +205,7 @@ impl Renderer for VkRenderer {
 
         if self.swapchain_dirty {
             let backend = self.backend.try_lock().unwrap();
-            let image_extent = [
-                backend.get_width(),
-                backend.get_height(),
-            ];
+            let image_extent = [backend.get_width(), backend.get_height()];
 
             let (new_swapchain, new_images) = match self.swapchain.recreate(SwapchainCreateInfo {
                 image_extent,
@@ -258,7 +248,15 @@ impl Renderer for VkRenderer {
             self.swapchain_dirty = true;
         }
 
-        let clear_values = vec![Some([0.0, 0.0, 0.0, 1.0].into())];
+        let clear_values = vec![Some(
+            [
+                super::CLEAR_COLOR_R as f32 / 255.0,
+                super::CLEAR_COLOR_G as f32 / 255.0,
+                super::CLEAR_COLOR_B as f32 / 255.0,
+                super::CLEAR_COLOR_A as f32 / 255.0,
+            ]
+            .into(),
+        )];
 
         let mut command_buffer_builder = AutoCommandBufferBuilder::primary(
             &self.command_buffer_allocator,
@@ -297,9 +295,7 @@ impl Renderer for VkRenderer {
             .then_signal_fence_and_flush();
 
         self.previous_frame_end = match future {
-            Ok(future) => {
-                Some(Box::new(future))
-            }
+            Ok(future) => Some(Box::new(future)),
             Err(FlushError::OutOfDate) => {
                 warn!("Swapchain is out of date");
                 self.swapchain_dirty = true;
@@ -315,6 +311,6 @@ impl Renderer for VkRenderer {
     fn end_frame(&mut self) {}
 
     fn shutdown(&mut self) {
-        info!("Shutting down Vulkan renderer (because of RAII or whatever, there's nothing to do here)");
+        
     }
 }

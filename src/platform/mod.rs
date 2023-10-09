@@ -1,7 +1,7 @@
 #[cfg(unix)]
-mod unix;
+pub mod unix;
 #[cfg(windows)]
-mod win32;
+pub mod win32;
 
 use std::sync::{Arc, Mutex};
 

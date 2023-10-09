@@ -6,6 +6,9 @@ use windows::Win32::{
 };
 use windows_core::*;
 
+pub const TRUE: BOOL = BOOL(1);
+pub const FALSE: BOOL = BOOL(0);
+
 pub struct Win32Backend {
     hinstance: HINSTANCE,
     window: HWND,
@@ -192,7 +195,7 @@ impl PlatformBackend for Win32Backend {
         unsafe { self.set_self_ptr() };
 
         let mut msg: MSG = unsafe { mem::zeroed() };
-        while unsafe { PeekMessageA(ptr::addr_of_mut!(msg), HWND(0), 0, 0, PM_REMOVE) } != BOOL(0) {
+        while unsafe { PeekMessageA(ptr::addr_of_mut!(msg), HWND(0), 0, 0, PM_REMOVE) } != FALSE {
             unsafe {
                 TranslateMessage(ptr::addr_of!((msg)));
                 DispatchMessageA(ptr::addr_of!(msg));

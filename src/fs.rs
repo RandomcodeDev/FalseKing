@@ -195,6 +195,7 @@ pub trait FileSystem {
 pub struct StdFileSystem(());
 
 impl StdFileSystem {
+    #[allow(dead_code)]
     pub fn new() -> Self {
         Self(())
     }
