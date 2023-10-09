@@ -19,10 +19,10 @@
     SplashScreenImage="Assets\SplashScreen.png" />
   <ExecutableList>
     <Executable
-      Name="FalseKing.Gaming.Desktop.x64.exe"
+      Name="false_king_pc"
       TargetDeviceFamily="PC" />
     <Executable
-      Name="FalseKing.Gaming.Xbox.Scarlett.x64.exe"
+      Name="false_king_scarlett"
       TargetDeviceFamily="Scarlett" />
   </ExecutableList>
   <StoreId>9N76SKFJDMRV</StoreId>

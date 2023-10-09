@@ -378,3 +378,9 @@ imgui.ini
 # Added by cargo
 
 /target
+
+# Packaging crap
+/*_*.*.*.*_x64*
+/layout_*.xml
+/meta_*.json
+/summary_*.json

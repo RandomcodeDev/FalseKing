@@ -1,8 +1,8 @@
 #[cfg(windows)]
 mod dx12;
-#[cfg(not(apple))]
+#[cfg(not(any(apple, feature = "xbox")))]
 mod vulkan;
-#[cfg(windows)]
+#[cfg(all(windows, not(feature = "xbox")))]
 mod dx9;
 #[cfg(apple)]
 mod metal;
@@ -25,11 +25,11 @@ pub enum RenderApi {
     Dx12,
 
     /// Vulkan
-    #[cfg(not(apple))]
+    #[cfg(not(any(apple, feature = "xbox")))]
     Vulkan,
 
     /// DirectX 9 (for Windows XP)
-    #[cfg(windows)]
+    #[cfg(all(windows, not(feature = "xbox")))]
     Dx9,
 
     /// Metal (gonna be a long time)
@@ -42,9 +42,9 @@ impl Display for RenderApi {
         f.write_str(match self {
             #[cfg(windows)]
             Self::Dx12 => "DirectX 12",
-            #[cfg(not(apple))]
+            #[cfg(not(any(apple, feature = "xbox")))]
             Self::Vulkan => "Vulkan",
-            #[cfg(windows)]
+            #[cfg(all(windows, not(feature = "xbox")))]
             Self::Dx9 => "DirectX 9",
             #[cfg(apple)]
             Self::Metal => "Metal",
@@ -78,14 +78,14 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
                     panic!("Failed to create DirectX 12 renderer");
                 }
             },
-            #[cfg(not(apple))]
+            #[cfg(not(any(apple, feature = "xbox")))]
             RenderApi::Vulkan => match vulkan::VkRenderer::new(backend.clone()) {
                 Some(vk) => return vk,
                 None => {
                     panic!("Failed to create Vulkan renderer");
                 }
             },
-            #[cfg(windows)]
+            #[cfg(all(windows, not(feature = "xbox")))]
             RenderApi::Dx9 => match dx9::Dx9Renderer::new(backend.clone()) {
                 Some(dx9) => {
                     return dx9;
@@ -112,7 +112,7 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
                 error!("Failed to create DirectX 12 renderer");
             }
         }*/
-        #[cfg(not(apple))]
+        #[cfg(not(any(apple, feature = "xbox")))]
         match vulkan::VkRenderer::new(backend.clone()) {
             Some(vk) => {
                 return vk;
@@ -121,7 +121,7 @@ pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<Render
                 error!("Failed to create Vulkan renderer");
             }
         }
-        #[cfg(windows)]
+        #[cfg(all(windows, not(feature = "xbox")))]
         match dx9::Dx9Renderer::new(backend.clone()) {
             Some(dx9) => {
                 return dx9;

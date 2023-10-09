@@ -276,7 +276,7 @@ impl FileSystem for StdFileSystem {
         #[cfg(windows)]
         match self.metadata(&from) {
             Ok(metadata) => {
-                if metadata.is_dir {
+                if metadata.is_dir() {
                     std::os::windows::fs::symlink_dir(from, to)
                 } else {
                     std::os::windows::fs::symlink_file(from, to)

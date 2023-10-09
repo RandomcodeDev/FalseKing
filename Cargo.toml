@@ -6,6 +6,7 @@ edition = "2021"
 [features]
 default = []
 release_log = []
+xbox = []
 
 [dependencies]
 chrono = "0.4.31"
