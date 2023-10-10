@@ -12,6 +12,9 @@ use std::{fmt::Display, sync::{Arc, Mutex}};
 use crate::platform::PlatformBackend;
 use log::error;
 
+#[cfg(not(any(apple, feature = "xbox")))]
+use vulkano::{buffer::BufferContents, pipeline::graphics::vertex_input::Vertex as VkVertex};
+
 /// Background colour
 const CLEAR_COLOR_R: u8 = 135;
 const CLEAR_COLOR_G: u8 = 0;
@@ -50,6 +53,19 @@ impl Display for RenderApi {
             Self::Metal => "Metal",
         })
     }
+}
+
+#[repr(C)]
+#[cfg_attr(not(any(apple, feature = "xbox")), derive(BufferContents, VkVertex))]
+struct Vertex {
+    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32A32_SFLOAT))]
+    position: [f32; 4],
+    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32A32_SFLOAT))]
+    color: [f32; 4],
+    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32_SFLOAT))]
+    uv: [f32; 2],
+    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32_SFLOAT))]
+    normal: [f32; 3]
 }
 
 pub trait Renderer {
