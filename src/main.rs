@@ -1,5 +1,5 @@
 #![cfg_attr(
-    all(windows, not(any(build = "debug", feature = "release_log"))),
+    all(windows, not(any(build = "debug", feature = "extra_log"))),
     windows_subsystem = "windows"
 )]
 #![feature(fs_try_exists)]
@@ -61,12 +61,22 @@ fn setup_logger() -> Result<(), fern::InitError> {
     let dispatch = fern::Dispatch::new()
         .format(move |out, message, record| {
             let dt = Local::now();
+
+            let mut location = String::from(record.target());
+            if let Some(file) = record.file() {
+                if let Some(line) = record.line() {
+                    location = format!("{file}:{line}");
+                }
+            }
+
+            let level = record.level().as_str().to_lowercase();
+
             out.finish(format_args!(
                 "[{} \x1B[{}m{}\x1B[0m {}] {}",
                 dt.format("%Y/%m/%d %H:%M:%S"),
                 colors_line.get_color(&record.level()).to_fg_str(),
-                record.level(),
-                record.target(),
+                level,
+                location,
                 message
             ))
         })
@@ -74,13 +84,15 @@ fn setup_logger() -> Result<(), fern::InitError> {
             String::from(crate::GAME_EXECUTABLE_NAME) + "-" + &dt + ".log",
         )?);
 
+    #[cfg(all(build = "debug", feature = "extra_log"))]
+    let dispatch = dispatch.level(log::LevelFilter::Trace);
     #[cfg(build = "debug")]
     let dispatch = dispatch.level(log::LevelFilter::Debug);
-    #[cfg(all(not(build = "debug"), feature = "release_log"))]
+    #[cfg(all(not(build = "debug"), feature = "extra_log"))]
     let dispatch = dispatch.level(log::LevelFilter::Info);
     #[cfg(feature = "verbose_log")]
     let dispatch = dispatch.level(log::LevelFilter::Trace);
-    #[cfg(any(build = "debug", all(not(build = "debug"), feature = "release_log")))]
+    #[cfg(any(build = "debug", all(not(build = "debug"), feature = "extra_log")))]
     let dispatch = dispatch.chain(io::stdout());
 
     dispatch.apply()?;
