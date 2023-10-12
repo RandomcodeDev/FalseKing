@@ -11,7 +11,7 @@ use vulkano::{
         RenderPassBeginInfo, SubpassContents,
     },
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
-    instance::{debug::DebugUtilsMessenger, InstanceExtensions},
+    instance::{debug::DebugUtilsMessenger, InstanceExtensions, InstanceCreationError},
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, RenderPass},
     swapchain::{
@@ -74,10 +74,21 @@ impl VkRenderer {
             .enable_vulkan_extensions(&mut instance_extensions);
         let instance_layers = vec![String::from("VK_LAYER_KHRONOS_validation")];
 
-        let (instance, debug_messenger) =
+        let (mut instance, mut debug_messenger) =
             Self::create_instance(instance_extensions, instance_layers);
         let instance = match instance {
             Ok(instance) => instance,
+            Err(InstanceCreationError::LayerNotPresent) => {
+                warn!("Missing validation layer, trying to create instance without them");
+                (instance, debug_messenger) = Self::create_instance(instance_extensions, Vec::new());
+                match instance {
+                    Ok(instance) => instance,
+                    Err(err) => {
+                        error!("Failed to create instance: {err} ({err:?})");
+                        return None;
+                    }
+                }
+            }
             Err(err) => {
                 error!("Failed to create instance: {err} ({err:?})");
                 return None;
@@ -227,6 +238,8 @@ impl Renderer for VkRenderer {
             .cleanup_finished();
 
         if self.swapchain_dirty {
+            info!("Recreating swapchain");
+
             let backend = self.backend.try_lock().unwrap();
             let image_extent = [backend.get_width(), backend.get_height()];
 
