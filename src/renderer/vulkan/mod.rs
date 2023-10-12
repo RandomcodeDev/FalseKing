@@ -11,7 +11,7 @@ use vulkano::{
         RenderPassBeginInfo, SubpassContents,
     },
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
-    instance::InstanceExtensions,
+    instance::{debug::DebugUtilsMessenger, InstanceExtensions},
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, RenderPass},
     swapchain::{
@@ -39,7 +39,12 @@ impl Display for Gpu {
 pub struct VkRenderer {
     backend: Arc<Mutex<dyn PlatformBackend>>,
 
+    #[allow(dead_code)]
+    debug_messenger: Option<DebugUtilsMessenger>,
+
+    #[allow(dead_code)]
     gpus: Vec<Gpu>,
+    #[allow(dead_code)]
     gpu_index: usize,
     device: Arc<Device>,
     queue: Arc<Queue>,
@@ -59,19 +64,35 @@ impl VkRenderer {
 
         let mut instance_extensions = InstanceExtensions {
             khr_surface: true,
+            #[cfg(build = "debug")]
+            ext_debug_utils: true,
             ..Default::default()
         };
         backend
             .try_lock()
             .unwrap()
             .enable_vulkan_extensions(&mut instance_extensions);
+        let instance_layers = vec![String::from("VK_LAYER_KHRONOS_validation")];
 
-        let instance = match Self::create_instance(instance_extensions) {
+        let (instance, debug_messenger) =
+            Self::create_instance(instance_extensions, instance_layers);
+        let instance = match instance {
             Ok(instance) => instance,
             Err(err) => {
-                error!("Failed to create instance: {err}");
+                error!("Failed to create instance: {err} ({err:?})");
                 return None;
             }
+        };
+        let debug_messenger = if let Some(debug_messenger) = debug_messenger {
+            match debug_messenger {
+                Ok(debug_messenger) => Some(debug_messenger),
+                Err(err) => {
+                    error!("Failed to create debug messenger: {err} ({err:?})");
+                    return None;
+                }
+            }
+        } else {
+            None
         };
 
         let surface = match backend
@@ -81,7 +102,7 @@ impl VkRenderer {
         {
             Ok(surface) => surface,
             Err(err) => {
-                error!("Failed to create surface: {err}");
+                error!("Failed to create surface: {err} ({err:?})");
                 return None;
             }
         };
@@ -95,7 +116,7 @@ impl VkRenderer {
             match Self::choose_gpu(instance.clone(), &device_extensions, surface.clone()) {
                 Ok(pair) => pair,
                 Err(err) => {
-                    error!("Failed to find usable GPU: {err}");
+                    error!("Failed to find usable GPU: {err} ({err:?})");
                     return None;
                 }
             };
@@ -103,7 +124,7 @@ impl VkRenderer {
         let (device, mut queues) = match Self::create_device(&gpus[0], device_extensions) {
             Ok(pair) => pair,
             Err(err) => {
-                error!("Failed to create device: {err}");
+                error!("Failed to create device: {err} ({err:?})");
                 return None;
             }
         };
@@ -120,7 +141,7 @@ impl VkRenderer {
             match Self::create_swapchain(backend.clone(), device.clone(), surface.clone()) {
                 Ok(pair) => pair,
                 Err(err) => {
-                    error!("Failed to create swapchain: {err}");
+                    error!("Failed to create swapchain: {err} ({err:?})");
                     return None;
                 }
             };
@@ -149,7 +170,7 @@ impl VkRenderer {
         ) {
             Ok(render_pass) => render_pass,
             Err(err) => {
-                error!("Failed to create render pass: {err}");
+                error!("Failed to create render pass: {err} ({err:?})");
                 return None;
             }
         };
@@ -167,7 +188,7 @@ impl VkRenderer {
         ) {
             Ok(framebuffers) => framebuffers,
             Err(err) => {
-                error!("Failed to create framebuffers: {err}");
+                error!("Failed to create framebuffers: {err} ({err:?})");
                 return None;
             }
         };
@@ -177,6 +198,8 @@ impl VkRenderer {
 
         Some(Arc::new(Mutex::new(Self {
             backend: backend.clone(),
+
+            debug_messenger,
 
             gpus,
             gpu_index,
@@ -214,7 +237,7 @@ impl Renderer for VkRenderer {
                 Ok(pair) => pair,
                 Err(SwapchainCreationError::ImageExtentNotSupported { .. }) => return,
                 Err(err) => {
-                    panic!("Failed to recreate swapchain: {err}");
+                    panic!("Failed to recreate swapchain: {err} ({err:?})");
                 }
             };
 
@@ -240,7 +263,7 @@ impl Renderer for VkRenderer {
                     warn!("Timed out waiting for next image");
                     return;
                 }
-                Err(err) => panic!("Failed to acquire next image: {err}"),
+                Err(err) => panic!("Failed to acquire next image: {err} ({err:?})"),
             };
 
         if suboptimal {
@@ -302,7 +325,7 @@ impl Renderer for VkRenderer {
                 Some(Box::new(sync::now(self.device.clone())))
             }
             Err(err) => {
-                error!("Failed to flush future: {err}");
+                error!("Failed to flush future: {err} ({err:?})");
                 Some(Box::new(sync::now(self.device.clone())))
             }
         }
@@ -310,7 +333,5 @@ impl Renderer for VkRenderer {
 
     fn end_frame(&mut self) {}
 
-    fn shutdown(&mut self) {
-        
-    }
+    fn shutdown(&mut self) {}
 }

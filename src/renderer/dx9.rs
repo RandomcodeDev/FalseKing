@@ -62,7 +62,7 @@ impl Dx9Renderer {
             ) {
                 Ok(_) => {}
                 Err(err) => {
-                    error!("Failed to create IDirect3DDevice9: {err}");
+                    error!("Failed to create IDirect3DDevice9: {err} ({err:?})");
                 }
             };
 

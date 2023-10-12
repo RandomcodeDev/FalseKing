@@ -1,6 +1,6 @@
 use super::{Gpu, VkRenderer};
 use crate::platform::PlatformBackend;
-use log::{error, info};
+use log::{error, info, log};
 use pci_ids::FromId;
 use std::sync::{Arc, Mutex};
 use vulkano::{
@@ -13,35 +13,89 @@ use vulkano::{
     device::Queue,
     device::QueueCreateInfo,
     device::QueueFlags,
-    image::{ImageAccess, SwapchainImage, view::ImageView},
+    image::{view::ImageView, ImageAccess, SwapchainImage},
     instance::Instance,
     instance::InstanceCreateInfo,
-    instance::InstanceCreationError,
-    instance::InstanceExtensions,
+    instance::{
+        debug::{DebugUtilsMessageSeverity, DebugUtilsMessenger, DebugUtilsMessengerCreateInfo},
+        InstanceCreationError,
+    },
+    instance::{
+        debug::{DebugUtilsMessageType, DebugUtilsMessengerCreationError},
+        InstanceExtensions,
+    },
     pipeline::graphics::viewport::Viewport,
-    render_pass::{Framebuffer, FramebufferCreationError, RenderPass, FramebufferCreateInfo},
+    render_pass::{Framebuffer, FramebufferCreateInfo, FramebufferCreationError, RenderPass},
     swapchain::{Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError},
-    Version, VulkanLibrary, OomError,
+    OomError, Version, VulkanLibrary,
 };
 
 impl VkRenderer {
     pub(super) fn create_instance(
         extensions: InstanceExtensions,
-    ) -> Result<Arc<Instance>, InstanceCreationError> {
+        layers: Vec<String>,
+    ) -> (
+        Result<Arc<Instance>, InstanceCreationError>,
+        Option<Result<DebugUtilsMessenger, DebugUtilsMessengerCreationError>>,
+    ) {
         info!("Creating instance with extensions {extensions:?}");
+        #[cfg(build = "debug")]
+        info!("Enabling validation layers {layers:?}");
 
         let library = match VulkanLibrary::new() {
             Ok(library) => library,
             Err(err) => {
-                error!("Failed to load Vulkan library: {err}");
-                return Err(InstanceCreationError::InitializationFailed);
+                error!("Failed to load Vulkan library: {err} ({err:?})");
+                return (Err(InstanceCreationError::InitializationFailed), None);
             }
         };
 
         let mut create_info = InstanceCreateInfo::application_from_cargo_toml();
         create_info.enabled_extensions = extensions;
         create_info.max_api_version = Some(Version::V1_3);
-        Instance::new(library, create_info)
+        #[cfg(build = "debug")]
+        {
+            create_info.enabled_layers = layers;
+        }
+        let instance = Instance::new(library, create_info);
+
+        #[cfg(build = "debug")]
+        if let Ok(instance) = instance {
+            let messenger = unsafe {
+                DebugUtilsMessenger::new(
+                    instance.clone(),
+                    DebugUtilsMessengerCreateInfo::user_callback(Arc::new(|msg| {
+                        let log_level = match msg.severity {
+                            DebugUtilsMessageSeverity::VERBOSE => log::Level::Trace,
+                            DebugUtilsMessageSeverity::INFO => log::Level::Debug,
+                            DebugUtilsMessageSeverity::WARNING => log::Level::Info,
+                            DebugUtilsMessageSeverity::ERROR => log::Level::Warn,
+                            _ => log::Level::Debug,
+                        };
+
+                        let mut location = String::new();
+
+                        if msg.ty.contains(DebugUtilsMessageType::GENERAL) {
+                            location += "general ";
+                        }
+                        if msg.ty.contains(DebugUtilsMessageType::PERFORMANCE) {
+                            location += "performance ";
+                        }
+                        if msg.ty.contains(DebugUtilsMessageType::VALIDATION) {
+                            location += "validation ";
+                        }
+
+                        let message = msg.description;
+
+                        log!(log_level, "Vulkan {location} message: {message}");
+                    })),
+                )
+            };
+
+            return (Ok(instance), Some(messenger));
+        }
+
+        (instance, None)
     }
 
     pub(super) fn choose_gpu(
@@ -106,6 +160,7 @@ impl VkRenderer {
                     None => "unknown",
                 }
             );
+            info!("\tType: {:?}", properties.device_type);
         });
 
         Ok((devices, 0))
@@ -149,17 +204,13 @@ impl VkRenderer {
         {
             Ok(capabilities) => capabilities,
             Err(err) => {
-                error!("Failed to get capabilities for device: {err}");
+                error!("Failed to get capabilities for device: {err} ({err:?})");
                 return Err(SwapchainCreationError::DeviceLost);
             }
         };
 
         let image_usage = capabilities.supported_usage_flags;
-        let composite_alpha = match capabilities
-            .supported_composite_alpha
-            .into_iter()
-            .next()
-        {
+        let composite_alpha = match capabilities.supported_composite_alpha.into_iter().next() {
             Some(alpha) => alpha,
             None => {
                 error!("Failed to get composite alpha for swapchain");
@@ -167,7 +218,7 @@ impl VkRenderer {
             }
         };
 
-        let image_format = Some(
+        let _image_format = Some(
             device
                 .physical_device()
                 .surface_formats(&surface, Default::default())
@@ -183,7 +234,7 @@ impl VkRenderer {
             surface.clone(),
             SwapchainCreateInfo {
                 min_image_count: capabilities.min_image_count,
-                image_format,
+                //image_format,
                 image_extent,
                 image_usage,
                 composite_alpha,
@@ -201,19 +252,36 @@ impl VkRenderer {
         let dimensions = images[0].dimensions().width_height();
         viewport.dimensions = [dimensions[0] as f32, dimensions[1] as f32];
 
-        info!("Creating {} {}x{} framebuffers", images.len(), viewport.dimensions[0], viewport.dimensions[1]);
+        info!(
+            "Creating {} {}x{} framebuffers",
+            images.len(),
+            viewport.dimensions[0],
+            viewport.dimensions[1]
+        );
 
-        let framebuffers: Vec<Result<Arc<Framebuffer>, FramebufferCreationError>> = images.iter().enumerate().map(|(index, image)| {
-            let view = match ImageView::new_default(image.clone()) {
-                Ok(view) => view,
-                Err(err) => {
-                    error!("Failed to create image view {index}: {err}");
-                    return Err(FramebufferCreationError::OomError(OomError::OutOfHostMemory));
-                }
-            };
+        let framebuffers: Vec<Result<Arc<Framebuffer>, FramebufferCreationError>> = images
+            .iter()
+            .enumerate()
+            .map(|(index, image)| {
+                let view = match ImageView::new_default(image.clone()) {
+                    Ok(view) => view,
+                    Err(err) => {
+                        error!("Failed to create image view {index}: {err} ({err:?})");
+                        return Err(FramebufferCreationError::OomError(
+                            OomError::OutOfHostMemory,
+                        ));
+                    }
+                };
 
-            Framebuffer::new(render_pass.clone(), FramebufferCreateInfo {attachments: vec![view], ..Default::default()})
-        }).collect::<Vec<_>>();
+                Framebuffer::new(
+                    render_pass.clone(),
+                    FramebufferCreateInfo {
+                        attachments: vec![view],
+                        ..Default::default()
+                    },
+                )
+            })
+            .collect::<Vec<_>>();
 
         // in order to return a Result, so other renderers get a chance if Vulkan can't be initialized
         let mut unwrapped_framebuffers = Vec::new();
@@ -221,12 +289,12 @@ impl VkRenderer {
             let framebuffer = match result {
                 Ok(framebuffer) => framebuffer,
                 Err(err) => {
-                    error!("Failed to create framebuffer {index}: {err}");
+                    error!("Failed to create framebuffer {index}: {err} ({err:?})");
                     return Err(*err);
                 }
             };
             unwrapped_framebuffers.push(framebuffer.clone());
-        };
+        }
 
         Ok(unwrapped_framebuffers)
     }
