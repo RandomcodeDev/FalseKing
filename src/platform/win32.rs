@@ -167,7 +167,7 @@ impl Win32Backend {
         SetWindowLongPtrA(
             self.window,
             GWLP_USERDATA,
-            ptr::addr_of_mut!(*self) as isize,
+        (ptr::addr_of_mut!(*self) as isize).try_into().unwrap(),
         );
         SetWindowPos(
             self.window,

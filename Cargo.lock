@@ -399,6 +399,7 @@ dependencies = [
  "vulkano-shaders",
  "windows 0.51.1",
  "windows-core",
+ "windows_i686_msvc",
  "xcb",
 ]
 
