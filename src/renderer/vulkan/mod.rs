@@ -207,6 +207,8 @@ impl VkRenderer {
         let previous_frame_end: Option<Box<dyn GpuFuture>> =
             Some(Box::new(sync::now(device.clone())));
 
+        // clippy is tweaking it's literally in a mutex
+        #[allow(clippy::arc_with_non_send_sync)]
         Some(Arc::new(Mutex::new(Self {
             backend: backend.clone(),
 

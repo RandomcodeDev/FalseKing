@@ -52,7 +52,7 @@ fn main() {
             let layout = out_dir.join("layout.xml");
 
             let mut extra_args = Vec::new();
-            if let Ok(_) = env::var("CARGO_FEATURE_XBOX") {
+            if env::var("CARGO_FEATURE_XBOX").is_ok() {
             } else {
                 extra_args.push("/pc")
             }
