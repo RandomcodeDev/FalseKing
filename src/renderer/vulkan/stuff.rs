@@ -36,9 +36,10 @@ impl VkRenderer {
     pub(super) fn create_instance(
         extensions: InstanceExtensions,
         layers: Vec<String>,
-    ) ->
-    (Result<Arc<Instance>, InstanceCreationError>,
-        Option<Result<DebugUtilsMessenger, DebugUtilsMessengerCreationError>>) {
+    ) -> (
+        Result<Arc<Instance>, InstanceCreationError>,
+        Option<Result<DebugUtilsMessenger, DebugUtilsMessengerCreationError>>,
+    ) {
         info!("Creating instance with extensions {extensions:?}");
         #[cfg(build = "debug")]
         info!("Enabling validation layers {layers:?}");

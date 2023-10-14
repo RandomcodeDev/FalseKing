@@ -11,7 +11,7 @@ use vulkano::{
         RenderPassBeginInfo, SubpassContents,
     },
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
-    instance::{debug::DebugUtilsMessenger, InstanceExtensions, InstanceCreationError},
+    instance::{debug::DebugUtilsMessenger, InstanceCreationError, InstanceExtensions},
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, RenderPass},
     swapchain::{
@@ -80,7 +80,8 @@ impl VkRenderer {
             Ok(instance) => instance,
             Err(InstanceCreationError::LayerNotPresent) => {
                 warn!("Missing validation layer, trying to create instance without them");
-                (instance, debug_messenger) = Self::create_instance(instance_extensions, Vec::new());
+                (instance, debug_messenger) =
+                    Self::create_instance(instance_extensions, Vec::new());
                 match instance {
                     Ok(instance) => instance,
                     Err(err) => {

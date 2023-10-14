@@ -1,13 +1,16 @@
 #[cfg(windows)]
 mod dx12;
-#[cfg(not(any(apple, feature = "xbox")))]
-mod vulkan;
 #[cfg(all(windows, not(feature = "xbox")))]
 mod dx9;
 #[cfg(apple)]
 mod metal;
+#[cfg(not(any(apple, feature = "xbox")))]
+mod vulkan;
 
-use std::{fmt::Display, sync::{Arc, Mutex}};
+use std::{
+    fmt::Display,
+    sync::{Arc, Mutex},
+};
 
 use crate::platform::PlatformBackend;
 use log::error;
@@ -65,7 +68,7 @@ struct Vertex {
     #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32_SFLOAT))]
     uv: [f32; 2],
     #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32_SFLOAT))]
-    normal: [f32; 3]
+    normal: [f32; 3],
 }
 
 pub trait Renderer {
@@ -80,7 +83,10 @@ pub trait Renderer {
 }
 
 /// Creates an instance of the requested backend, or the first one that initializes successfully
-pub fn get_renderer(backend: Arc<Mutex<dyn PlatformBackend>>, api: Option<RenderApi>) -> Arc<Mutex<dyn Renderer>> {
+pub fn get_renderer(
+    backend: Arc<Mutex<dyn PlatformBackend>>,
+    api: Option<RenderApi>,
+) -> Arc<Mutex<dyn Renderer>> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
     if let Some(api) = api {

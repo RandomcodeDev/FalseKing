@@ -4,10 +4,8 @@
 )]
 #![feature(fs_try_exists)]
 
-mod fs;
 mod platform;
 mod renderer;
-mod vpk;
 
 use chrono::Local;
 use clap::Parser;

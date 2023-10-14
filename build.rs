@@ -66,7 +66,7 @@ fn main() {
                 .spawn()
             {
                 Ok(_) => {}
-                Err(err) => println!("cargo:warning={err}"),
+                Err(err) => println!("cargo:warning={err} ({err:?})"),
             }
             match Command::new(makepkg.clone())
                 .arg("pack")
@@ -82,7 +82,7 @@ fn main() {
                 .spawn()
             {
                 Ok(_) => {}
-                Err(err) => println!("cargo:warning={err}"),
+                Err(err) => println!("cargo:warning={err} ({err:?})"),
             }
         }
     }

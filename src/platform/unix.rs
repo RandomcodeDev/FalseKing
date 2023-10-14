@@ -1,6 +1,9 @@
 use super::PlatformBackend;
 use log::info;
-use std::{mem, sync::{Arc, Mutex}};
+use std::{
+    mem,
+    sync::{Arc, Mutex},
+};
 use xcb::{x, Xid, XidNew};
 
 pub struct UnixBackend {
@@ -198,6 +201,13 @@ impl PlatformBackend for UnixBackend {
         instance: Arc<vulkano::instance::Instance>,
     ) -> Result<Arc<vulkano::swapchain::Surface>, vulkano::swapchain::SurfaceCreationError> {
         info!("Creating XCB surface");
-        unsafe { vulkano::swapchain::Surface::from_xcb(instance, self.connection.get_raw_conn(), self.window.resource_id(), None) }
+        unsafe {
+            vulkano::swapchain::Surface::from_xcb(
+                instance,
+                self.connection.get_raw_conn(),
+                self.window.resource_id(),
+                None,
+            )
+        }
     }
 }

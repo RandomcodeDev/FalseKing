@@ -137,16 +137,16 @@ pub trait FileSystem {
     fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf>;
 
     /// Copy a file
-    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<u64>;
+    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<u64>;
 
     /// Create a directory
-    fn create_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
+    fn create_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Create a directory recursively
-    fn create_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
+    fn create_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Create a hard link
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, original: P, link: Q) -> io::Result<()>;
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q) -> io::Result<()>;
 
     /// Get the metadata of a path
     fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
@@ -167,28 +167,28 @@ pub trait FileSystem {
     fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String>;
 
     /// Remove an empty directory
-    fn remove_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
+    fn remove_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Annihilate a directory tree
-    fn remove_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
+    fn remove_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Remove a file
-    fn remove_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()>;
+    fn remove_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Rename a file
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&self, to: P, from: Q) -> io::Result<()>;
+    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
 
     /// Change permissions
-    fn set_permissions<P: AsRef<Path>>(&self, path: P, permissions: Permissions) -> io::Result<()>;
+    fn set_permissions<P: AsRef<Path>>(&mut self, path: P, permissions: Permissions) -> io::Result<()>;
 
     /// Create a symlink (not deprecated)
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<()>;
+    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
 
     /// Get metadata of a file, not following symlinks
     fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
 
     /// Write a slice to a file
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&self, path: P, contents: C) -> io::Result<()>;
+    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&mut self, path: P, contents: C) -> io::Result<()>;
 }
 
 /// FileSystem using std::fs
@@ -210,19 +210,19 @@ impl FileSystem for StdFileSystem {
         std::fs::canonicalize(path)
     }
 
-    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<u64> {
+    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<u64> {
         std::fs::copy(from, to)
     }
 
-    fn create_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+    fn create_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
         std::fs::create_dir(path)
     }
 
-    fn create_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+    fn create_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
         std::fs::create_dir_all(path)
     }
 
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, original: P, link: Q) -> io::Result<()> {
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q) -> io::Result<()> {
         std::fs::hard_link(original, link)
     }
 
@@ -252,27 +252,27 @@ impl FileSystem for StdFileSystem {
         std::fs::read_to_string(path)
     }
 
-    fn remove_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+    fn remove_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
         std::fs::remove_dir(path)
     }
 
-    fn remove_dir_all<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+    fn remove_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
         std::fs::remove_dir_all(path)
     }
 
-    fn remove_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+    fn remove_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
         std::fs::remove_file(path)
     }
 
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&self, to: P, from: Q) -> io::Result<()> {
+    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {
         std::fs::rename(from, to)
     }
 
-    fn set_permissions<P: AsRef<Path>>(&self, path: P, perm: Permissions) -> io::Result<()> {
+    fn set_permissions<P: AsRef<Path>>(&mut self, path: P, perm: Permissions) -> io::Result<()> {
         std::fs::set_permissions(path, perm)
     }
 
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&self, from: P, to: Q) -> io::Result<()> {
+    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {
         #[cfg(windows)]
         match self.metadata(&from) {
             Ok(metadata) => {
@@ -295,7 +295,7 @@ impl FileSystem for StdFileSystem {
         }
     }
 
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&self, path: P, contents: C) -> io::Result<()> {
+    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&mut self, path: P, contents: C) -> io::Result<()> {
         std::fs::write(path, contents)
     }
 }

@@ -1,6 +1,9 @@
 use super::PlatformBackend;
 use log::info;
-use std::{ffi, mem, ptr, sync::{Arc, Mutex}};
+use std::{
+    ffi, mem, ptr,
+    sync::{Arc, Mutex},
+};
 use windows::Win32::{
     Foundation::*, Graphics::Gdi::*, System::LibraryLoader::*, UI::WindowsAndMessaging::*,
 };
@@ -156,9 +159,7 @@ impl Win32Backend {
 
     unsafe fn get_self_ptr<'a>(window: HWND) -> Option<&'a mut Self> {
         match GetWindowLongPtrA(window, GWLP_USERDATA) {
-            0 => {
-                None
-            }
+            0 => None,
             addr => (addr as *mut Self).as_mut(),
         }
     }
@@ -167,7 +168,7 @@ impl Win32Backend {
         SetWindowLongPtrA(
             self.window,
             GWLP_USERDATA,
-        (ptr::addr_of_mut!(*self) as isize).try_into().unwrap(),
+            (ptr::addr_of_mut!(*self) as isize).try_into().unwrap(),
         );
         SetWindowPos(
             self.window,

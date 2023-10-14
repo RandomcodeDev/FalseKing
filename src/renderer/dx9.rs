@@ -14,7 +14,10 @@ use windows::{
 
 macro_rules! D3DCOLOR_ARGB {
     ($a:expr, $r:expr, $g:expr, $b:expr) => {
-        ((($a as u32 & 0xff) << 24u32) | (($r as u32 & 0xff) << 16u32) | (($g as u32 & 0xff) << 8u32) | ($b as u32 & 0xff)) as u32
+        ((($a as u32 & 0xff) << 24u32)
+            | (($r as u32 & 0xff) << 16u32)
+            | (($g as u32 & 0xff) << 8u32)
+            | ($b as u32 & 0xff)) as u32
     };
 }
 
@@ -31,6 +34,8 @@ macro_rules! D3DCOLOR_RGBA {
 }
 
 pub struct Dx9Renderer {
+    // Probably needs to outlive device or smth
+    #[allow(dead_code)]
     d3d: IDirect3D9,
     device: IDirect3DDevice9,
 }
@@ -51,6 +56,9 @@ impl Dx9Renderer {
                 SwapEffect: D3DSWAPEFFECT_COPY,
                 ..Default::default()
             };
+
+            // rustc is bamboozled, need mut for as_mut_ptr
+            #[allow(unused_mut)]
             let mut device = MaybeUninit::new(mem::zeroed());
             match d3d.CreateDevice(
                 D3DADAPTER_DEFAULT,
@@ -99,12 +107,11 @@ impl Renderer for Dx9Renderer {
         unsafe {
             let _ = self.device.EndScene();
 
-            let _ = self.device
+            let _ = self
+                .device
                 .Present(ptr::null(), ptr::null(), HWND(0), ptr::null());
         }
     }
 
-    fn shutdown(&mut self) {
-        
-    }
+    fn shutdown(&mut self) {}
 }
