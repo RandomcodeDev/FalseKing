@@ -5,12 +5,9 @@ use std::{mem, ptr};
 use log::{error, info};
 
 use super::Renderer;
-use crate::platform::win32::{FALSE, TRUE};
+use crate::platform::win32::TRUE;
 use crate::platform::PlatformBackend;
-use windows::{
-    core::Result,
-    Win32::{Foundation::*, Graphics::Direct3D9::*},
-};
+use windows::Win32::{Foundation::*, Graphics::Direct3D9::*};
 
 macro_rules! D3DCOLOR_ARGB {
     ($a:expr, $r:expr, $g:expr, $b:expr) => {
@@ -21,13 +18,13 @@ macro_rules! D3DCOLOR_ARGB {
     };
 }
 
-macro_rules! D3DCOLOR_XRGB {
+macro_rules! _D3DCOLOR_XRGB {
     ($r:expr, $g:expr, $b:expr) => {
         D3DCOLOR_ARGB!(0xff, $r, $g, $b)
     };
 }
 
-macro_rules! D3DCOLOR_RGBA {
+macro_rules! _D3DCOLOR_RGBA {
     ($r:expr, $g:expr, $b:expr, $a:expr) => {
         D3DCOLOR_ARGB!($a, $r, $g, $b)
     };
@@ -75,7 +72,7 @@ impl Dx9Renderer {
             };
 
             // Has been checked for errors
-            let mut device = device.assume_init().unwrap();
+            let device = device.assume_init().unwrap();
 
             Some(Arc::new(Mutex::new(Self { d3d, device })))
         }

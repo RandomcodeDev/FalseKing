@@ -85,6 +85,8 @@ fn main() {
                 Err(err) => println!("cargo:warning={err} ({err:?})"),
             }
         }
+    } else if target_os == "windows" && (target_arch == "i586" || target_arch == "i686") {
+        println!("cargo:rustc-link-arg-bin=false_king=/SUBSYSTEM:CONSOLE,5.01")
     }
 
     println!("cargo:rustc-cfg=build={:?}", profile);

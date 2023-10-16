@@ -719,17 +719,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num-derive"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cfb77679af88f8b125209d354a202862602672222e7f2313fdd6dc349bad4712"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.38",
-]
-
-[[package]]
 name = "num-traits"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -828,20 +817,6 @@ dependencies = [
  "phf_codegen",
  "proc-macro2",
  "quote",
-]
-
-[[package]]
-name = "pe-parser"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "381afb861e665a5def060ebb06165256a4ec21ab4acb8717179426fb00b66d29"
-dependencies = [
- "bitflags 2.4.0",
- "bytemuck",
- "chrono",
- "clap",
- "num-derive",
- "num-traits",
 ]
 
 [[package]]
@@ -1184,12 +1159,8 @@ dependencies = [
 name = "tools"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "clap",
  "common",
- "fern",
- "log",
- "pe-parser",
 ]
 
 [[package]]
