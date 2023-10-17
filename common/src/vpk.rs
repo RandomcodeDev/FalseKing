@@ -11,11 +11,13 @@ pub mod vpk2 {
         io::{self, Write},
         mem,
         path::{Path, PathBuf},
+        sync::{Arc, Mutex},
+        time::SystemTime,
     };
 
     use log::{debug, error, info, warn};
 
-    use crate::fs::FileSystem;
+    use crate::fs::{DirEntry, FileKind, FileSystem, FileType, Metadata, Permissions};
 
     /// Signature of VPK version 2 header
     const VPK2_SIGNATURE: u32 = 0x55AA1234;
@@ -142,6 +144,22 @@ pub mod vpk2 {
         type Error = TryFromSliceError;
     }
 
+    impl From<Vpk2DirectoryEntry> for Metadata {
+        fn from(value: Vpk2DirectoryEntry) -> Self {
+            Self::new(
+                FileType(FileKind::Regular),
+                false,
+                true,
+                false,
+                value.length as u64,
+                Permissions(false),
+                SystemTime::now(),
+                SystemTime::now(),
+                SystemTime::now(),
+            )
+        }
+    }
+
     /// MD5 hashe of a file in an archive
     #[repr(C)]
     #[derive(Clone, Default, Debug)]
@@ -231,6 +249,7 @@ pub mod vpk2 {
     }
 
     /// VPK version 2
+    #[derive(Clone)]
     pub struct Vpk2 {
         real_path: PathBuf,
 
@@ -238,7 +257,7 @@ pub mod vpk2 {
         external_md5_section: Vec<Vpk2ExternalMd5Entry>,
         md5: Vpk2Md5,
         signature: Vpk2Signature,
-        files: HashMap<String, Vpk2DirectoryEntry>,
+        files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
 
         current_archive: u16,
         current_offset: u32,
@@ -327,6 +346,8 @@ pub mod vpk2 {
                 string
             };
 
+            let mut files = self_.files.lock().unwrap();
+
             loop {
                 let extension = read_string(&mut current_offset, &directory);
                 if extension.len() < 1 {
@@ -358,7 +379,7 @@ pub mod vpk2 {
                             full_path += &extension;
                         }
 
-                        self_.files.insert(
+                        files.insert(
                             full_path.clone(),
                             match Vpk2DirectoryEntry::try_from(
                                 &directory[current_offset
@@ -375,16 +396,16 @@ pub mod vpk2 {
                             },
                         );
 
-                        if self_.files[&full_path].offset > self_.current_offset {
-                            self_.current_offset = self_.files[&full_path].offset;
+                        if files[&full_path].offset > self_.current_offset {
+                            self_.current_offset = files[&full_path].offset;
                         }
-                        if self_.files[&full_path].archive_index > self_.current_archive {
-                            self_.current_archive = self_.files[&full_path].archive_index;
-                            self_.current_offset = self_.files[&full_path].offset;
+                        if files[&full_path].archive_index > self_.current_archive {
+                            self_.current_archive = files[&full_path].archive_index;
+                            self_.current_offset = files[&full_path].offset;
                         }
 
                         self_.current_offset = (mem::size_of::<Vpk2DirectoryEntry>()
-                            + self_.files[&full_path].preload_size as usize)
+                            + files[&full_path].preload_size as usize)
                             as u32;
                         debug!("Got entry {full_path} in {}", dir_path.display());
                     }
@@ -448,7 +469,7 @@ pub mod vpk2 {
                 //current_offset += self_.header.signature_size as usize;
             }
 
-            Some(self_)
+            Some(self_.clone())
         }
 
         pub fn save<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
@@ -465,10 +486,13 @@ pub mod vpk2 {
 
             info!("Saving VPK file to {}", self.real_path.display());
 
-            let mut name_tree: HashMap<String, HashMap<String, HashMap<String, Vpk2DirectoryEntry>>> =
-                HashMap::new();
-
-            self.files.iter().for_each(|(full_path, entry)| {
+            let mut name_tree: HashMap<
+                String,
+                HashMap<String, HashMap<String, Vpk2DirectoryEntry>>,
+            > = HashMap::new();
+            
+            let files = self.files.lock().unwrap();
+            files.iter().for_each(|(full_path, entry)| {
                 let mut name = String::from(" ");
                 let extension = String::from(if let Some(last_dot) = full_path.find('.') {
                     let split = full_path.split_at(last_dot);
@@ -542,7 +566,7 @@ pub mod vpk2 {
                 self.header.tree_size,
                 directory.len()
             );
-            
+
             fs::write(dir_path, directory)?;
 
             Ok(())
@@ -567,6 +591,25 @@ pub mod vpk2 {
         }
     }
 
+    pub struct ReadDir {
+        files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
+    }
+
+    impl Iterator for ReadDir {
+        type Item = io::Result<DirEntry>;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            let files = self.files.lock().unwrap();
+            let entry = files.iter().next()?;
+            let metadata: Metadata = entry.1.clone().into();
+            Some(Ok(DirEntry::new(
+                PathBuf::from(entry.0),
+                metadata.clone(),
+                metadata.file_type(),
+            )))
+        }
+    }
+
     impl FileSystem for Vpk2 {
         fn try_exists<P: AsRef<Path>>(&self, path: P) -> io::Result<bool> {
             let path = String::from(
@@ -575,7 +618,8 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            Ok(self.files.get(&path).is_some())
+            let files = self.files.lock().unwrap();
+            Ok(files.get(&path).is_some())
         }
 
         fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
@@ -594,14 +638,16 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-
             let to = String::from(
                 to.as_ref()
                     .as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            self.files.insert(to, self.files[&from].clone());
+
+            let mut files_mut = self.files.lock().unwrap();
+            let files = self.files.lock().unwrap();
+            files_mut.insert(to, files[&from].clone());
 
             Ok(0)
         }
@@ -625,8 +671,20 @@ pub mod vpk2 {
             Ok(())
         }
 
-        fn metadata<P: AsRef<Path>>(&self, _path: P) -> io::Result<crate::fs::Metadata> {
-            todo!()
+        fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<crate::fs::Metadata> {
+            let path = String::from(
+                path.as_ref()
+                    .as_os_str()
+                    .to_str()
+                    .ok_or(io::Error::from(io::ErrorKind::Other))?,
+            );
+            
+            let mut files = self.files.lock().unwrap();
+            if let Some(entry) = files.get(&path) {
+                Ok(entry.clone().into())
+            } else {
+                Err(io::Error::from(io::ErrorKind::NotFound))
+            }
         }
 
         fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>> {
@@ -636,9 +694,10 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-
+            
+            let files = self.files.lock().unwrap();
             // TODO: Same issue as C++, can a file be in more than one chunk?
-            if let Some(entry) = self.files.get(&path) {
+            if let Some(entry) = files.get(&path) {
                 let archive_path = self.get_archive_path(Some(entry.archive_index as u32));
                 let archive = fs::read(&archive_path)?;
                 if entry.offset as usize + entry.length as usize <= archive.len() {
@@ -655,11 +714,15 @@ pub mod vpk2 {
             Err(io::Error::new(io::ErrorKind::NotFound, path))
         }
 
-        fn read_dir<P: AsRef<Path>>(
-            &self,
-            _path: P,
-        ) -> io::Result<Box<dyn Iterator<Item = io::Result<crate::fs::DirEntry>>>> {
-            todo!()
+        type ReadDir = ReadDir;
+
+        fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+        where
+            Self::ReadDir: Iterator,
+        {
+            Ok(Self::ReadDir {
+                files: self.files.clone()
+            })
         }
 
         fn read_link<P: AsRef<Path>>(&self, _path: P) -> io::Result<PathBuf> {
@@ -692,10 +755,11 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-
+            
+            let mut files = self.files.lock().unwrap();
             // TODO: should this delete the data or just the entry? VPKs should
             // just get recreated probably.
-            match self.files.remove_entry(&path) {
+            match files.remove_entry(&path) {
                 Some(_) => Ok(()),
                 None => Err(io::Error::from(io::ErrorKind::NotFound)),
             }
@@ -714,13 +778,14 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-
-            let entry = match self.files.remove_entry(&from) {
+            
+            let mut files = self.files.lock().unwrap();
+            let entry = match files.remove_entry(&from) {
                 Some(entry) => Ok(entry),
                 None => Err(io::Error::from(io::ErrorKind::NotFound)),
             }?;
 
-            self.files.insert(to, entry.1);
+            files.insert(to, entry.1);
 
             Ok(())
         }
@@ -728,7 +793,7 @@ pub mod vpk2 {
         fn set_permissions<P: AsRef<Path>>(
             &mut self,
             _path: P,
-            _permissions: std::fs::Permissions,
+            _permissions: Permissions,
         ) -> io::Result<()> {
             // Permissions don't exist in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
@@ -747,6 +812,7 @@ pub mod vpk2 {
             path: P,
             contents: C,
         ) -> io::Result<()> {
+            let mut files = self.files.lock().unwrap();
             let path = String::from(
                 path.as_ref()
                     .as_os_str()
@@ -793,7 +859,7 @@ pub mod vpk2 {
             archive_file.flush()?;
 
             self.current_offset += entry.length;
-            self.files.insert(path, entry);
+            files.insert(path, entry);
 
             Ok(())
         }
@@ -807,7 +873,7 @@ pub mod vpk2 {
                 external_md5_section: Vec::new(),
                 md5: Vpk2Md5::default(),
                 signature: Vpk2Signature::default(),
-                files: HashMap::new(),
+                files: Arc::new(Mutex::new(HashMap::new())),
                 current_archive: 0,
                 current_offset: 0,
             }

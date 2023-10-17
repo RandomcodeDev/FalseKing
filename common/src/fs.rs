@@ -1,10 +1,80 @@
-use std::{
-    ffi::OsString,
-    fs::{FileType, Permissions},
-    io,
-    path::*,
-    time::SystemTime,
-};
+use std::{ffi::OsString, io, mem, path::*, time::SystemTime};
+
+#[derive(Clone, Copy, Debug)]
+pub enum FileKind {
+    Regular,
+    Directory,
+    Symlink,
+    Other,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct FileType(pub FileKind);
+
+impl FileType {
+    pub fn is_dir(&self) -> bool {
+        match self.0 {
+            FileKind::Directory => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_file(&self) -> bool {
+        match self.0 {
+            FileKind::Regular => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_symlink(&self) -> bool {
+        match self.0 {
+            FileKind::Symlink => true,
+            _ => false,
+        }
+    }
+}
+
+impl From<std::fs::FileType> for FileType {
+    fn from(value: std::fs::FileType) -> Self {
+        if value.is_dir() {
+            Self(FileKind::Directory)
+        } else if value.is_file() {
+            Self(FileKind::Regular)
+        } else if value.is_symlink() {
+            Self(FileKind::Symlink)
+        } else {
+            Self(FileKind::Other)
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Permissions(pub bool);
+
+impl Permissions {
+    pub fn readonly(&self) -> bool {
+        self.0
+    }
+
+    pub fn set_readonly(&mut self, readonly: bool) {
+        self.0 = readonly
+    }
+}
+
+impl From<Permissions> for std::fs::Permissions {
+    fn from(value: Permissions) -> Self {
+        // TODO: make safer
+        let mut perm: std::fs::Permissions = unsafe { mem::zeroed() };
+        perm.set_readonly(value.readonly());
+        perm
+    }
+}
+
+impl From<std::fs::Permissions> for Permissions {
+    fn from(value: std::fs::Permissions) -> Self {
+        Self(value.readonly())
+    }
+}
 
 /// std::fs::Metadata but transparent
 #[allow(dead_code)]
@@ -82,12 +152,12 @@ impl Metadata {
 impl From<std::fs::Metadata> for Metadata {
     fn from(value: std::fs::Metadata) -> Self {
         Self {
-            file_type: value.file_type(),
+            file_type: value.file_type().into(),
             is_dir: value.is_dir(),
             is_file: value.is_file(),
             is_symlink: value.is_symlink(),
             len: value.len(),
-            permissions: value.permissions(),
+            permissions: value.permissions().into(),
             modified: value.modified().unwrap(),
             accessed: value.accessed().unwrap(),
             created: value.created().unwrap(),
@@ -101,6 +171,10 @@ pub struct DirEntry(PathBuf, Metadata, FileType);
 
 #[allow(dead_code)]
 impl DirEntry {
+    pub fn new(path: PathBuf, metadata: Metadata, file_type: FileType) -> Self {
+        Self(path, metadata, file_type)
+    }
+
     pub fn path(&self) -> PathBuf {
         self.0.clone()
     }
@@ -123,7 +197,7 @@ impl From<std::fs::DirEntry> for DirEntry {
         Self(
             value.path(),
             value.metadata().ok().unwrap().into(),
-            value.file_type().ok().unwrap(),
+            value.file_type().ok().unwrap().into(),
         )
     }
 }
@@ -146,7 +220,8 @@ pub trait FileSystem {
     fn create_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
 
     /// Create a hard link
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q) -> io::Result<()>;
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q)
+        -> io::Result<()>;
 
     /// Get the metadata of a path
     fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
@@ -154,11 +229,13 @@ pub trait FileSystem {
     /// Read a file into a vector
     fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>>;
 
+    // ReadDir
+    type ReadDir;
+
     /// Directory iterator
-    fn read_dir<P: AsRef<Path>>(
-        &self,
-        path: P,
-    ) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>>;
+    fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+    where
+        Self::ReadDir: Iterator;
 
     /// Get the path a symlink points to
     fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf>;
@@ -179,7 +256,11 @@ pub trait FileSystem {
     fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
 
     /// Change permissions
-    fn set_permissions<P: AsRef<Path>>(&mut self, path: P, permissions: Permissions) -> io::Result<()>;
+    fn set_permissions<P: AsRef<Path>>(
+        &mut self,
+        path: P,
+        permissions: Permissions,
+    ) -> io::Result<()>;
 
     /// Create a symlink (not deprecated)
     fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
@@ -222,7 +303,11 @@ impl FileSystem for StdFileSystem {
         std::fs::create_dir_all(path)
     }
 
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q) -> io::Result<()> {
+    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(
+        &mut self,
+        original: P,
+        link: Q,
+    ) -> io::Result<()> {
         std::fs::hard_link(original, link)
     }
 
@@ -237,11 +322,13 @@ impl FileSystem for StdFileSystem {
         std::fs::read(path)
     }
 
-    fn read_dir<P: AsRef<Path>>(
-        &self,
-        _path: P,
-    ) -> io::Result<Box<dyn Iterator<Item = io::Result<DirEntry>>>> {
-        todo!()
+    type ReadDir = std::fs::ReadDir;
+
+    fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+    where
+        Self::ReadDir: Iterator,
+    {
+        std::fs::read_dir(path)
     }
 
     fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
@@ -269,7 +356,7 @@ impl FileSystem for StdFileSystem {
     }
 
     fn set_permissions<P: AsRef<Path>>(&mut self, path: P, perm: Permissions) -> io::Result<()> {
-        std::fs::set_permissions(path, perm)
+        std::fs::set_permissions(path, perm.into())
     }
 
     fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {

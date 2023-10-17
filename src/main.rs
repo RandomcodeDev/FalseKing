@@ -9,10 +9,8 @@ mod renderer;
 
 use chrono::Local;
 use clap::Parser;
-use fern::colors::{Color, ColoredLevelConfig};
 //use legion::*;
 use platform::PlatformBackend;
-use std::io;
 
 pub const GAME_NAME: &str = "False King";
 pub const GAME_EXECUTABLE_NAME: &str = "false_king";
@@ -26,7 +24,21 @@ struct Args {
 }
 
 fn main() {
-    setup_logger().expect("Failed to set up logger");
+    #[cfg(all(build = "debug", feature = "extra_log"))]
+    let level = log::LevelFilter::Trace;
+    #[cfg(build = "debug")]
+    let level = log::LevelFilter::Debug;
+    #[cfg(all(not(build = "debug"), feature = "extra_log"))]
+    let level = log::LevelFilter::Info;
+    #[cfg(feature = "verbose_log")]
+    let level = log::LevelFilter::Trace;
+    #[cfg(any(build = "debug", all(not(build = "debug"), feature = "extra_log")))]
+    let stdout = true;
+    #[cfg(not(any(build = "debug", all(not(build = "debug"), feature = "extra_log"))))]
+    let stdout = false;
+
+    common::setup_logger(level, Some(String::from(GAME_EXECUTABLE_NAME)), stdout)
+        .expect("Failed to set up logger");
 
     let args = Args::parse();
 
@@ -44,56 +56,4 @@ fn main() {
 
     renderer.try_lock().unwrap().shutdown();
     backend.try_lock().unwrap().shutdown();
-}
-
-fn setup_logger() -> Result<(), fern::InitError> {
-    let dt = Local::now().format("%Y-%m-%d_%H-%M-%S").to_string();
-
-    let colors_line = ColoredLevelConfig::new()
-        .error(Color::Red)
-        .warn(Color::Yellow)
-        .info(Color::Green)
-        .debug(Color::BrightCyan)
-        .trace(Color::Cyan);
-
-    let dispatch = fern::Dispatch::new()
-        .format(move |out, message, record| {
-            let dt = Local::now();
-
-            let mut location = String::from(record.target());
-            if let Some(file) = record.file() {
-                if let Some(line) = record.line() {
-                    location = format!("{file}:{line}");
-                }
-            }
-
-            let level = record.level().as_str().to_lowercase();
-
-            out.finish(format_args!(
-                "[{} \x1B[{}m{}\x1B[0m {}] {}",
-                dt.format("%Y/%m/%d %H:%M:%S"),
-                colors_line.get_color(&record.level()).to_fg_str(),
-                level,
-                location,
-                message
-            ))
-        })
-        .chain(fern::log_file(
-            String::from(crate::GAME_EXECUTABLE_NAME) + "-" + &dt + ".log",
-        )?);
-
-    #[cfg(all(build = "debug", feature = "extra_log"))]
-    let dispatch = dispatch.level(log::LevelFilter::Trace);
-    #[cfg(build = "debug")]
-    let dispatch = dispatch.level(log::LevelFilter::Debug);
-    #[cfg(all(not(build = "debug"), feature = "extra_log"))]
-    let dispatch = dispatch.level(log::LevelFilter::Info);
-    #[cfg(feature = "verbose_log")]
-    let dispatch = dispatch.level(log::LevelFilter::Trace);
-    #[cfg(any(build = "debug", all(not(build = "debug"), feature = "extra_log")))]
-    let dispatch = dispatch.chain(io::stdout());
-
-    dispatch.apply()?;
-
-    Ok(())
 }
