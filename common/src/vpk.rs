@@ -1,5 +1,5 @@
 /// Default file extension for VPK files
-const VPK_EXTENSION: &str = ".vpk";
+const VPK_EXTENSION: &str = "vpk";
 
 /// Based on my C++ implementation: https://github.com/RandomcodeDev/FalseKing/blob/e6f62531b80fbb3a47bf83aca238c16892aff9ed/core/vpk.cpp
 /// Overall, functional without significant issues. Could be improved, but likely doesn't need to be yet.
@@ -517,7 +517,7 @@ pub mod vpk2 {
                     name_tree.insert(extension.clone(), HashMap::new());
                     let paths = name_tree.get_mut(&extension).unwrap();
                     paths.insert(path.clone(), HashMap::new());
-                    let names = paths.get_mut(&name).unwrap();
+                    let names = paths.get_mut(&path).unwrap();
                     names.insert(name.clone(), entry.clone());
                 }
             });
@@ -556,8 +556,8 @@ pub mod vpk2 {
             directory[..mem::size_of::<Vpk2Header>()]
                 .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.header) });
             directory.resize(directory.len() + mem::size_of::<Vpk2Md5>(), 0);
-            directory[self.header.tree_size as usize..]
-                .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.header) });
+            directory[mem::size_of::<Vpk2Header>() + self.header.tree_size as usize..]
+                .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.md5) });
 
             let dir_path = self.get_directory_path();
             info!(
@@ -573,13 +573,13 @@ pub mod vpk2 {
         }
 
         fn get_directory_path(&self) -> PathBuf {
-            format!("{}_dir.{}", self.real_path.display(), super::VPK_EXTENSION).into()
+            format!("{}_dir.{}", self.real_path.with_extension("").display(), super::VPK_EXTENSION).into()
         }
 
         fn get_archive_path(&self, index: Option<u32>) -> PathBuf {
             format!(
-                "{}_{:.3}.{}",
-                self.real_path.display(),
+                "{}_{:03}.{}",
+                self.real_path.with_extension("").display(),
                 if index.is_some() {
                     index.unwrap()
                 } else {
