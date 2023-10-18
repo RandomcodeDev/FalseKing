@@ -48,6 +48,14 @@ struct Args {
 fn create(input_dir: PathBuf, output_vpk: PathBuf) {
     println!("Creating VPK {} from {}", input_dir.display(), output_vpk.display());
 
+    let mut output_vpk = output_vpk;
+    if output_vpk.as_os_str().len() < 1 {
+        output_vpk = input_dir.clone();
+        if output_vpk.ends_with("/") || output_vpk.ends_with("\\") {
+            output_vpk.pop();
+        }
+    }
+
     let mut vpk = vpk::vpk2::Vpk2::new(&output_vpk, true).expect("Failed to create VPK");
 
     fn visit_dirs<T>(

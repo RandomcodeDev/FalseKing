@@ -17,6 +17,8 @@ pub mod vpk2 {
 
     use log::{debug, error, info, warn};
 
+    use serde::{Serialize, Deserialize};
+
     use crate::fs::{DirEntry, FileKind, FileSystem, FileType, Metadata, Permissions};
 
     /// Signature of VPK version 2 header
@@ -32,8 +34,7 @@ pub mod vpk2 {
     const VPK2_CHUNK_MAX_SIZE: usize = 209715200;
 
     /// Header of a VPK 2 directory file
-    #[repr(C)]
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     struct Vpk2Header {
         /// Signature, must equal `VPK2_SIGNATURE`
         signature: u32,
@@ -75,30 +76,10 @@ pub mod vpk2 {
         }
     }
 
-    impl TryFrom<&[u8]> for Vpk2Header {
-        /// Convert from a u8 slice of at least `size_of::<Vpk2Header>`
-        fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-            Ok(Self {
-                signature: u32::from_le_bytes(*crate::util::slice_to_array(&value[0..3])?),
-                version: u32::from_le_bytes(*crate::util::slice_to_array(&value[4..7])?),
-                tree_size: u32::from_le_bytes(*crate::util::slice_to_array(&value[8..11])?),
-                file_data_size: u32::from_le_bytes(*crate::util::slice_to_array(&value[12..15])?),
-                external_md5_size: u32::from_le_bytes(*crate::util::slice_to_array(
-                    &value[16..19],
-                )?),
-                md5_size: u32::from_le_bytes(*crate::util::slice_to_array(&value[20..23])?),
-                signature_size: u32::from_le_bytes(*crate::util::slice_to_array(&value[24..27])?),
-            })
-        }
-
-        type Error = TryFromSliceError;
-    }
-
     const VPK2_ENTRY_TERMINATOR: u16 = 0xFFFF;
 
     /// Directory entry of a VPK 2 file
-    #[repr(C)]
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     struct Vpk2DirectoryEntry {
         /// Special Valve CRC32
         crc: u32,
@@ -128,22 +109,6 @@ pub mod vpk2 {
         }
     }
 
-    impl TryFrom<&[u8]> for Vpk2DirectoryEntry {
-        /// Convert from a u8 slice of at least `size_of::<Vpk2DirectoryEntry>`
-        fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-            Ok(Self {
-                crc: u32::from_le_bytes(*crate::util::slice_to_array(&value[0..3])?),
-                preload_size: u16::from_le_bytes(*crate::util::slice_to_array(&value[4..5])?),
-                archive_index: u16::from_le_bytes(*crate::util::slice_to_array(&value[6..7])?),
-                offset: u32::from_le_bytes(*crate::util::slice_to_array(&value[8..11])?),
-                length: u32::from_le_bytes(*crate::util::slice_to_array(&value[12..15])?),
-                terminator: u16::from_le_bytes(*crate::util::slice_to_array(&value[16..17])?),
-            })
-        }
-
-        type Error = TryFromSliceError;
-    }
-
     impl From<Vpk2DirectoryEntry> for Metadata {
         fn from(value: Vpk2DirectoryEntry) -> Self {
             Self::new(
@@ -161,8 +126,7 @@ pub mod vpk2 {
     }
 
     /// MD5 hashe of a file in an archive
-    #[repr(C)]
-    #[derive(Clone, Default, Debug)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     struct Vpk2ExternalMd5Entry {
         /// The index where the data is
         archive_index: u32,
@@ -174,23 +138,8 @@ pub mod vpk2 {
         md5: u128,
     }
 
-    impl TryFrom<&[u8]> for Vpk2ExternalMd5Entry {
-        /// Convert from a u8 slice of at least `size_of::<Vpk2ExternalMd5Entry>`
-        fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-            Ok(Self {
-                archive_index: u32::from_le_bytes(*crate::util::slice_to_array(&value[0..3])?),
-                starting_offset: u32::from_le_bytes(*crate::util::slice_to_array(&value[4..7])?),
-                count: u32::from_le_bytes(*crate::util::slice_to_array(&value[8..11])?),
-                md5: u128::from_le_bytes(*crate::util::slice_to_array(&value[12..27])?),
-            })
-        }
-
-        type Error = TryFromSliceError;
-    }
-
     /// MD5 hashes of the directory file
-    #[repr(C)]
-    #[derive(Clone, Default, Debug)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     struct Vpk2Md5 {
         /// Hash of the directory tree
         tree_md5: u128,
@@ -200,24 +149,8 @@ pub mod vpk2 {
         unknown: u128,
     }
 
-    impl TryFrom<&[u8]> for Vpk2Md5 {
-        /// Convert from a u8 slice of at least `size_of::<Vpk2Md5>`
-        fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-            Ok(Self {
-                tree_md5: u128::from_le_bytes(*crate::util::slice_to_array(&value[0..15])?),
-                external_md5_md5: u128::from_le_bytes(*crate::util::slice_to_array(
-                    &value[16..31],
-                )?),
-                unknown: u128::from_le_bytes(*crate::util::slice_to_array(&value[32..47])?),
-            })
-        }
-
-        type Error = TryFromSliceError;
-    }
-
     /// Signature section
-    #[repr(C)]
-    #[derive(Clone, Default, Debug)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     struct Vpk2Signature {
         /// Public key size
         public_key_size: u32,
@@ -226,26 +159,6 @@ pub mod vpk2 {
         /// Signature size
         signature_size: u32,
         signature: Vec<u8>,
-    }
-
-    impl TryFrom<&[u8]> for Vpk2Signature {
-        /// Convert from a u8 slice of at least `size_of::<Vpk2Signature>`
-        fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-            let public_key_size = u32::from_le_bytes(*crate::util::slice_to_array(&value[0..3])?);
-            let signature_size = u32::from_le_bytes(*crate::util::slice_to_array(
-                &value[4 + public_key_size as usize..4 + public_key_size as usize + 3],
-            )?);
-            Ok(Self {
-                public_key_size,
-                public_key: Vec::from(&value[4..public_key_size as usize]),
-                signature_size,
-                signature: Vec::from(
-                    &value[4 + public_key_size as usize + 4..4 + public_key_size as usize + 7],
-                ),
-            })
-        }
-
-        type Error = TryFromSliceError;
     }
 
     /// VPK version 2
@@ -312,19 +225,21 @@ pub mod vpk2 {
             };
 
             if !self_.header.is_valid() {
+                let signature = self_.header.signature;
                 error!(
                     "VPK signature of {} is 0x{:08X}, expected 0x{VPK2_SIGNATURE:08X}",
                     dir_path.display(),
-                    self_.header.signature
+                    signature
                 );
                 return None;
             }
 
             if !self_.header.is_correct_version() {
+                let version = self_.header.version;
                 error!(
                     "VPK {} is version {}, should be {VPK2_VERSION}",
                     dir_path.display(),
-                    self_.header.version
+                    version
                 );
                 return None;
             }
@@ -497,12 +412,13 @@ pub mod vpk2 {
                 let extension = String::from(if let Some(last_dot) = full_path.find('.') {
                     let split = full_path.split_at(last_dot);
                     name = String::from(split.0);
-                    split.1
+                    split.1.strip_prefix('.').unwrap() // remove first .
                 } else {
                     " "
                 });
-                let path = String::from(if let Some(last_slash) = full_path.find('/') {
+                let path = String::from(if let Some(last_slash) = full_path.rfind('/') {
                     name = String::from(name.split_at(last_slash).1);
+                    name.remove(0); // remove first /
                     full_path.split_at(last_slash).0
                 } else {
                     " "
@@ -560,10 +476,11 @@ pub mod vpk2 {
                 .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.md5) });
 
             let dir_path = self.get_directory_path();
+            let tree_size = self.header.tree_size;
             info!(
                 "Writing VPK directory to {}. Directory tree is {} byte(s), directory is {} byte(s).",
                 dir_path.display(),
-                self.header.tree_size,
+                tree_size,
                 directory.len()
             );
 
@@ -679,7 +596,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
             
-            let mut files = self.files.lock().unwrap();
+            let files = self.files.lock().unwrap();
             if let Some(entry) = files.get(&path) {
                 Ok(entry.clone().into())
             } else {
@@ -716,7 +633,7 @@ pub mod vpk2 {
 
         type ReadDir = ReadDir;
 
-        fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+        fn read_dir<P: AsRef<Path>>(&self, _path: P) -> io::Result<Self::ReadDir>
         where
             Self::ReadDir: Iterator,
         {
@@ -819,6 +736,11 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
+
+            let mut path = crate::util::clean_path(&path);
+            if path.chars().nth(0).is_some_and(|c| c == '/') {
+                path.remove(0);
+            }
 
             let contents = contents.as_ref();
 
