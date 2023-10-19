@@ -8,7 +8,7 @@ pub mod vpk2 {
     use log::{debug, error, info, warn};
     use binary_serde::{BinarySerde, Endianness};
     use std::{
-        collections::HashMap,
+        collections::{HashMap, Iter},
         fs::{self, OpenOptions},
         io::{self, Write},
         mem,
@@ -168,7 +168,7 @@ pub mod vpk2 {
         external_md5_section: Vec<Vpk2ExternalMd5Entry>,
         md5: Vpk2Md5,
         //signature: Vpk2Signature,
-        files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
+        files: HashMap<String, Vpk2DirectoryEntry>,
 
         current_archive: u16,
         current_offset: u32,
@@ -259,7 +259,7 @@ pub mod vpk2 {
                 string
             };
 
-            let mut files = self_.files.lock().unwrap();
+            
 
             loop {
                 let extension = read_string(&mut current_offset, &directory);
@@ -404,7 +404,6 @@ pub mod vpk2 {
                 HashMap<String, HashMap<String, Vpk2DirectoryEntry>>,
             > = HashMap::new();
 
-            let files = self.files.lock().unwrap();
             files.iter().for_each(|(full_path, entry)| {
                 let mut name = String::new();
                 let extension = String::from(if let Some(last_dot) = full_path.find('.') {
@@ -525,6 +524,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
             let mut split = path.rsplit('_');
+            split.next(); // skip first part
             let mut name = PathBuf::from(split.next().unwrap_or_default());
             name.set_extension(super::VPK_EXTENSION);
             Ok(name)
@@ -532,15 +532,14 @@ pub mod vpk2 {
     }
 
     pub struct ReadDir {
-        files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
+        files: Iter<'_, String, Vpk2DirectoryEntry>,
     }
 
     impl Iterator for ReadDir {
         type Item = io::Result<DirEntry>;
 
         fn next(&mut self) -> Option<Self::Item> {
-            let files = self.files.lock().unwrap();
-            let entry = files.iter().next()?;
+            let entry = self.files.next();
             let metadata: Metadata = entry.1.clone().into();
             Some(Ok(DirEntry::new(
                 PathBuf::from(entry.0),
@@ -558,7 +557,7 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            let files = self.files.lock().unwrap();
+            
             Ok(files.get(&path).is_some())
         }
 
@@ -585,9 +584,9 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
 
-            let mut files_mut = self.files.lock().unwrap();
-            let files = self.files.lock().unwrap();
-            files_mut.insert(to, files[&from].clone());
+            
+            
+            self.files.insert(to, files[&from].clone());
 
             Ok(0)
         }
@@ -619,7 +618,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
 
-            let files = self.files.lock().unwrap();
+            
             if let Some(entry) = files.get(&path) {
                 Ok(entry.clone().into())
             } else {
@@ -635,7 +634,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
 
-            let files = self.files.lock().unwrap();
+            
             // TODO: Same issue as C++, can a file be in more than one chunk?
             if let Some(entry) = files.get(&path) {
                 let archive_path = self.get_archive_path(Some(entry.archive_index as u32));
@@ -661,7 +660,7 @@ pub mod vpk2 {
             Self::ReadDir: Iterator,
         {
             Ok(Self::ReadDir {
-                files: self.files.clone(),
+                files: self.files.iter(),
             })
         }
 
@@ -696,7 +695,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
 
-            let mut files = self.files.lock().unwrap();
+            
             // TODO: should this delete the data or just the entry? VPKs should
             // just get recreated probably.
             match files.remove_entry(&path) {
@@ -719,7 +718,7 @@ pub mod vpk2 {
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
 
-            let mut files = self.files.lock().unwrap();
+            
             let entry = match files.remove_entry(&from) {
                 Some(entry) => Ok(entry),
                 None => Err(io::Error::from(io::ErrorKind::NotFound)),
@@ -752,7 +751,7 @@ pub mod vpk2 {
             path: P,
             contents: C,
         ) -> io::Result<()> {
-            let mut files = self.files.lock().unwrap();
+            
             let path = String::from(
                 path.as_ref()
                     .as_os_str()
@@ -818,7 +817,7 @@ pub mod vpk2 {
                 external_md5_section: Vec::new(),
                 md5: Vpk2Md5::default(),
                 //signature: Vpk2Signature::default(),
-                files: Arc::new(Mutex::new(HashMap::new())),
+                files: HashMap::new(),
                 current_archive: 0,
                 current_offset: 0,
             }
