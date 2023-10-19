@@ -1,11 +1,13 @@
 /// Default file extension for VPK files
-const VPK_EXTENSION: &str = "vpk";
+pub const VPK_EXTENSION: &str = "vpk";
 
 /// Based on my C++ implementation: https://github.com/RandomcodeDev/FalseKing/blob/e6f62531b80fbb3a47bf83aca238c16892aff9ed/core/vpk.cpp
 /// Overall, functional without significant issues. Could be improved, but likely doesn't need to be yet.
 pub mod vpk2 {
+    use crate::fs::{DirEntry, FileKind, FileSystem, FileType, Metadata, Permissions};
+    use log::{debug, error, info, warn};
+    use binary_serde::{BinarySerde, Endianness};
     use std::{
-        array::TryFromSliceError,
         collections::HashMap,
         fs::{self, OpenOptions},
         io::{self, Write},
@@ -14,12 +16,6 @@ pub mod vpk2 {
         sync::{Arc, Mutex},
         time::SystemTime,
     };
-
-    use log::{debug, error, info, warn};
-
-    use serde::{Serialize, Deserialize};
-
-    use crate::fs::{DirEntry, FileKind, FileSystem, FileType, Metadata, Permissions};
 
     /// Signature of VPK version 2 header
     const VPK2_SIGNATURE: u32 = 0x55AA1234;
@@ -30,11 +26,12 @@ pub mod vpk2 {
     /// Special archive index for entries stored in the directory file
     const _VPK2_SPECIAL_INDEX: u16 = 0x7FFF;
 
-    /// Maximum size of an archive
+    /// Maximum size of an archive (200M)
     const VPK2_CHUNK_MAX_SIZE: usize = 209715200;
 
     /// Header of a VPK 2 directory file
-    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[repr(C)]
+    #[derive(Clone, Debug, BinarySerde)]
     struct Vpk2Header {
         /// Signature, must equal `VPK2_SIGNATURE`
         signature: u32,
@@ -79,7 +76,8 @@ pub mod vpk2 {
     const VPK2_ENTRY_TERMINATOR: u16 = 0xFFFF;
 
     /// Directory entry of a VPK 2 file
-    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[repr(C)]
+    #[derive(Clone, Debug, BinarySerde)]
     struct Vpk2DirectoryEntry {
         /// Special Valve CRC32
         crc: u32,
@@ -126,7 +124,8 @@ pub mod vpk2 {
     }
 
     /// MD5 hashe of a file in an archive
-    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[repr(C)]
+    #[derive(Clone, Debug, BinarySerde)]
     struct Vpk2ExternalMd5Entry {
         /// The index where the data is
         archive_index: u32,
@@ -139,7 +138,8 @@ pub mod vpk2 {
     }
 
     /// MD5 hashes of the directory file
-    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[repr(C)]
+    #[derive(Clone, Debug, Default, BinarySerde)]
     struct Vpk2Md5 {
         /// Hash of the directory tree
         tree_md5: u128,
@@ -149,16 +149,14 @@ pub mod vpk2 {
         unknown: u128,
     }
 
-    /// Signature section
-    #[derive(Clone, Debug, Serialize, Deserialize)]
+    /// Signature section (TODO: make serializable, even though it's not understood well enough to use)
+    #[repr(C)]
+    #[derive(Clone, Debug, Default)]
     struct Vpk2Signature {
-        /// Public key size
-        public_key_size: u32,
         /// Public key
-        public_key: Vec<u8>,
-        /// Signature size
-        signature_size: u32,
-        signature: Vec<u8>,
+        _public_key: Vec<u8>,
+        /// Signature
+        _signature: Vec<u8>,
     }
 
     /// VPK version 2
@@ -169,7 +167,7 @@ pub mod vpk2 {
         header: Vpk2Header,
         external_md5_section: Vec<Vpk2ExternalMd5Entry>,
         md5: Vpk2Md5,
-        signature: Vpk2Signature,
+        //signature: Vpk2Signature,
         files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
 
         current_archive: u16,
@@ -213,7 +211,7 @@ pub mod vpk2 {
                 return None;
             }
 
-            self_.header = match Vpk2Header::try_from(directory.as_slice()) {
+            self_.header = match Vpk2Header::binary_deserialize(directory.as_ref(), Endianness::Little) {
                 Ok(header) => header,
                 Err(err) => {
                     error!(
@@ -296,9 +294,10 @@ pub mod vpk2 {
 
                         files.insert(
                             full_path.clone(),
-                            match Vpk2DirectoryEntry::try_from(
+                            match Vpk2DirectoryEntry::binary_deserialize(
                                 &directory[current_offset
                                     ..current_offset + mem::size_of::<Vpk2DirectoryEntry>()],
+                                Endianness::Little
                             ) {
                                 Ok(entry) => entry,
                                 Err(err) => {
@@ -335,9 +334,8 @@ pub mod vpk2 {
             for i in 0..md5_entry_count {
                 let start = current_offset + i * mem::size_of::<Vpk2ExternalMd5Entry>();
                 let end = current_offset + (i + 1) * mem::size_of::<Vpk2ExternalMd5Entry>();
-                self_
-                    .external_md5_section
-                    .push(match (&directory[start..end]).try_into() {
+                self_.external_md5_section.push(
+                    match Vpk2ExternalMd5Entry::binary_deserialize(&directory[start..end], Endianness::Little) {
                         Ok(entry) => entry,
                         Err(err) => {
                             error!(
@@ -346,15 +344,16 @@ pub mod vpk2 {
                             );
                             return None;
                         }
-                    });
+                    },
+                );
             }
             current_offset += self_.header.external_md5_size as usize;
 
             if self_.header.md5_size as usize >= mem::size_of::<Vpk2Md5>() {
-                self_.md5 = match (&directory
-                    [current_offset..current_offset + mem::size_of::<Vpk2Md5>()])
-                    .try_into()
-                {
+                self_.md5 = match Vpk2Md5::binary_deserialize(
+                    &directory[current_offset..current_offset + mem::size_of::<Vpk2Md5>()],
+                    Endianness::Little,
+                ) {
                     Ok(md5) => md5,
                     Err(err) => {
                         error!(
@@ -364,13 +363,12 @@ pub mod vpk2 {
                         return None;
                     }
                 };
-                current_offset += self_.header.md5_size as usize;
+                //current_offset += self_.header.md5_size as usize;
             }
 
-            if self_.header.signature_size as usize >= mem::size_of::<Vpk2Signature>() {
-                self_.signature = match (&directory
-                    [current_offset..current_offset + mem::size_of::<Vpk2Signature>()])
-                    .try_into()
+            /*if self_.header.signature_size as usize >= mem::size_of::<Vpk2Signature>() {
+                self_.signature = match serde_binary::from_slice(&directory
+                    [current_offset..current_offset + mem::size_of::<Vpk2Signature>()], Endian::Little)
                 {
                     Ok(md5) => md5,
                     Err(err) => {
@@ -382,7 +380,7 @@ pub mod vpk2 {
                     }
                 };
                 //current_offset += self_.header.signature_size as usize;
-            }
+            }*/
 
             Some(self_.clone())
         }
@@ -405,10 +403,10 @@ pub mod vpk2 {
                 String,
                 HashMap<String, HashMap<String, Vpk2DirectoryEntry>>,
             > = HashMap::new();
-            
+
             let files = self.files.lock().unwrap();
             files.iter().for_each(|(full_path, entry)| {
-                let mut name = String::from(" ");
+                let mut name = String::new();
                 let extension = String::from(if let Some(last_dot) = full_path.find('.') {
                     let split = full_path.split_at(last_dot);
                     name = String::from(split.0);
@@ -423,6 +421,10 @@ pub mod vpk2 {
                 } else {
                     " "
                 });
+
+                if name.len() < 1 {
+                    name.push(' ');
+                }
 
                 if let Some(paths) = name_tree.get_mut(&extension) {
                     if let Some(names) = paths.get_mut(&path) {
@@ -454,10 +456,15 @@ pub mod vpk2 {
                     names.iter().for_each(|(name, entry)| {
                         let mut name_raw = Vec::from(name.as_str().as_bytes());
                         name_raw.push(0);
-                        let mut entry_raw = unsafe { crate::util::any_as_bytes(entry) }.to_vec();
-                        name_raw.push(0);
                         directory.append(&mut name_raw);
-                        directory.append(&mut entry_raw);
+                        let len = directory.len();
+                        directory.resize(directory.len() + mem::size_of::<Vpk2DirectoryEntry>(), 0);
+                        entry.binary_serialize(&mut directory[len..], Endianness::Little);
+
+                        // This is _probably_ because the struct has 3 u16's, which makes something 
+                        // somewhere align it, causing two zeroes that shouldn't be there to prematurely
+                        // end this level of the tree
+                        directory.resize(directory.len() - 2, 0);
                     });
 
                     directory.push(0);
@@ -469,11 +476,9 @@ pub mod vpk2 {
             directory.push(0);
 
             self.header.tree_size = (directory.len() - mem::size_of::<Vpk2Header>()) as u32;
-            directory[..mem::size_of::<Vpk2Header>()]
-                .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.header) });
+            self.header.binary_serialize(&mut directory[..mem::size_of::<Vpk2Header>()], Endianness::Little);
             directory.resize(directory.len() + mem::size_of::<Vpk2Md5>(), 0);
-            directory[mem::size_of::<Vpk2Header>() + self.header.tree_size as usize..]
-                .copy_from_slice(unsafe { crate::util::any_as_bytes(&self.md5) });
+            self.md5.binary_serialize(&mut directory[mem::size_of::<Vpk2Header>() + self.header.tree_size as usize..], Endianness::Little);
 
             let dir_path = self.get_directory_path();
             let tree_size = self.header.tree_size;
@@ -490,7 +495,12 @@ pub mod vpk2 {
         }
 
         fn get_directory_path(&self) -> PathBuf {
-            format!("{}_dir.{}", self.real_path.with_extension("").display(), super::VPK_EXTENSION).into()
+            format!(
+                "{}_dir.{}",
+                self.real_path.with_extension("").display(),
+                super::VPK_EXTENSION
+            )
+            .into()
         }
 
         fn get_archive_path(&self, index: Option<u32>) -> PathBuf {
@@ -505,6 +515,19 @@ pub mod vpk2 {
                 super::VPK_EXTENSION
             )
             .into()
+        }
+
+        pub fn get_base_path<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
+            let path = String::from(
+                path.as_ref()
+                    .as_os_str()
+                    .to_str()
+                    .ok_or(io::Error::from(io::ErrorKind::Other))?,
+            );
+            let mut split = path.rsplit('_');
+            let mut name = PathBuf::from(split.next().unwrap_or_default());
+            name.set_extension(super::VPK_EXTENSION);
+            Ok(name)
         }
     }
 
@@ -595,7 +618,7 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            
+
             let files = self.files.lock().unwrap();
             if let Some(entry) = files.get(&path) {
                 Ok(entry.clone().into())
@@ -611,7 +634,7 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            
+
             let files = self.files.lock().unwrap();
             // TODO: Same issue as C++, can a file be in more than one chunk?
             if let Some(entry) = files.get(&path) {
@@ -638,7 +661,7 @@ pub mod vpk2 {
             Self::ReadDir: Iterator,
         {
             Ok(Self::ReadDir {
-                files: self.files.clone()
+                files: self.files.clone(),
             })
         }
 
@@ -672,7 +695,7 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            
+
             let mut files = self.files.lock().unwrap();
             // TODO: should this delete the data or just the entry? VPKs should
             // just get recreated probably.
@@ -695,7 +718,7 @@ pub mod vpk2 {
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
-            
+
             let mut files = self.files.lock().unwrap();
             let entry = match files.remove_entry(&from) {
                 Some(entry) => Ok(entry),
@@ -794,7 +817,7 @@ pub mod vpk2 {
                 header: Vpk2Header::default(),
                 external_md5_section: Vec::new(),
                 md5: Vpk2Md5::default(),
-                signature: Vpk2Signature::default(),
+                //signature: Vpk2Signature::default(),
                 files: Arc::new(Mutex::new(HashMap::new())),
                 current_archive: 0,
                 current_offset: 0,
