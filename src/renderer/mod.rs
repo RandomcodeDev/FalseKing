@@ -19,9 +19,9 @@ use log::error;
 use vulkano::{buffer::BufferContents, pipeline::graphics::vertex_input::Vertex as VkVertex};
 
 /// Background colour
-const CLEAR_COLOR_R: u8 = 135;
+const CLEAR_COLOR_R: u8 = 0;
 const CLEAR_COLOR_G: u8 = 0;
-const CLEAR_COLOR_B: u8 = 255;
+const CLEAR_COLOR_B: u8 = 0;
 const CLEAR_COLOR_A: u8 = 255;
 
 #[derive(Clone, clap::ValueEnum)]
