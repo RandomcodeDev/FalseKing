@@ -6,7 +6,7 @@ use std::{
 use clap::{Parser, Subcommand};
 use common::{
     fs::{self, FileSystem},
-    log::{self, info}, vpk,
+    log::{self, error, info}, vpk,
 };
 
 #[derive(Debug, Subcommand)]
@@ -49,7 +49,7 @@ struct Args {
     debug: bool,
 }
 
-fn create(input_dir: PathBuf, output_vpk: Option<PathBuf>) {
+fn create(input_dir: PathBuf, output_vpk: Option<PathBuf>) -> io::Result<()> {
     let mut output_vpk = 
     if output_vpk.is_some() {
         output_vpk.unwrap()
@@ -101,10 +101,38 @@ fn create(input_dir: PathBuf, output_vpk: Option<PathBuf>) {
 
     println!("Saving VPK to {}", output_vpk.display());
     vpk.save(output_vpk).expect("Failed to save VPK");
+
+    Ok(())
 }
 
-fn extract(input_vpk: PathBuf, output_dir: Option<PathBuf>) {
+fn extract(input_vpk: PathBuf, output_dir: Option<PathBuf>) -> io::Result<()> {
     let base_path = vpk::vpk2::Vpk2::get_base_path(input_vpk).expect("Failed to get base name of VPK");
+
+    let mut output_dir = if output_dir.is_some() {
+        output_dir.unwrap()
+    } else {
+        base_path.clone()
+    };
+    output_dir.set_extension("");
+
+    println!("Extracting VPK {} to {}", base_path.display(), output_dir.display());
+
+    let vpk = vpk::vpk2::Vpk2::new(base_path, false).expect("Failed to open VPK");
+
+    for entry in vpk.read_dir("")? {
+        match entry {
+            Ok(entry) => {
+                let mut output_path = output_dir.clone();
+                output_path.push(entry.path().file_name().expect("No path"));
+                info!("{} -> {}", entry.path().display(), output_path.display());
+            }
+            Err(err) => {
+                error!("Failed to extract file: {err}");
+            }
+        }
+    }
+
+    Ok(())
 }
 
 fn main() {
@@ -123,9 +151,9 @@ fn main() {
     )
     .expect("Failed to initialize logging");
 
-    match args.command {
+    let _ = match args.command {
         Commands::Create { input_dir, output_vpk } => create(input_dir, output_vpk),
         Commands::Extract { input_vpk, output_dir } => extract(input_vpk, output_dir),
-        Commands::List { input_vpk, check_hashes } => {}
-    }
+        Commands::List { input_vpk, check_hashes } => Ok(())
+    };
 }
