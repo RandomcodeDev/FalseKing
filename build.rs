@@ -1,3 +1,4 @@
+use shaderc;
 use std::{
     env, fs,
     path::{Path, PathBuf},
@@ -87,6 +88,10 @@ fn main() {
         }
     } else if target_os == "windows" && (target_arch == "i586" || target_arch == "i686") {
         println!("cargo:rustc-link-arg-bin=false_king=/SUBSYSTEM:CONSOLE,5.01")
+    }
+
+    if target_os != "macos" {
+
     }
 
     println!("cargo:rustc-cfg=build={:?}", profile);
