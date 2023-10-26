@@ -2,7 +2,7 @@ use shaderc;
 use std::{
     env, fs,
     path::{Path, PathBuf},
-    process::Command,
+    process::Command, mem,
 };
 
 fn put_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) {
@@ -91,7 +91,35 @@ fn main() {
     }
 
     if target_os != "macos" {
+        let compiler = shaderc::Compiler::new().unwrap();
+        let mut options = shaderc::CompileOptions::new();
 
+        fn compile_shader(
+            compiler: &shaderc::Compiler,
+            input_file_name: &str,
+            output_file_name: &str,
+            shader_kind: shaderc::ShaderKind,
+            additional_options: Option<&shaderc::CompileOptions<'_>>,
+        ) {
+            let source_text = fs::read_to_string(input_file_name).unwrap();
+            let result = compiler
+                .compile_into_spirv(
+                    source_text.as_str(),
+                    shader_kind,
+                    input_file_name,
+                    "main",
+                    additional_options,
+                )
+                .unwrap();
+            fs::write(output_file_name, unsafe {
+                mem::transmute::<&[u32], &[u8]>(result.as_binary())
+            })
+            .unwrap();
+        }
+
+        for entry in fs::read_dir("assets/shaders").unwrap() {
+            let entry = entry.unwrap();
+        }
     }
 
     println!("cargo:rustc-cfg=build={:?}", profile);

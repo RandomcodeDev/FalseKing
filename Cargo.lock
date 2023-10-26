@@ -437,6 +437,7 @@ dependencies = [
  "log",
  "metal",
  "pci-ids",
+ "shaderc",
  "vulkano",
  "vulkano-shaders",
  "windows 0.51.1",
