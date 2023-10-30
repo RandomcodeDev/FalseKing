@@ -79,7 +79,7 @@ impl Dx9Renderer {
     }
 }
 
-impl Renderer for Dx9Renderer {
+impl<R> Renderer<R> for Dx9Renderer {
     fn begin_frame(&mut self) {
         unsafe {
             let _ = self.device.Clear(

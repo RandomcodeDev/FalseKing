@@ -2,14 +2,18 @@
     all(windows, not(any(build = "debug", feature = "extra_log"))),
     windows_subsystem = "windows"
 )]
+
 #![feature(fs_try_exists)]
 
 mod platform;
 mod renderer;
 
+use common::fs;
 use clap::Parser;
 //use legion::*;
+use log::info;
 use platform::PlatformBackend;
+use std::{env, sync::{Arc, Mutex}};
 
 pub const GAME_NAME: &str = "False King";
 pub const GAME_EXECUTABLE_NAME: &str = "false_king";
@@ -41,9 +45,13 @@ fn main() {
 
     let args = Args::parse();
 
-    //let filesystem = fs::StdFileSystem::new();
+    if let Ok(cwd) = env::current_dir() {
+        info!("Running in {}", cwd.display());
+    }
+
+    let filesystem = Arc::new(Mutex::new(fs::StdFileSystem::new()));
     let backend = platform::get_backend_for_platform().unwrap();
-    let renderer = renderer::get_renderer(backend.clone(), args.render_api);
+    let renderer = renderer::get_renderer(backend.clone(), filesystem.clone(), args.render_api);
 
     //let world = World::default();
 

@@ -92,7 +92,7 @@ fn create(input_dir: PathBuf, output_vpk: Option<PathBuf>) -> io::Result<()> {
             let mut path = entry.path();
             path = PathBuf::from(path.strip_prefix(input_dir.as_path()).expect("Failed to make path relative"));
             info!("{} -> {}", entry.path().display(), path.display());
-            vpk.as_mut().unwrap().write(path, data).expect(
+            vpk.as_mut().unwrap().write(path.as_path(), data.as_slice()).expect(
                 format!("Failed to write file {} into VPK", entry.path().display()).as_str(),
             );
         },
@@ -100,13 +100,13 @@ fn create(input_dir: PathBuf, output_vpk: Option<PathBuf>) -> io::Result<()> {
     ).expect("Failed to add files to VPK");
 
     println!("Saving VPK to {}", output_vpk.display());
-    vpk.save(output_vpk).expect("Failed to save VPK");
+    vpk.save(output_vpk.as_path()).expect("Failed to save VPK");
 
     Ok(())
 }
 
 fn extract(input_vpk: PathBuf, output_dir: Option<PathBuf>) -> io::Result<()> {
-    let base_path = vpk::vpk2::Vpk2::get_base_path(input_vpk).expect("Failed to get base name of VPK");
+    let base_path = vpk::vpk2::Vpk2::get_base_path(input_vpk.as_path()).expect("Failed to get base name of VPK");
 
     let mut output_dir = if output_dir.is_some() {
         output_dir.unwrap()
@@ -117,9 +117,9 @@ fn extract(input_vpk: PathBuf, output_dir: Option<PathBuf>) -> io::Result<()> {
 
     println!("Extracting VPK {} to {}", base_path.display(), output_dir.display());
 
-    let vpk = vpk::vpk2::Vpk2::new(base_path, false).expect("Failed to open VPK");
+    let vpk = vpk::vpk2::Vpk2::new(base_path.as_path(), false).expect("Failed to open VPK");
 
-    for entry in vpk.read_dir("")? {
+    for entry in vpk.read_dir(PathBuf::from("").as_path())? {
         match entry {
             Ok(entry) => {
                 let mut output_path = output_dir.clone();

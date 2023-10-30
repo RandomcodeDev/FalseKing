@@ -19,11 +19,12 @@
     SplashScreenImage="Assets\SplashScreen.png" />
   <ExecutableList>
     <Executable
-      Name="false_king_pc"
+      Name="false_king.exe"
       TargetDeviceFamily="PC" />
     <Executable
-      Name="false_king_scarlett"
-      TargetDeviceFamily="Scarlett" />
+      Name="false_king.exe"
+      TargetDeviceFamily="Scarlett"
+      IsDevOnly="false" />
   </ExecutableList>
   <StoreId>9N76SKFJDMRV</StoreId>
   <VirtualMachine>

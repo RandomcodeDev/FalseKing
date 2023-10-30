@@ -205,71 +205,71 @@ impl From<std::fs::DirEntry> for DirEntry {
 /// std::fs but you can make other things accessible with it (like a VPK)
 pub trait FileSystem {
     /// Check if a file exists
-    fn try_exists<P: AsRef<Path>>(&self, path: P) -> io::Result<bool>;
+    fn try_exists(&self, path: &Path) -> io::Result<bool>;
 
     /// Canonicalize a path
-    fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf>;
+    fn canonicalize(&self, path: &Path) -> io::Result<PathBuf>;
 
     /// Copy a file
-    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<u64>;
+    fn copy(&mut self, from: &Path, to: &Path) -> io::Result<u64>;
 
     /// Create a directory
-    fn create_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
+    fn create_dir(&mut self, path: &Path) -> io::Result<()>;
 
     /// Create a directory recursively
-    fn create_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
+    fn create_dir_all(&mut self, path: &Path) -> io::Result<()>;
 
     /// Create a hard link
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, original: P, link: Q)
+    fn hard_link(&mut self, original: &Path, link: &Path)
         -> io::Result<()>;
 
     /// Get the metadata of a path
-    fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
+    fn metadata(&self, path: &Path) -> io::Result<Metadata>;
 
     /// Read a file into a vector
-    fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>>;
+    fn read(&self, path: &Path) -> io::Result<Vec<u8>>;
 
     // ReadDir
     type ReadDir;
 
     /// Directory iterator
-    fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+    fn read_dir(&self, path: &Path) -> io::Result<Self::ReadDir>
     where
         Self::ReadDir: Iterator;
 
     /// Get the path a symlink points to
-    fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf>;
+    fn read_link(&self, path: &Path) -> io::Result<PathBuf>;
 
     /// Read a file into a string
-    fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String>;
+    fn read_to_string(&self, path: &Path) -> io::Result<String>;
 
     /// Remove an empty directory
-    fn remove_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
+    fn remove_dir(&mut self, path: &Path) -> io::Result<()>;
 
     /// Annihilate a directory tree
-    fn remove_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
+    fn remove_dir_all(&mut self, path: &Path) -> io::Result<()>;
 
     /// Remove a file
-    fn remove_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()>;
+    fn remove_file(&mut self, path: &Path) -> io::Result<()>;
 
     /// Rename a file
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
+    fn rename(&mut self, from: &Path, to: &Path) -> io::Result<()>;
 
     /// Change permissions
-    fn set_permissions<P: AsRef<Path>>(
+    fn set_permissions(
         &mut self,
-        path: P,
+        path: &Path,
         permissions: Permissions,
     ) -> io::Result<()>;
 
     /// Create a symlink (not deprecated)
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()>;
+    fn soft_link(&mut self, from: &Path, to: &Path) -> io::Result<()>;
 
     /// Get metadata of a file, not following symlinks
-    fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata>;
+    fn symlink_metadata(&self, path: &Path) -> io::Result<Metadata>;
 
     /// Write a slice to a file
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&mut self, path: P, contents: C) -> io::Result<()>;
+    fn write(&mut self, path: &Path, contents: &[u8]) -> io::Result<()>;
 }
 
 /// FileSystem using std::fs
@@ -283,83 +283,83 @@ impl StdFileSystem {
 }
 
 impl FileSystem for StdFileSystem {
-    fn try_exists<P: AsRef<Path>>(&self, path: P) -> io::Result<bool> {
+    fn try_exists(&self, path: &Path) -> io::Result<bool> {
         std::fs::try_exists(path)
     }
 
-    fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
+    fn canonicalize(&self, path: &Path) -> io::Result<PathBuf> {
         std::fs::canonicalize(path)
     }
 
-    fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<u64> {
+    fn copy(&mut self, from: &Path, to: &Path) -> io::Result<u64> {
         std::fs::copy(from, to)
     }
 
-    fn create_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    fn create_dir(&mut self, path: &Path) -> io::Result<()> {
         std::fs::create_dir(path)
     }
 
-    fn create_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    fn create_dir_all(&mut self, path: &Path) -> io::Result<()> {
         std::fs::create_dir_all(path)
     }
 
-    fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(
+    fn hard_link(
         &mut self,
-        original: P,
-        link: Q,
+        original: &Path,
+        link: &Path,
     ) -> io::Result<()> {
         std::fs::hard_link(original, link)
     }
 
-    fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata> {
+    fn metadata(&self, path: &Path) -> io::Result<Metadata> {
         match std::fs::metadata(path) {
             Ok(path) => Ok(path.into()),
             Err(err) => Err(err),
         }
     }
 
-    fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>> {
+    fn read(&self, path: &Path) -> io::Result<Vec<u8>> {
         std::fs::read(path)
     }
 
     type ReadDir = std::fs::ReadDir;
 
-    fn read_dir<P: AsRef<Path>>(&self, path: P) -> io::Result<Self::ReadDir>
+    fn read_dir(&self, path: &Path) -> io::Result<Self::ReadDir>
     where
         Self::ReadDir: Iterator,
     {
         std::fs::read_dir(path)
     }
 
-    fn read_link<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
+    fn read_link(&self, path: &Path) -> io::Result<PathBuf> {
         std::fs::read_link(path)
     }
 
-    fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String> {
+    fn read_to_string(&self, path: &Path) -> io::Result<String> {
         std::fs::read_to_string(path)
     }
 
-    fn remove_dir<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    fn remove_dir(&mut self, path: &Path) -> io::Result<()> {
         std::fs::remove_dir(path)
     }
 
-    fn remove_dir_all<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    fn remove_dir_all(&mut self, path: &Path) -> io::Result<()> {
         std::fs::remove_dir_all(path)
     }
 
-    fn remove_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    fn remove_file(&mut self, path: &Path) -> io::Result<()> {
         std::fs::remove_file(path)
     }
 
-    fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {
+    fn rename(&mut self, from: &Path, to: &Path) -> io::Result<()> {
         std::fs::rename(from, to)
     }
 
-    fn set_permissions<P: AsRef<Path>>(&mut self, path: P, perm: Permissions) -> io::Result<()> {
+    fn set_permissions(&mut self, path: &Path, perm: Permissions) -> io::Result<()> {
         std::fs::set_permissions(path, perm.into())
     }
 
-    fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {
+    fn soft_link(&mut self, from: &Path, to: &Path) -> io::Result<()> {
         #[cfg(windows)]
         match self.metadata(&from) {
             Ok(metadata) => {
@@ -375,14 +375,14 @@ impl FileSystem for StdFileSystem {
         std::os::unix::fs::symlink(from, to)
     }
 
-    fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<Metadata> {
+    fn symlink_metadata(&self, path: &Path) -> io::Result<Metadata> {
         match std::fs::symlink_metadata(path) {
             Ok(path) => Ok(path.into()),
             Err(err) => Err(err),
         }
     }
 
-    fn write<P: AsRef<Path>, C: AsRef<[u8]>>(&mut self, path: P, contents: C) -> io::Result<()> {
+    fn write(&mut self, path: &Path, contents: &[u8]) -> io::Result<()> {
         std::fs::write(path, contents)
     }
 }

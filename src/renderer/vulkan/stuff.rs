@@ -1,8 +1,9 @@
 use super::{Gpu, VkRenderer};
 use crate::platform::PlatformBackend;
-use log::{error, info, log};
+use common::fs;
+use log::{debug, error, info, log};
 use pci_ids::FromId;
-use std::sync::{Arc, Mutex};
+use std::{path::PathBuf, sync::{Arc, Mutex}};
 use vulkano::{
     device::physical::PhysicalDeviceError,
     device::physical::PhysicalDeviceType,
@@ -26,11 +27,17 @@ use vulkano::{
     },
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, FramebufferCreateInfo, FramebufferCreationError, RenderPass},
+    shader::{spirv::SpirvError, ShaderModule, ShaderCreationError},
     swapchain::{Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError},
     OomError, Version, VulkanLibrary,
 };
 
-impl VkRenderer {
+/// Extension for vertex shader binaries
+const VERTEX_SHADER_EXTENSION: &str = ".vert.spv";
+/// Extension for pixel shader binaries
+const PIXEL_SHADER_EXTENSION: &str = ".pixel.spv";
+
+impl<R> VkRenderer<R> {
     // this type is a pair of things it's totally fine
     #[allow(clippy::type_complexity)]
     pub(super) fn create_instance(
@@ -243,6 +250,38 @@ impl VkRenderer {
                 ..Default::default()
             },
         )
+    }
+
+    pub(super) fn load_shader(
+        filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>,
+        device: Arc<Device>,
+        name: &str,
+    ) -> Result<(Arc<ShaderModule>, Arc<ShaderModule>), ShaderCreationError> {
+        let vertex_path = PathBuf::from(format!("assets/shaders/{name}{VERTEX_SHADER_EXTENSION}"));
+        let pixel_path = PathBuf::from(format!("assets/shaders/{name}{PIXEL_SHADER_EXTENSION}"));
+        info!("Loading shader {name} from {} and {}", vertex_path.display(), pixel_path.display());
+        
+        let vertex_bytes = match filesystem.try_lock().as_ref().unwrap().read(vertex_path.as_path()) {
+            Ok(bytes) => bytes,
+            Err(err) => {
+                error!("Failed to load vertex shader {}: {err} ({err:?})", vertex_path.display());
+                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
+            }
+        };
+        let pixel_bytes = match filesystem.try_lock().as_ref().unwrap().read(pixel_path.as_path()) {
+            Ok(bytes) => bytes,
+            Err(err) => {
+                error!("Failed to load pixel shader {}: {err} ({err:?})", pixel_path.display());
+                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
+            }
+        };
+
+        debug!("{} {}", vertex_bytes.len(), pixel_bytes.len());
+
+        let vertex = unsafe { ShaderModule::from_bytes(device.clone(), vertex_bytes.as_ref())? };
+        let pixel = unsafe { ShaderModule::from_bytes(device.clone(), pixel_bytes.as_ref())? };
+
+        Ok((vertex, pixel))
     }
 
     // this one is a little ugly

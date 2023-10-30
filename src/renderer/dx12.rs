@@ -12,7 +12,7 @@ impl Dx12Renderer {
     }
 }
 
-impl Renderer for Dx12Renderer {
+impl<R> Renderer<R> for Dx12Renderer {
     fn begin_frame(&mut self) {}
 
     fn end_frame(&mut self) {}

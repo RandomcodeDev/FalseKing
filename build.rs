@@ -1,8 +1,10 @@
+#![feature(let_chains)]
+
 use shaderc;
 use std::{
-    env, fs,
+    env, fs, mem,
     path::{Path, PathBuf},
-    process::Command, mem,
+    process::Command,
 };
 
 fn put_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) {
@@ -92,7 +94,8 @@ fn main() {
 
     if target_os != "macos" {
         let compiler = shaderc::Compiler::new().unwrap();
-        let mut options = shaderc::CompileOptions::new();
+        let mut options = shaderc::CompileOptions::new().unwrap();
+        options.set_source_language(shaderc::SourceLanguage::HLSL);
 
         fn compile_shader(
             compiler: &shaderc::Compiler,
@@ -111,14 +114,47 @@ fn main() {
                     additional_options,
                 )
                 .unwrap();
-            fs::write(output_file_name, unsafe {
-                mem::transmute::<&[u32], &[u8]>(result.as_binary())
-            })
-            .unwrap();
+            fs::write(output_file_name, result.as_binary_u8()).unwrap();
         }
 
         for entry in fs::read_dir("assets/shaders").unwrap() {
             let entry = entry.unwrap();
+
+            let file_name = PathBuf::from(entry.file_name());
+            if let Some(extension) = file_name.extension() && extension != "hlsl" {
+                continue;
+            }
+
+            // Strip .hlsl and get .pixel or .vert or whatever
+            let kind = String::from(
+                file_name
+                    .with_extension("")
+                    .extension()
+                    .unwrap_or_default()
+                    .to_str()
+                    .unwrap_or_default(),
+            );
+
+            let kind = match kind.as_str() {
+                "vert" => shaderc::ShaderKind::Vertex,
+                "pixel" => shaderc::ShaderKind::Fragment,
+                _ => panic!("Unknown shader type {kind}"),
+            };
+
+            let path = entry.path();
+            let path = path.as_os_str().to_str().unwrap();
+            let output = path.replace("hlsl", "spv");
+
+            // Don't rebuild an up-to-date file
+            if let Ok(meta) = fs::metadata(path) && let Ok(output_meta) = fs::metadata(&output) &&
+                let Ok(output_modified) = output_meta.modified() && let Ok(modified) = meta.modified() &&
+                output_modified > modified {
+                println!("cargo:warning=Skipping shader {path}, {output} is up to date");
+                continue;
+            }
+
+            println!("cargo:warning=Compiling {kind:?} shader {path} to {output}");
+            compile_shader(&compiler, path, output.as_str(), kind, Some(&options));
         }
     }
 

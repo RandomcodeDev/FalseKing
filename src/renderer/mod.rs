@@ -7,13 +7,13 @@ mod metal;
 #[cfg(not(any(apple, feature = "xbox")))]
 mod vulkan;
 
+use crate::platform::PlatformBackend;
+use common::fs;
+use log::error;
 use std::{
     fmt::Display,
     sync::{Arc, Mutex},
 };
-
-use crate::platform::PlatformBackend;
-use log::error;
 
 #[cfg(not(any(apple, feature = "xbox")))]
 use vulkano::{buffer::BufferContents, pipeline::graphics::vertex_input::Vertex as VkVertex};
@@ -71,7 +71,7 @@ struct Vertex {
     normal: [f32; 3],
 }
 
-pub trait Renderer {
+pub trait Renderer<R> {
     /// Prepare to take rendering commands
     fn begin_frame(&mut self);
 
@@ -83,10 +83,11 @@ pub trait Renderer {
 }
 
 /// Creates an instance of the requested backend, or the first one that initializes successfully
-pub fn get_renderer(
+pub fn get_renderer<R: 'static>(
     backend: Arc<Mutex<dyn PlatformBackend>>,
+    filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>,
     api: Option<RenderApi>,
-) -> Arc<Mutex<dyn Renderer>> {
+) -> Arc<Mutex<dyn Renderer<R>>> {
     // This function has a bunch of return statements that aren't necessarily executed
     #[allow(unreachable_code)]
     if let Some(api) = api {
@@ -101,7 +102,8 @@ pub fn get_renderer(
                 }
             },
             #[cfg(not(any(apple, feature = "xbox")))]
-            RenderApi::Vulkan => match vulkan::VkRenderer::new(backend.clone()) {
+            RenderApi::Vulkan => match vulkan::VkRenderer::new(backend.clone(), filesystem.clone())
+            {
                 Some(vk) => return vk,
                 None => {
                     panic!("Failed to create Vulkan renderer");
@@ -135,7 +137,7 @@ pub fn get_renderer(
             }
         }*/
         #[cfg(not(any(apple, feature = "xbox")))]
-        match vulkan::VkRenderer::new(backend.clone()) {
+        match vulkan::VkRenderer::new(backend.clone(), filesystem.clone()) {
             Some(vk) => {
                 return vk;
             }

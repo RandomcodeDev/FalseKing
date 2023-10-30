@@ -1,5 +1,6 @@
 use super::Renderer;
 use crate::platform::PlatformBackend;
+use common::fs;
 use log::{error, info, warn};
 use std::{
     fmt::Display,
@@ -36,12 +37,15 @@ impl Display for Gpu {
     }
 }
 
-pub struct VkRenderer {
+pub struct VkRenderer<R> {
     backend: Arc<Mutex<dyn PlatformBackend>>,
+    filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>,
 
+    // Needs to live
     #[allow(dead_code)]
     debug_messenger: Option<DebugUtilsMessenger>,
 
+    // Will be used for dynamically selecting the GPU at runtime
     #[allow(dead_code)]
     gpus: Vec<Gpu>,
     #[allow(dead_code)]
@@ -58,8 +62,8 @@ pub struct VkRenderer {
     previous_frame_end: Option<Box<dyn GpuFuture>>,
 }
 
-impl VkRenderer {
-    pub fn new(backend: Arc<Mutex<dyn PlatformBackend>>) -> Option<Arc<Mutex<Self>>> {
+impl<R> VkRenderer<R> {
+    pub fn new(backend: Arc<Mutex<dyn PlatformBackend>>, filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>) -> Option<Arc<Mutex<Self>>> {
         info!("Initializing Vulkan renderer");
 
         let mut instance_extensions = InstanceExtensions {
@@ -162,7 +166,13 @@ impl VkRenderer {
         let command_buffer_allocator =
             StandardCommandBufferAllocator::new(device.clone(), Default::default());
 
-        // shaders go here
+        let (vertex_shader, pixel_shader) = match Self::load_shader(filesystem.clone(), device.clone(), "main") {
+            Ok(pair) => pair,
+            Err(err) => {
+                error!("Failed to load shader main: {err} ({err:?})");
+                return None;
+            }
+        };
 
         info!("Creating renderpass");
         let render_pass = match vulkano::single_pass_renderpass!(
@@ -186,6 +196,10 @@ impl VkRenderer {
                 return None;
             }
         };
+
+        //let pipeline = match Self::create_pipeline() {
+        //
+        //};
 
         let mut viewport = Viewport {
             origin: [0.0, 0.0],
@@ -212,6 +226,7 @@ impl VkRenderer {
         #[allow(clippy::arc_with_non_send_sync)]
         Some(Arc::new(Mutex::new(Self {
             backend: backend.clone(),
+            filesystem: filesystem.clone(),
 
             debug_messenger,
 
@@ -231,8 +246,8 @@ impl VkRenderer {
     }
 }
 
-// Can panic/expect because this isn't recoverable, unlike new where another renderer might be created after it returns
-impl Renderer for VkRenderer {
+// Can panic/unwrap/expect because this isn't recoverable, unlike new where another renderer might be created after it returns
+impl<R> Renderer<R> for VkRenderer<R> {
     fn begin_frame(&mut self) {
         self.previous_frame_end
             .as_mut()

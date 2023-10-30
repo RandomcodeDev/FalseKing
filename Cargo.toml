@@ -30,7 +30,6 @@ metal = "0.26.0"
 
 [target.'cfg(not(target_family = "apple"))'.dependencies]
 vulkano = "0.33.0"
-vulkano-shaders = "0.33.0"
 
 [target.'cfg(target_family = "unix")'.dependencies]
 xcb = "1.2.2"

@@ -5,8 +5,8 @@ pub const VPK_EXTENSION: &str = "vpk";
 /// Overall, functional without significant issues. Could be improved, but likely doesn't need to be yet.
 pub mod vpk2 {
     use crate::fs::{DirEntry, FileKind, FileSystem, FileType, Metadata, Permissions};
-    use log::{debug, error, info, warn};
     use binary_serde::{BinarySerde, Endianness};
+    use log::{debug, error, info, warn};
     use std::{
         collections::HashMap,
         fs::{self, OpenOptions},
@@ -175,10 +175,7 @@ pub mod vpk2 {
     }
 
     impl Vpk2 {
-        pub fn new<P: AsRef<Path>>(path: P, create: bool) -> Option<Self>
-        where
-            PathBuf: From<P>,
-        {
+        pub fn new(path: &Path, create: bool) -> Option<Self> {
             let mut self_ = Self::default();
 
             self_.real_path = PathBuf::from(path);
@@ -211,16 +208,17 @@ pub mod vpk2 {
                 return None;
             }
 
-            self_.header = match Vpk2Header::binary_deserialize(directory.as_ref(), Endianness::Little) {
-                Ok(header) => header,
-                Err(err) => {
-                    error!(
-                        "Failed to parse VPK header in {}: {err} ({err:?})",
-                        dir_path.display()
-                    );
-                    return None;
-                }
-            };
+            self_.header =
+                match Vpk2Header::binary_deserialize(directory.as_ref(), Endianness::Little) {
+                    Ok(header) => header,
+                    Err(err) => {
+                        error!(
+                            "Failed to parse VPK header in {}: {err} ({err:?})",
+                            dir_path.display()
+                        );
+                        return None;
+                    }
+                };
 
             if !self_.header.is_valid() {
                 let signature = self_.header.signature;
@@ -335,7 +333,10 @@ pub mod vpk2 {
                 let start = current_offset + i * mem::size_of::<Vpk2ExternalMd5Entry>();
                 let end = current_offset + (i + 1) * mem::size_of::<Vpk2ExternalMd5Entry>();
                 self_.external_md5_section.push(
-                    match Vpk2ExternalMd5Entry::binary_deserialize(&directory[start..end], Endianness::Little) {
+                    match Vpk2ExternalMd5Entry::binary_deserialize(
+                        &directory[start..end],
+                        Endianness::Little,
+                    ) {
                         Ok(entry) => entry,
                         Err(err) => {
                             error!(
@@ -385,15 +386,15 @@ pub mod vpk2 {
             Some(self_.clone())
         }
 
-        pub fn save<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+        pub fn save(&mut self, path: &Path) -> io::Result<()> {
             let have_path = self.real_path.as_os_str().len() > 0;
-            let have_new_path = path.as_ref().as_os_str().len() > 0;
+            let have_new_path = path.as_os_str().len() > 0;
             if !have_path && !have_new_path {
                 warn!("Not writing VPK file without a name");
             }
 
             if !have_path || have_new_path {
-                self.real_path = PathBuf::from(path.as_ref());
+                self.real_path = PathBuf::from(path);
                 self.real_path.set_extension(super::VPK_EXTENSION);
             }
 
@@ -461,7 +462,7 @@ pub mod vpk2 {
                         directory.resize(directory.len() + mem::size_of::<Vpk2DirectoryEntry>(), 0);
                         entry.binary_serialize(&mut directory[len..], Endianness::Little);
 
-                        // This is _probably_ because the struct has 3 u16's, which makes something 
+                        // This is _probably_ because the struct has 3 u16's, which makes something
                         // somewhere align it, causing two zeroes that shouldn't be there to prematurely
                         // end this level of the tree
                         directory.resize(directory.len() - 2, 0);
@@ -476,9 +477,15 @@ pub mod vpk2 {
             directory.push(0);
 
             self.header.tree_size = (directory.len() - mem::size_of::<Vpk2Header>()) as u32;
-            self.header.binary_serialize(&mut directory[..mem::size_of::<Vpk2Header>()], Endianness::Little);
+            self.header.binary_serialize(
+                &mut directory[..mem::size_of::<Vpk2Header>()],
+                Endianness::Little,
+            );
             directory.resize(directory.len() + mem::size_of::<Vpk2Md5>(), 0);
-            self.md5.binary_serialize(&mut directory[mem::size_of::<Vpk2Header>() + self.header.tree_size as usize..], Endianness::Little);
+            self.md5.binary_serialize(
+                &mut directory[mem::size_of::<Vpk2Header>() + self.header.tree_size as usize..],
+                Endianness::Little,
+            );
 
             let dir_path = self.get_directory_path();
             let tree_size = self.header.tree_size;
@@ -517,10 +524,9 @@ pub mod vpk2 {
             .into()
         }
 
-        pub fn get_base_path<P: AsRef<Path>>(path: P) -> io::Result<PathBuf> {
+        pub fn get_base_path(path: &Path) -> io::Result<PathBuf> {
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -534,7 +540,7 @@ pub mod vpk2 {
 
     pub struct ReadDir {
         files: Arc<Mutex<HashMap<String, Vpk2DirectoryEntry>>>,
-        index: usize
+        index: usize,
     }
 
     impl Iterator for ReadDir {
@@ -555,10 +561,9 @@ pub mod vpk2 {
     }
 
     impl FileSystem for Vpk2 {
-        fn try_exists<P: AsRef<Path>>(&self, path: P) -> io::Result<bool> {
+        fn try_exists(&self, path: &Path) -> io::Result<bool> {
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -566,25 +571,23 @@ pub mod vpk2 {
             Ok(files.get(&path).is_some())
         }
 
-        fn canonicalize<P: AsRef<Path>>(&self, path: P) -> io::Result<PathBuf> {
+        fn canonicalize(&self, path: &Path) -> io::Result<PathBuf> {
             Ok(PathBuf::from(format!(
                 "{}.{}/{}",
                 self.real_path.display(),
                 super::VPK_EXTENSION,
-                path.as_ref().display()
+                path.display()
             )))
         }
 
-        fn copy<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<u64> {
+        fn copy(&mut self, from: &Path, to: &Path) -> io::Result<u64> {
             let from = String::from(
-                from.as_ref()
-                    .as_os_str()
+                from.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
             let to = String::from(
-                to.as_ref()
-                    .as_os_str()
+                to.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -596,29 +599,24 @@ pub mod vpk2 {
             Ok(0)
         }
 
-        fn create_dir<P: AsRef<Path>>(&mut self, _path: P) -> io::Result<()> {
+        fn create_dir(&mut self, _path: &Path) -> io::Result<()> {
             // Creating directories doesn't matter in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn create_dir_all<P: AsRef<Path>>(&mut self, _path: P) -> io::Result<()> {
+        fn create_dir_all(&mut self, _path: &Path) -> io::Result<()> {
             // Creating directories doesn't matter in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn hard_link<P: AsRef<Path>, Q: AsRef<Path>>(
-            &mut self,
-            original: P,
-            link: Q,
-        ) -> io::Result<()> {
+        fn hard_link(&mut self, original: &Path, link: &Path) -> io::Result<()> {
             self.copy(original, link)?;
             Ok(())
         }
 
-        fn metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<crate::fs::Metadata> {
+        fn metadata(&self, path: &Path) -> io::Result<crate::fs::Metadata> {
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -631,10 +629,9 @@ pub mod vpk2 {
             }
         }
 
-        fn read<P: AsRef<Path>>(&self, path: P) -> io::Result<Vec<u8>> {
+        fn read(&self, path: &Path) -> io::Result<Vec<u8>> {
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -660,43 +657,42 @@ pub mod vpk2 {
 
         type ReadDir = ReadDir;
 
-        fn read_dir<P: AsRef<Path>>(&self, _path: P) -> io::Result<Self::ReadDir>
+        fn read_dir(&self, _path: &Path) -> io::Result<Self::ReadDir>
         where
             Self::ReadDir: Iterator,
         {
             Ok(Self::ReadDir {
                 files: self.files.clone(),
-                index: 0
+                index: 0,
             })
         }
 
-        fn read_link<P: AsRef<Path>>(&self, _path: P) -> io::Result<PathBuf> {
+        fn read_link(&self, _path: &Path) -> io::Result<PathBuf> {
             // VPKs don't have links, but my lazy-ass implementation makes hard links
             // and symlinks and copying all shallow copies anyway
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn read_to_string<P: AsRef<Path>>(&self, path: P) -> io::Result<String> {
+        fn read_to_string(&self, path: &Path) -> io::Result<String> {
             match String::from_utf8(self.read(path)?) {
                 Ok(content) => Ok(content),
                 Err(_) => Err(io::Error::from(io::ErrorKind::InvalidData)),
             }
         }
 
-        fn remove_dir<P: AsRef<Path>>(&mut self, _path: P) -> io::Result<()> {
+        fn remove_dir(&mut self, _path: &Path) -> io::Result<()> {
             // Removing directories doesn't matter in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn remove_dir_all<P: AsRef<Path>>(&mut self, _path: P) -> io::Result<()> {
+        fn remove_dir_all(&mut self, _path: &Path) -> io::Result<()> {
             // Removing directories doesn't matter in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn remove_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+        fn remove_file(&mut self, path: &Path) -> io::Result<()> {
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -710,16 +706,14 @@ pub mod vpk2 {
             }
         }
 
-        fn rename<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, to: P, from: Q) -> io::Result<()> {
+        fn rename(&mut self, to: &Path, from: &Path) -> io::Result<()> {
             let from = String::from(
-                from.as_ref()
-                    .as_os_str()
+                from.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
             let to = String::from(
-                to.as_ref()
-                    .as_os_str()
+                to.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
@@ -735,32 +729,23 @@ pub mod vpk2 {
             Ok(())
         }
 
-        fn set_permissions<P: AsRef<Path>>(
-            &mut self,
-            _path: P,
-            _permissions: Permissions,
-        ) -> io::Result<()> {
+        fn set_permissions(&mut self, _path: &Path, _permissions: Permissions) -> io::Result<()> {
             // Permissions don't exist in VPKs
             Err(io::Error::from(io::ErrorKind::Unsupported))
         }
 
-        fn soft_link<P: AsRef<Path>, Q: AsRef<Path>>(&mut self, from: P, to: Q) -> io::Result<()> {
+        fn soft_link(&mut self, from: &Path, to: &Path) -> io::Result<()> {
             self.hard_link(from, to)
         }
 
-        fn symlink_metadata<P: AsRef<Path>>(&self, path: P) -> io::Result<crate::fs::Metadata> {
+        fn symlink_metadata(&self, path: &Path) -> io::Result<crate::fs::Metadata> {
             self.metadata(path)
         }
 
-        fn write<P: AsRef<Path>, C: AsRef<[u8]>>(
-            &mut self,
-            path: P,
-            contents: C,
-        ) -> io::Result<()> {
+        fn write(&mut self, path: &Path, contents: &[u8]) -> io::Result<()> {
             let mut files = self.files.lock().unwrap();
             let path = String::from(
-                path.as_ref()
-                    .as_os_str()
+                path.as_os_str()
                     .to_str()
                     .ok_or(io::Error::from(io::ErrorKind::Other))?,
             );
