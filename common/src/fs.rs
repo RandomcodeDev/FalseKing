@@ -220,8 +220,7 @@ pub trait FileSystem {
     fn create_dir_all(&mut self, path: &Path) -> io::Result<()>;
 
     /// Create a hard link
-    fn hard_link(&mut self, original: &Path, link: &Path)
-        -> io::Result<()>;
+    fn hard_link(&mut self, original: &Path, link: &Path) -> io::Result<()>;
 
     /// Get the metadata of a path
     fn metadata(&self, path: &Path) -> io::Result<Metadata>;
@@ -256,11 +255,7 @@ pub trait FileSystem {
     fn rename(&mut self, from: &Path, to: &Path) -> io::Result<()>;
 
     /// Change permissions
-    fn set_permissions(
-        &mut self,
-        path: &Path,
-        permissions: Permissions,
-    ) -> io::Result<()>;
+    fn set_permissions(&mut self, path: &Path, permissions: Permissions) -> io::Result<()>;
 
     /// Create a symlink (not deprecated)
     fn soft_link(&mut self, from: &Path, to: &Path) -> io::Result<()>;
@@ -303,11 +298,7 @@ impl FileSystem for StdFileSystem {
         std::fs::create_dir_all(path)
     }
 
-    fn hard_link(
-        &mut self,
-        original: &Path,
-        link: &Path,
-    ) -> io::Result<()> {
+    fn hard_link(&mut self, original: &Path, link: &Path) -> io::Result<()> {
         std::fs::hard_link(original, link)
     }
 

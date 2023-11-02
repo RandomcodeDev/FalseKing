@@ -1,5 +1,9 @@
 #![feature(fs_try_exists)]
 
+pub const GAME_NAME: &str = "False King";
+pub const GAME_EXECUTABLE_NAME: &str = "false_king";
+
+pub mod dirs;
 pub mod fs;
 pub mod util;
 pub mod vpk;
@@ -10,7 +14,11 @@ use std::io;
 
 pub use log;
 
-pub fn setup_logger(level: log::LevelFilter, name: Option<String>, stdout: bool) -> Result<(), fern::InitError> {
+pub fn setup_logger(
+    level: log::LevelFilter,
+    name: Option<String>,
+    stdout: bool,
+) -> Result<(), fern::InitError> {
     let dt = Local::now().format("%Y-%m-%d_%H-%M-%S").to_string();
 
     let colors_line = ColoredLevelConfig::new()
@@ -20,33 +28,33 @@ pub fn setup_logger(level: log::LevelFilter, name: Option<String>, stdout: bool)
         .debug(Color::BrightCyan)
         .trace(Color::Cyan);
 
-    let mut dispatch = fern::Dispatch::new()
-        .format(move |out, message, record| {
-            let dt = Local::now();
+    let mut dispatch = fern::Dispatch::new().format(move |out, message, record| {
+        let dt = Local::now();
 
-            let mut location = String::from(record.target());
-            if let Some(file) = record.file() {
-                if let Some(line) = record.line() {
-                    location = format!("{file}:{line}");
-                }
+        let mut location = String::from(record.target());
+        if let Some(file) = record.file() {
+            if let Some(line) = record.line() {
+                location = format!("{file}:{line}");
             }
+        }
 
-            let level = record.level().as_str().to_lowercase();
+        let level = record.level().as_str().to_lowercase();
 
-            out.finish(format_args!(
-                "[{} \x1B[{}m{}\x1B[0m {}] {}",
-                dt.format("%Y/%m/%d %H:%M:%S"),
-                colors_line.get_color(&record.level()).to_fg_str(),
-                level,
-                location,
-                message
-            ))
-        });
+        out.finish(format_args!(
+            "[{} \x1B[{}m{}\x1B[0m {}] {}",
+            dt.format("%Y/%m/%d %H:%M:%S"),
+            colors_line.get_color(&record.level()).to_fg_str(),
+            level,
+            location,
+            message
+        ))
+    });
 
-    if name.is_some() {
-        dispatch = dispatch.chain(fern::log_file(
-            name.unwrap() + "-" + &dt + ".log",
-        )?);
+    if let Some(name) = name {
+        dispatch = dispatch.chain(fern::log_file(format!(
+            "{}/{name}-{dt}.log",
+            dirs::LOG_DIR.display()
+        ))?);
     }
 
     dispatch = dispatch.level(level);

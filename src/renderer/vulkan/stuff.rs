@@ -3,7 +3,10 @@ use crate::platform::PlatformBackend;
 use common::fs;
 use log::{debug, error, info, log};
 use pci_ids::FromId;
-use std::{path::PathBuf, sync::{Arc, Mutex}};
+use std::{
+    path::PathBuf,
+    sync::{Arc, Mutex},
+};
 use vulkano::{
     device::physical::PhysicalDeviceError,
     device::physical::PhysicalDeviceType,
@@ -27,7 +30,7 @@ use vulkano::{
     },
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, FramebufferCreateInfo, FramebufferCreationError, RenderPass},
-    shader::{spirv::SpirvError, ShaderModule, ShaderCreationError},
+    shader::{spirv::SpirvError, ShaderCreationError, ShaderModule},
     swapchain::{Surface, Swapchain, SwapchainCreateInfo, SwapchainCreationError},
     OomError, Version, VulkanLibrary,
 };
@@ -259,24 +262,42 @@ impl<R> VkRenderer<R> {
     ) -> Result<(Arc<ShaderModule>, Arc<ShaderModule>), ShaderCreationError> {
         let vertex_path = PathBuf::from(format!("assets/shaders/{name}{VERTEX_SHADER_EXTENSION}"));
         let pixel_path = PathBuf::from(format!("assets/shaders/{name}{PIXEL_SHADER_EXTENSION}"));
-        info!("Loading shader {name} from {} and {}", vertex_path.display(), pixel_path.display());
-        
-        let vertex_bytes = match filesystem.try_lock().as_ref().unwrap().read(vertex_path.as_path()) {
-            Ok(bytes) => bytes,
-            Err(err) => {
-                error!("Failed to load vertex shader {}: {err} ({err:?})", vertex_path.display());
-                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
-            }
-        };
-        let pixel_bytes = match filesystem.try_lock().as_ref().unwrap().read(pixel_path.as_path()) {
-            Ok(bytes) => bytes,
-            Err(err) => {
-                error!("Failed to load pixel shader {}: {err} ({err:?})", pixel_path.display());
-                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
-            }
-        };
+        info!(
+            "Loading shader {name} from {} and {}",
+            vertex_path.display(),
+            pixel_path.display()
+        );
 
-        debug!("{} {}", vertex_bytes.len(), pixel_bytes.len());
+        let vertex_bytes = match filesystem
+            .try_lock()
+            .as_ref()
+            .unwrap()
+            .read(vertex_path.as_path())
+        {
+            Ok(bytes) => bytes,
+            Err(err) => {
+                error!(
+                    "Failed to load vertex shader {}: {err} ({err:?})",
+                    vertex_path.display()
+                );
+                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
+            }
+        };
+        let pixel_bytes = match filesystem
+            .try_lock()
+            .as_ref()
+            .unwrap()
+            .read(pixel_path.as_path())
+        {
+            Ok(bytes) => bytes,
+            Err(err) => {
+                error!(
+                    "Failed to load pixel shader {}: {err} ({err:?})",
+                    pixel_path.display()
+                );
+                return Err(ShaderCreationError::SpirvError(SpirvError::InvalidHeader));
+            }
+        };
 
         let vertex = unsafe { ShaderModule::from_bytes(device.clone(), vertex_bytes.as_ref())? };
         let pixel = unsafe { ShaderModule::from_bytes(device.clone(), pixel_bytes.as_ref())? };

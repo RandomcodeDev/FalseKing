@@ -14,7 +14,7 @@ use vulkano::{
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
     instance::{debug::DebugUtilsMessenger, InstanceCreationError, InstanceExtensions},
     pipeline::graphics::viewport::Viewport,
-    render_pass::{Framebuffer, RenderPass},
+    render_pass::{Framebuffer, Subpass, RenderPass},
     swapchain::{
         self, AcquireError, Swapchain, SwapchainCreateInfo, SwapchainCreationError,
         SwapchainPresentInfo,
@@ -63,7 +63,10 @@ pub struct VkRenderer<R> {
 }
 
 impl<R> VkRenderer<R> {
-    pub fn new(backend: Arc<Mutex<dyn PlatformBackend>>, filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>) -> Option<Arc<Mutex<Self>>> {
+    pub fn new(
+        backend: Arc<Mutex<dyn PlatformBackend>>,
+        filesystem: Arc<Mutex<dyn fs::FileSystem<ReadDir = R>>>,
+    ) -> Option<Arc<Mutex<Self>>> {
         info!("Initializing Vulkan renderer");
 
         let mut instance_extensions = InstanceExtensions {
@@ -166,13 +169,14 @@ impl<R> VkRenderer<R> {
         let command_buffer_allocator =
             StandardCommandBufferAllocator::new(device.clone(), Default::default());
 
-        let (vertex_shader, pixel_shader) = match Self::load_shader(filesystem.clone(), device.clone(), "main") {
-            Ok(pair) => pair,
-            Err(err) => {
-                error!("Failed to load shader main: {err} ({err:?})");
-                return None;
-            }
-        };
+        let (vertex_shader, pixel_shader) =
+            match Self::load_shader(filesystem.clone(), device.clone(), "main") {
+                Ok(pair) => pair,
+                Err(err) => {
+                    error!("Failed to load shader main: {err} ({err:?})");
+                    return None;
+                }
+            };
 
         info!("Creating renderpass");
         let render_pass = match vulkano::single_pass_renderpass!(
@@ -197,9 +201,22 @@ impl<R> VkRenderer<R> {
             }
         };
 
-        //let pipeline = match Self::create_pipeline() {
-        //
-        //};
+        info!("Creating graphics pipeline");
+        let pipeline = match
+        GraphicsPipeline::start()
+            .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
+            .vertex_shader(vertex_shader.entry_point("main").unwrap(), ())
+            .input_assembly_state(InputAssemblyState::new())
+            .viewport_state(ViewportState::vieport_dynamic_scissor_irrelevant())
+            .fragment_shader(pixel_shader.entry_point("main").unwrap(), ())
+            .render_pass(Subpass::from(render_pass.clone(), 0).unwrap())
+            .build(device.clone()) {
+            Ok(pipeline) => pipeline,
+            Err(err) => {
+                error!("Failed to create pipeline: {err} ({err:?})");
+                return None;
+            }
+        };
 
         let mut viewport = Viewport {
             origin: [0.0, 0.0],
@@ -300,6 +317,7 @@ impl<R> Renderer<R> for VkRenderer<R> {
         if suboptimal {
             warn!("Swapchain is suboptimal");
             self.swapchain_dirty = true;
+            return;
         }
 
         let clear_values = vec![Some(

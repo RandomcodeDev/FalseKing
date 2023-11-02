@@ -12,3 +12,5 @@ fern = { version = "0.6.2", features = ["colored"] }
 log = "0.4.20"
 serde = { version = "1.0.189", features = ["derive"] }
 binary_serde = "1.0.18"
+directories = "5.0.1"
+lazy_static = "1.4.0"

@@ -2,21 +2,20 @@
     all(windows, not(any(build = "debug", feature = "extra_log"))),
     windows_subsystem = "windows"
 )]
-
 #![feature(fs_try_exists)]
 
 mod platform;
 mod renderer;
 
-use common::fs;
 use clap::Parser;
+use common::fs;
 //use legion::*;
 use log::info;
 use platform::PlatformBackend;
-use std::{env, sync::{Arc, Mutex}};
-
-pub const GAME_NAME: &str = "False King";
-pub const GAME_EXECUTABLE_NAME: &str = "false_king";
+use std::{
+    env,
+    sync::{Arc, Mutex},
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -40,13 +39,23 @@ fn main() {
     #[cfg(not(any(build = "debug", all(not(build = "debug"), feature = "extra_log"))))]
     let stdout = false;
 
-    common::setup_logger(level, Some(String::from(GAME_EXECUTABLE_NAME)), stdout)
-        .expect("Failed to set up logger");
+    common::dirs::make_dirs().expect("Failed to create data directories");
+
+    common::setup_logger(
+        level,
+        Some(String::from(common::GAME_EXECUTABLE_NAME)),
+        stdout,
+    )
+    .expect("Failed to set up logger");
 
     let args = Args::parse();
 
     if let Ok(cwd) = env::current_dir() {
-        info!("Running in {}", cwd.display());
+        info!(
+            "Running in {} with data directory {}",
+            cwd.display(),
+            common::dirs::data_dir().display()
+        );
     }
 
     let filesystem = Arc::new(Mutex::new(fs::StdFileSystem::new()));

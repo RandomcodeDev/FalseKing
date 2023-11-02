@@ -67,9 +67,9 @@ impl Win32Backend {
             )
         };
 
-        info!("Creating {width}x{height} window {}", crate::GAME_NAME);
+        info!("Creating {width}x{height} window {}", common::GAME_NAME);
 
-        let title = ffi::CString::new(crate::GAME_NAME).unwrap();
+        let title = ffi::CString::new(common::GAME_NAME).unwrap();
 
         let window = unsafe {
             CreateWindowExA(
