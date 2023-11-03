@@ -10,6 +10,7 @@ mod vulkan;
 use crate::platform::PlatformBackend;
 use common::fs;
 use log::error;
+use nalgebra_glm::{TMat4, identity};
 use std::{
     fmt::Display,
     sync::{Arc, Mutex},
@@ -61,14 +62,31 @@ impl Display for RenderApi {
 #[repr(C)]
 #[cfg_attr(not(any(apple, feature = "xbox")), derive(BufferContents, VkVertex))]
 struct Vertex {
-    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32A32_SFLOAT))]
+    #[cfg_attr(not(any(apple, feature = "xbox")), name("input.position"), format(R32G32B32A32_SFLOAT))]
     position: [f32; 4],
-    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32A32_SFLOAT))]
+    #[cfg_attr(not(any(apple, feature = "xbox")), name("input.color"), format(R32G32B32A32_SFLOAT))]
     color: [f32; 4],
-    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32_SFLOAT))]
+    #[cfg_attr(not(any(apple, feature = "xbox")), name("input.uv"), format(R32G32_SFLOAT))]
     uv: [f32; 2],
-    #[cfg_attr(not(any(apple, feature = "xbox")), format(R32G32B32_SFLOAT))]
+    #[cfg_attr(not(any(apple, feature = "xbox")), name("input.normal"), format(R32G32B32_SFLOAT))]
     normal: [f32; 3],
+}
+
+#[derive(Clone, Debug)]
+struct MVP {
+    model: TMat4<f32>,
+    view: TMat4<f32>,
+    projection: TMat4<f32>
+}
+
+impl MVP {
+    fn new() -> Self {
+        Self {
+            model: identity(),
+            view: identity(),
+            projection: identity(),
+        }
+    }
 }
 
 pub trait Renderer<R> {

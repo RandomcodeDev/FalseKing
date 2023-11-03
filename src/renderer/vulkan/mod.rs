@@ -4,16 +4,19 @@ use common::fs;
 use log::{error, info, warn};
 use std::{
     fmt::Display,
+    mem,
     sync::{Arc, Mutex},
 };
 use vulkano::{
+    buffer::allocator::SubbufferAllocator,
     command_buffer::{
         allocator::StandardCommandBufferAllocator, AutoCommandBufferBuilder, CommandBufferUsage,
         RenderPassBeginInfo, SubpassContents,
     },
     device::{physical::PhysicalDevice, Device, DeviceExtensions, Queue},
     instance::{debug::DebugUtilsMessenger, InstanceCreationError, InstanceExtensions},
-    pipeline::graphics::viewport::Viewport,
+    memory::allocator::StandardMemoryAllocator,
+    pipeline::graphics::{GraphicsPipeline, input_assembly::InputAssemblyState, vertex_input::Vertex, viewport::{Viewport, ViewportState}},
     render_pass::{Framebuffer, Subpass, RenderPass},
     swapchain::{
         self, AcquireError, Swapchain, SwapchainCreateInfo, SwapchainCreationError,
@@ -54,7 +57,9 @@ pub struct VkRenderer<R> {
     queue: Arc<Queue>,
     swapchain: Arc<Swapchain>,
     command_buffer_allocator: StandardCommandBufferAllocator,
+    memory_allocator: Arc<StandardMemoryAllocator>,
     render_pass: Arc<RenderPass>,
+    pipeline: Arc<GraphicsPipeline>,
     viewport: Viewport,
     framebuffers: Vec<Arc<Framebuffer>>,
 
@@ -169,6 +174,9 @@ impl<R> VkRenderer<R> {
         let command_buffer_allocator =
             StandardCommandBufferAllocator::new(device.clone(), Default::default());
 
+        info!("Creating memory allocator");
+        let memory_allocator = Arc::new(StandardMemoryAllocator::new_default(device.clone()));
+
         let (vertex_shader, pixel_shader) =
             match Self::load_shader(filesystem.clone(), device.clone(), "main") {
                 Ok(pair) => pair,
@@ -177,6 +185,9 @@ impl<R> VkRenderer<R> {
                     return None;
                 }
             };
+
+        info!("Creating {}-byte uniform buffer", mem::size_of::<super::MVP>());
+        let uniform_buffer: SubbufferAllocator<super::MVP> = SubbufferAllocator::uniform_buffer(memory_allocator.clone());
 
         info!("Creating renderpass");
         let render_pass = match vulkano::single_pass_renderpass!(
@@ -204,10 +215,10 @@ impl<R> VkRenderer<R> {
         info!("Creating graphics pipeline");
         let pipeline = match
         GraphicsPipeline::start()
-            .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
+            .vertex_input_state(super::Vertex::per_vertex())
             .vertex_shader(vertex_shader.entry_point("main").unwrap(), ())
             .input_assembly_state(InputAssemblyState::new())
-            .viewport_state(ViewportState::vieport_dynamic_scissor_irrelevant())
+            .viewport_state(ViewportState::viewport_dynamic_scissor_irrelevant())
             .fragment_shader(pixel_shader.entry_point("main").unwrap(), ())
             .render_pass(Subpass::from(render_pass.clone(), 0).unwrap())
             .build(device.clone()) {
@@ -253,7 +264,9 @@ impl<R> VkRenderer<R> {
             queue,
             swapchain,
             command_buffer_allocator,
+            memory_allocator,
             render_pass,
+            pipeline,
             viewport,
             framebuffers,
 
